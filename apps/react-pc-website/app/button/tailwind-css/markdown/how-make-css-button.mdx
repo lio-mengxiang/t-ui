@@ -1,0 +1,208 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { BasicExample, LoadingExample, SizeExample, GroupExample, BasicTailwindExample, ActiveExample } from './example';
+
+<H1 subheading="使用 Tailwind CSS 构建篇">原来精美的 Button 都是这么封装的？一看就会</H1>
+
+<AvatarM />
+
+<ImageTypography src="/button/button.webp" fill alt="button" />
+
+注：这篇是讲的使用 `tailwindcss` 添加样式。如果你对 `css/less/sass` 的 `Button` 感兴趣， 请移步上一篇文章。我
+这篇完全是上一篇文章复制，只是将 `css` 修改为 `tailwindcss`。
+
+有同学觉得写一个 `Button` 组件还不简单吗？直接使用 `button` 标签 + `css` 轻松实现：
+
+<BasicExample />
+
+但这个按钮问题太多了，例如没有 `hover` 状态，没有 `disabled` 状态。接着我们之前在 《必读指南》介绍的知名组件库对于 `Button`
+组件的要求，我们一一实现：
+
+- hover 状态
+- disabled 状态
+- loading 状态出现 loading 图标
+- group 按钮
+- 单个图标的 Button
+- 按钮尺寸
+- 边框按钮、纯文字按钮
+- 按钮状态，例如成功状态按钮
+
+## 1、抽象 Button 状态
+
+对于 `button` 我们可以将一些常用的功能单独抽离成 `css` 变量。例如：
+
+- 设置不同主题色：例如 `primary`（主色）, `success`（成功状态）, `error`（失败状态） 等等。
+- 设置 `disabled` 状态的背景色，文字颜色（不同主题色还需要分别设置不同的 `disabled` 状态色）
+- 等等
+
+我在 Tailwind 中是这样做的：
+
+<BasicTailwindExample />
+
+其实，上面所有的状态类名，例如 `bg-blue-500` 属于 `tailwindcss` 自己带的类名，我们可以在 `tailwind.config.ts` 中定义，自己业务的主题类名
+类似 `bg-primary-color`。
+
+## 2、增加 loading/hover 态
+
+我们上面定义了正常和 `disabled` 状态的 `css` 变量，接下来 `loading` 状态需要的是一个 `loading` 图标，
+图标我们直接从 `@t-headless-ui/react` 中获取, 对 `loading` 处理是传入参数 `loading: true` 的参数，
+就会出现 `loading` 图标，当然你可以自定义任意 `loading` 图标。
+
+需要注意，`loading` 状态，`onClick` 事件是不会触发。
+
+接着我们增加一下 `hover` 状态，为什么需要 `hover` 态呢？好处就是当 `hover` 按钮时，能给对面一个反馈，知道此时正在 `hover` 哪个按钮，我们使用如下
+css 实现：
+
+<CodeBlock
+  code={`// hover
+'hover:bg-color-100': !disabled`}
+  language="css"
+/>
+
+效果如下：
+
+<LoadingExample />
+
+## 3、增加 active/focus 态
+
+`active` 状态是指点击按钮且没有离开按钮时的状态，表明按钮正在被点击，我们在后续的 《创意案例》 章节会有
+很多有意思的案例，比如点击按钮时，按钮会有一个波纹效果，会有彩带等等。
+
+`focus` 状态是指当我们使用键盘的 `tab` 键选中按钮时的状态。主要是有些场景用户希望用 `tab` 快速选中按钮
+例如在弹框组件中，往往会有确定和取消两个按钮，我们就可以使用 `tab` 快速选中。所以有一个 ui 上能区分是否 `focus`
+对应按钮是很有必要的。
+
+加这个两个状态也就是几行 `css` 的事，如下：
+
+<CodeBlock
+  code={`// active
+'active:bg-blue-700': status === 'primary' && !disabled,
+'active:bg-warning-700': status === 'warning' && !disabled,
+'active:bg-red-700': status === 'error' && !disabled,
+'active:bg-green-700': status === 'success' && !disabled,
+// focus
+'focus-visible:border-blue-100': status === 'primary' && !disabled,
+'focus-visible:border-warning-100': status === 'warning' && !disabled,
+'focus-visible:border-red-100': status === 'error' && !disabled,
+'focus-visible:border-green-100': status === 'success' && !disabled,`}
+  language="css"
+/>
+
+效果如下：
+
+<ActiveExample />
+
+## 4、使用 css 增强 Button
+
+- 按钮尺寸：很多库会让 `Button` 组件支持 `lg`、`sm` 等尺寸，其实就是修改一下 `height` 和 `padding` 即可。
+
+我们先拿按钮尺寸来举例，在这之前，我们首先要明白一个很重要的辅助函数 `classNames`。
+
+简单来说 `classNames` 是一个帮助你动态拼接 `CSS` 类名的小工具，让你写样式时更简洁、更清晰。
+
+🎯 为什么需要它？
+你可能经常会写这样的代码：
+
+<CodeBlock code={`<div className={isActive ? "btn active" : "btn"}>点击我</div>`} language="jsx" />
+但当你的条件变多，代码就会变得很乱，比如这样：
+
+<CodeBlock
+  code={`<div className={isActive ? (isDisabled ? 'btn active disabled' : 'btn active') : isDisabled ? 'btn disabled' : 'btn'}>点击我</div>`}
+  language="jsx"
+/>
+
+😵 看起来非常难读！我们可以用 classnames 简化
+
+<CodeBlock code={`import classNames from "classnames";
+
+<div
+  className={classNames('btn', {
+    active: isActive,
+    disabled: isDisabled,
+  })}
+>
+  点击我
+</div>
+`} language="jsx" />
+
+这会根据 isActive 和 isDisabled 的值自动拼接类名。
+
+比如：
+
+- isActive = true, isDisabled = false ➜ "btn active"
+
+- isActive = false, isDisabled = true ➜ "btn disabled"
+
+- 都为 true ➜ "btn active disabled"
+
+`classNames` 还支持传入数组，比如：
+
+<CodeBlock code={`<div className={classNames('btn', ['active', 'disabled'])}>点击我</div>`} language="jsx" />
+
+这会拼接 "btn active disabled" 这个类名。
+
+好了，我们接着之前的增加按钮尺寸的功能。
+我们使用 `classNames` 辅助函数，动态拼接 `CSS` 类名，实现按钮尺寸的功能。还有，我自己实现了一个简单 `classNames` 辅助函数，命令为 `cs`。
+
+<SizeExample />
+
+下面的一些对标知名组件库的功能，大家也可以用类似的方法去实现，因为都是简单的 `css` + `classNames` 辅助函数的组合。我就不赘述了。
+
+- 单个图标的 Button：将按钮长宽设置一致即可。
+- 边框按钮、纯文字按钮：将背景颜色去掉，改为边框颜色即可。
+- 按钮状态，例如成功状态按钮：设置不同主题色即可，建议在 `global.css` 中定义，这个涉及到组件库的换肤方案，有兴趣的可以来我们的组件库交流群里找我详细了解。
+
+其实，Button 组件使用 `less` 我在自己之前实现的组件库 `@mx-design/react` 中也有实现，感兴趣的同学欢迎到我的 github 和组件库群探讨。但我也深知
+这种 `css` 和组件耦合的组件库的局限性，所以放弃了 `@mx-design/react` 的维护，转而专注于 `headless` 的组件库的开发。
+
+## 5、增加实现 group 按钮
+
+这个也比较好实现，其实也算是简单的 `css` 功能。我们可以在 Button 组件外层包裹一个 `div`，然后给 `div` 加上一个类名，例如 `button-group`。
+
+- 然后对于 `button-group` 第一个子元素，也就是第一个 `Button` 组件，我们可以给它左上角和左下角加上一个 `border-radius`，例如 `4px`。
+- 接着对于 `button-group` 最后一个子元素，也就是最后一个 `Button` 组件，我们可以给它右上角和右下角加上一个 `border-radius`，例如 `4px`。
+
+就轻松实现 group 按钮的功能了。
+
+`css` 大致如下（以下代码还处理了一些边界情况，例如按钮重合部分，有的边框需要）
+
+<CodeBlock
+  code={`.btn-group {
+    display: inline-flex;
+    --btn-radius: 4px;
+}
+.btn-group .normal-btn:first-child {
+    border-radius: var(--btn-radius) 0 0 var(--btn-radius);
+}
+.btn-group .btn-outline:first-child:hover {
+    border-right-color: transparent;
+}
+.btn-group .normal-btn:not(:first-child):not(:last-child):hover {
+    border-right-color: transparent;
+}
+.btn-group .normal-btn:last-child {
+    border-radius: 0 var(--btn-radius) var(--btn-radius) 0;
+}
+.btn-group .normal-btn:not(:first-child):not(:last-child) {
+    border-radius: 0;
+}
+.btn-group .normal-btn:not(:last-child) {
+    border-right: 1px solid rgba(255, 255, 255, 20%);
+}`}
+  language="css"
+/>
+
+效果如下：
+
+<GroupExample />
+
+## 6、总结
+
+作为一名合格的前端开发，毫无疑问需要对页面常见功能和组件了解基本原理，如果要向更高级的前端工程师段位进阶，这些组件需要自己实现
+也是必须的。最后，希望文章对你有帮助，有任何疑惑，欢迎加入目前国内最好手写组件库交流群。
+
+完整代码可以去我的 `@mx-design/react` 组件库中查看。也欢迎报名我的质量超超超高的 `React` 组件库开发教程。
+我肯定你学到的知识，会把很多同段位的前端遥遥甩在身后，这对于你面试项目介绍、远程工作展示自己的项目、或者接单子时展示实力都会大有帮助。
+我也很乐意直接帮助优化简历中的项目介绍的内容。
+
+`Vue` 组件库也在开发中，vue 的同伴也欢迎加群哦。

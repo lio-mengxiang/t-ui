@@ -1,0 +1,137 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, Link } from '@/_components/typography';
+import { CodePreview } from '@/_components/code-preview';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { BasicExample, TailwindBasicExample, CssBasicExample } from './example';
+
+<H1>Next.js 换肤方案</H1>
+
+<AvatarM />
+
+<ImageTypography src="/solution/theme.webp" fill alt="button" containerClassName="h-96" />
+
+## 介绍
+
+之前介绍了 <Link href={`/solution/theme/css`}>Css 换肤方案</Link> 和 <Link href={`/solution/theme/tailwind`}>Tailwind 换肤方案</Link>，其实这两种都是基于普通的 `SPA` 架构的页面，毕竟国内 `SPA` 还是主流。但在国外 `Next.js` 这种全栈框架非常流行。（
+我个人不太喜欢用这种框架，Nextjs 也只是主要是用其 `SSG` 的功能，这种框架对于简单的后端来说还挺方便的，但是复杂度一旦上去了，`Next.js` 对于 react 有非常多限制，而且后端性能并不出色，所以
+我通常还是喜欢前后端分离的架构，后端用正常的 `Node.js` 框架即可）。
+
+`next.js`的主题色和国际化都远不如 `SPA` 页面那样容易，因为 `SPA`（单页Web应用） 页面的 `HTML` 都是靠 `javascript` 生成的，那么我们在
+所以我们在 `React` 、 `Vue` 等等这些框架中，可以先获得 `localstorage` 中的主题值，然后再赋值给 html 的 `class` 属性，然后框架在第一次初始化时，渲染出 html 元素。
+
+但是 `next.js` 它是已经生成好 `HTML` 了，我们如果还使用 `SPA` 架构那套在 js 中注入 `CSS` 变量，就会出现页面刚开始没有主题色，然后闪一下，换颜色。
+
+所以我们必须要在 HTML 呈现之前，就把 `CSS` 注入，这就是一个技术难题了。
+
+在 `next.js` 中有一个库叫做 `next-themes`, 专门解决这个问题。
+
+我把这个库的逻辑精简了很多，自己手写了一个精简版用到了自己的项目中，接下来我就来介绍一下主要实现逻辑。
+
+## css 变量换肤思路
+
+上面的两篇文章其实已经讲了很多 `CSS` 变量的换肤思路的，请从上面 `CSS 换肤方案` 这篇文章了解具体思路。
+
+简单来说就是：
+
+我们在 html 标签中添加 `class` 属性，值为 `light` 或者 `dark`，这样我们就可以根据 `class` 的值，来切换主题。
+
+<CodeBlock code={`<html class="light"></html>`} language="html" />
+
+然后所有主题需要的 `CSS` 变量定义如下，例如亮色主题为：
+
+<CodeBlock
+  code={`html.light {
+    --primary-blue-600: #366ef4;
+    --primary-blue-500: #2557e7;
+    --primary-blue-200: #c3dafe;
+    --primary-blue-700: #204ed6;
+    --primary-blue-300: #93c5fd;
+    /* .... */
+}`}
+  language="css"
+/>
+
+## 服务器端获取不到 localstorage
+
+因为 `next.js` 是在服务器已经渲染好 `HTML` 了，所以我们在服务器端是获取不到 `localStorage` 的。
+
+这就意味着无论是 `vue` 还是 `react` 初次渲染当然在服务端拿不到客户端的 `localStorage`。可 `CSS 变量` 换肤，需要初始化的时候获取到客户端的 `localstorage`。
+
+这可怎么办呢？
+
+## Script 阻塞 dom 渲染
+
+这是一个面试常见的问题，就是 `script` 标签是否会阻塞 `DOM` 渲染？
+
+如果不考虑 `script` 标签的 `async` 和 `defer` 属性，`script` 会阻塞 `DOM` 渲染。
+所以一般 `script` 标签建议放到 `body` 标签之后，这样可以避免阻塞 `DOM` 渲染。
+
+但是这里我们反而要反之其道行之，把 `script` 放到 `head` 标签上，这样我们就可以在页面渲染前，更改 `HTML` 属性。
+
+这就是我们初始化页面 `HTML` 的思路。
+
+类似如下的代码：
+
+<CodeBlock
+  code={`// defaultTheme 是值默认主题色，themeKey 是指 localStorage 中的主题色的 key 值
+  const script = (defaultTheme: ThemeTypeProps, themeKey: string) => {
+    const theme = localStorage.getItem(themeKey) || defaultTheme;
+    localStorage.setItem(themeKey, theme);
+    document.documentElement.setAttribute('class', theme);
+  };
+  `}
+  language="javascript"
+/>
+
+## 封装为 React 组件
+
+上面虽然解决了初始化的问题，但是毕竟是 `React` 组件，我们给子组件共享当前的主题是什么和修改主题的方法。
+
+所以我们可以用 `React Context` 来实现。
+
+<CodeBlock
+  code={`const NextLocalStorage = ({ defaultTheme, children, nonce, scriptContent, themeKey = THEME }: LocalstorageProviderProps) => {
+    const [theme, setTheme] = useState<ThemeTypeProps | undefined>(undefined);
+    const setThemeState = useCallback(
+      (value: ThemeTypeProps) => {
+        setTheme(value);
+        // 然后修改 localstorage 的信息
+        saveToLS(themeKey, value);
+      },
+      [themeKey],
+    );
+    useEffect(() => {
+      // 后续 theme 变化，更新 html class 对应的主题样式
+      if (!theme) return;
+      document.documentElement.classList = '';
+      document.documentElement.classList.add(theme as ThemeTypeProps);
+    }, [theme]);
+    // 共享当前主题色和修改主题的方法给子组件用
+    const providerValue = useMemo(
+      () => ({
+        theme,
+        themeKey,
+        setThemeState,
+      }),
+      [setThemeState, theme, themeKey],
+    );
+    return (
+      <LocalstorageContext value={providerValue}>
+        {/* ThemeScript 组件就是注入 script 初始化主题的组件 */}
+        <ThemeScript />
+        {children}
+      </LocalstorageContext>
+    );
+};
+`}
+  language="typescript"
+/>
+
+## 细节注意
+
+就是如果我们浏览器开了多个标签，那么如何实现，当某个标签的主题切换之后，另一个标签页的主题也能更新呢？
+
+这里我们可以利用 `storage` 事件来处理。用法如下
+
+<CodeBlock code={`window.addEventListener("storage", handleStorage, false);`} language="typescript" />
+
+这里我们可以注册一个 `handleStorage`, 用来上面已经定义好的修改主题的方法 `setThemeState` 来通知所有页签。

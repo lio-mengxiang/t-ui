@@ -1,0 +1,220 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, Link } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { Promote } from '@/_components/promote';
+import { BasicExample, BasicMessageExample, CloseMessageExample, UpdateMessageExample } from './example';
+
+<H1>简单封装 Modal 组件</H1>
+
+<AvatarM />
+
+<ImageTypography src="/modal/modal.webp" fill alt="modal" />
+
+首先建议阅读必读指南中，附录关于如何创建 `modalStore` 的说明。简单来说 `modalStore` 是用来管理 `modal` 组件的状态的。
+
+注：以下样式使用的是 `tailwindcss` 类名。你可以完全使用 `css` 类名来代替。样式都很简单。
+
+## 1、增加 modal
+
+以下使用了 `modalStore.add` 方法来增加一个 `modal` 组件。详细解释请看后面。
+
+<CodeBlock
+  code={`import { modalStore } from '@/layout';
+import { TModalBox } from '@/alert/t-modal-box';
+ 
+const TModal = {
+  add({
+    title,
+    showCloseIcon = true,
+    onCancel,
+    showFooter = true,
+    onOk,
+    className,
+    style,
+    contentClassName,
+    containerClassName,
+    maskClassName,
+    content,
+    initialFocusEl,
+    attach,
+  }: {
+    title: string;
+    showCloseIcon?: boolean;
+    onCancel?: () => void;
+    showFooter?: boolean;
+    onOk?: () => void;
+    className?: string;
+    style?: React.CSSProperties;
+    contentClassName?: string;
+    containerClassName?: string;
+    maskClassName?: string;
+    content: React.ReactNode;
+    initialFocusEl?: () => void;
+    attach?: string;
+  }) {
+    const id = modalStore.add({
+      attach,
+      initialFocusEl,
+      maskCls: cs('z-modal fixed inset-0 bg-black/50 w-full h-full overflow-hidden', maskClassName),
+      containerClassName: cs('z-modal fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-hidden', containerClassName),
+      content: (
+        <TModalBox
+          title={title}
+          showCloseIcon={showCloseIcon}
+          showFooter={showFooter}
+          className={className}
+          contentClassName={contentClassName}
+          style={style}
+          onCancel={() => {
+            onCancel?.();
+            modalStore.remove(id);
+          }}
+          onOk={() => {
+            onOk?.();
+          }}
+        >
+          {content}
+        </TModalBox>
+      ),
+      onCancel: () => {
+        modalStore.remove(id);
+      },
+    });
+    return id;
+  },
+};`}
+  language="jsx"
+/>
+
+- 首先我们固定了背景黑色蒙版的样式，也就是 `maskCls`。这里使用了 `position: fixed` 来覆盖整个页面。
+- 然后设置了 `modal` 在容器中的位置，使用 `containerClassName` 来设置，可以看到下面是居中显示的，并且默认因为挂载
+  到 `document.body` 上。所以使用了 `position: fixed` 来居中到屏幕上。
+
+当然还可以自己传入 `attach` 参数，自定义需要挂载的元素上，传入的是一个字符串，内部会用 `document.querySelector` 来查询元素。
+这里为什么不直接传入 `dom` 元素，而是传入一个字符串，是因为我们希望可以在 `服务端渲染` 时，直接使用 `document` 或者 `window` 是不允许的。
+所以干脆就传入字符串，在组件内部的 `useEffect` 中，使用 `document.querySelector` 来查询元素。
+
+- `initialFocusEl` 表示是否需要将焦点锁定到第一个可聚焦的元素上。这是一个函数，里面一般都是用 `ref` 获取到该元素，然后调用 `focus` 方法来获取焦点。
+- `onCancel` 表示点击取消按钮时的回调函数，一般会用来关闭 `modal` 组件。
+- `content` 表示 `modal` 组件的内容，一般是一个 `ReactNode` 类型的元素。这里我们使用了 `Alert` 章节自定义的 ·`Modal` 组件来包裹内容。你也完全可以定义自己的 `modal` 组件。从而达到函数调用的方式传入参数的效果。
+
+在 `TModalBox` 中，我们默认把关闭功能添加进来，使用 `modalStore.remove(id);` 来实现关闭弹框。接收的 `id` 正是 `add` 方法返回的 `id`。表示我们要操作哪个弹窗。
+
+其中注意的是， `TModalBox` 中的确定按钮，有时候我们需要异步关闭，比如将表单数据发送给后端成功后关闭弹窗。此时一般会有一个 `loading` 参数传入到 `TModalBox` 中的确定按钮，有时候我们需要异步关闭，比如将表单数据发送给后端成功后关闭弹窗。此时一般会有一个
+`loading` 参数传给这个确定按钮，用来表示是否正在等待后端返回数据中。
+
+如何给 `TModalBox` 更新参数呢？可以使用 `modalStore.update(id, { contentProps: { loading: true } });` 方法来更新 `modal` 组件的参数。
+
+其中 `id` 是 `add` 方法返回的 `id`，表示我们要操作哪个弹窗。 `contentProps` 是专门给 `content` 传入的组件的参数。
+
+其中还有一个 `cs` 方法，实际上就是 `classnames` 库的 `cs` 方法，用来合并类名的。当然因为 `tailwindcss` 合并类名还需要 `tailwind-merge` 库协助，所以这个 `cs` 方法是结合了两者。
+
+## 2、删除 modal
+
+上面液体提到删除 `modal` 的方式，我们补充一个 `remove` 方法，用来手动删除 `modal` 组件。
+
+<CodeBlock
+  code={`import { modalStore } from '@/layout';
+import { TModalBox } from '@/alert/t-modal-box';
+ 
+const TModal = {
+  add({
+    title,
+    showCloseIcon = true,
+    onCancel,
+    showFooter = true,
+    onOk,
+    className,
+    style,
+    contentClassName,
+    containerClassName,
+    maskClassName,
+    content,
+    initialFocusEl,
+    attach,
+  }: {
+    title: string;
+    showCloseIcon?: boolean;
+    onCancel?: () => void;
+    showFooter?: boolean;
+    onOk?: () => void;
+    className?: string;
+    style?: React.CSSProperties;
+    contentClassName?: string;
+    containerClassName?: string;
+    maskClassName?: string;
+    content: React.ReactNode;
+    initialFocusEl?: () => void;
+    attach?: string;
+  }) {
+    const id = modalStore.add({
+      ...xx
+    });
+    return id;
+  },
+ 
+  remove(id: string) {
+    modalStore.remove(id);
+  },
+};`}
+  language="jsx"
+/>
+
+`id` 是 `add` 方法返回的 `id`，表示我们要操作哪个弹窗。其实也支持在 `add` 方式自定义 `id`，但是一般情况下用内部会自动生成，免去传入的麻烦。
+
+## 3、更新 modal
+
+更新 `modal` 也很简单，直接使用 `update` 方法即可。
+
+<CodeBlock
+  code={`import { modalStore } from '@/layout';
+import { TModalBox } from '@/alert/t-modal-box';
+ 
+const TModal = {
+  add({
+    title,
+    showCloseIcon = true,
+    onCancel,
+    showFooter = true,
+    onOk,
+    className,
+    style,
+    contentClassName,
+    containerClassName,
+    maskClassName,
+    content,
+    initialFocusEl,
+    attach,
+  }: {
+    title: string;
+    showCloseIcon?: boolean;
+    onCancel?: () => void;
+    showFooter?: boolean;
+    onOk?: () => void;
+    className?: string;
+    style?: React.CSSProperties;
+    contentClassName?: string;
+    containerClassName?: string;
+    maskClassName?: string;
+    content: React.ReactNode;
+    initialFocusEl?: () => void;
+    attach?: string;
+  }) {
+      const id = modalStore.add({
+        ...xx
+      });
+      return id;
+    },
+  
+    remove(id: string) {
+      modalStore.remove(id);
+    },
+    update(id: string, data: any) {
+      modalStore.update(id, { contentProps: data });
+    },
+};`}
+  language="jsx"
+/>
+
+## 欢迎加入简历亮点交流群
+
+<Promote />

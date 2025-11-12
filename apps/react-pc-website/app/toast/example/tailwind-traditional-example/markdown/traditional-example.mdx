@@ -1,0 +1,108 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { BasicExample, CustomExample, StatusExample, PositionExample, UpdateMessageExample, CloseExample } from './example';
+
+{/* ### 基本用法 */}
+
+<H3Sub
+  sub={
+    <>
+      最简单的例子。<Code>切记</Code>一定要看 <Code>必读指南</Code>中<Code>引入和使用 toast</Code>章节，了解如何引入
+      <Code>ToastProvider</Code>。
+    </>
+  }
+>
+  {'基本用法'}
+</H3Sub>
+<BasicExample />
+
+{/* ### 不同类型 */}
+
+<H3Sub
+  sub={
+    <>
+      全局提示有 5 种不同的类型，分别为：<Code>info</Code>、<Code>success</Code>、<Code>warning</Code>、<Code>error</Code>、
+      <Code>loading</Code>
+    </>
+  }
+>
+  {'不同类型'}
+</H3Sub>
+<StatusExample />
+
+{/* ### 自定义组件 */}
+
+<H3Sub
+  sub={
+    <>
+      可以使用基本的<Code>createToastStore</Code>方法来自定义 toast 组件, 这里我们定义另一种
+    </>
+  }
+>
+  {'自定义组件'}
+</H3Sub>
+<CustomExample />
+
+{/* ### 位置 */}
+
+<H3Sub
+  sub={
+    <>
+      <Code>message</Code> 组件的位置完全可以自己定义，请在<Code>必读指南</Code>里了解，配置位置的方式，以下的 <Code>message</Code>
+      我们定位在了右下角
+    </>
+  }
+>
+  {'位置'}
+</H3Sub>
+
+以下就是配置 `ToastProvider` 的代码，注意
+
+- `bottom-28`(定向到底部)，`items-end pr-12`(定位到右边)，所以就是 `右下方`
+- 并且 `direction` 设为 `bottom-to-top` ，所以就是从下往上弹出
+- 最后 `stack` 设为 `true` ，并且我们使用 `stack` 模式
+
+<CodeBlock
+  code={`export const toastBottomStore = createToastStore({ maxCount: 6 });
+ 
+<ToastProvider
+    store={toastBottomStore}
+    containerProps={{
+      className: cs('w-full fixed bottom-12 flex flex-col items-end pr-12 pointer-events-none', \`\${TOAST_Z_INDEX}\`),
+    }}
+    direction="bottom-to-top"
+/>`}
+  language="tsx"
+  className="mb-12"
+/>
+
+<PositionExample />
+
+{/* ### 手动控制关闭 */}
+
+<H3Sub
+  sub={
+    <>
+      传入<Code>showClose</Code>可以让 message 显示关闭按钮。点击关闭按钮可以手动关闭 message
+    </>
+  }
+>
+  {'手动控制关闭'}
+</H3Sub>
+
+<CloseExample />
+
+{/* ### 更新内容 */}
+
+<H3Sub
+  sub={
+    <>
+      通过指定 <Code>id</Code>，可以更新已经存在的 <Code>message</Code> 内容。注意， <Code>duration</Code> 值为 <Code>null</Code> 会取消当前
+      <Code>message</Code> 消息自动关闭功能
+    </>
+  }
+>
+  {'更新内容'}
+</H3Sub>
+
+<UpdateMessageExample />

@@ -1,0 +1,118 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import {
+  BasicExample,
+  PrefixSuffixExample,
+  StatusExample,
+  LabelExample,
+  FormatExample,
+  ShowLimitExample,
+  FitWidthExample,
+  SearchExample,
+  PasswordExample,
+} from './example';
+
+{/* ### 基本用法 */}
+
+<H3Sub
+  sub={
+    <>
+      最简单的例子。建议在使用<Code>allowClear</Code>属性的时候，加上固定参数。以免 <Code>allowClear</Code> 出现可以清除输入框内容的图标
+      时会占据一定空间，让输入框变长。
+    </>
+  }
+>
+  {'基本用法'}
+</H3Sub>
+<BasicExample />
+
+{/* ### 输入状态 */}
+
+<H3Sub sub={<>不同的输入框状态</>}>{'输入状态'}</H3Sub>
+<StatusExample />
+
+{/* ### 前后缀 */}
+
+<H3Sub
+  sub={
+    <>
+      通过指定<Code>prefixElement</Code>和<Code>suffixElement</Code>来在输入框内添加前缀和后缀。
+    </>
+  }
+>
+  {'前后缀'}
+</H3Sub>
+<PrefixSuffixExample />
+
+{/* ### 前后标签 */}
+
+<H3Sub
+  sub={
+    <>
+      前后标签的功能完全可以使用<Code>CSS</Code> 结合 <Code>Button</Code> 组件轻松实现。
+    </>
+  }
+>
+  {'前后标签'}
+</H3Sub>
+<LabelExample />
+
+{/* ### 前后标签 */}
+
+{/* ### 字数统计 */}
+
+<H3Sub
+  sub={
+    <>
+      设置 <Code>maxLength.length</Code> 可以限制最大字数，配合 <Code>showWordLimit</Code> 可以显示字数统计。 设置{' '}
+      <Code>maxLength.errorOnly: true</Code> 后不会限制用户输入字数，但是超过最大字数会展示错误状态。
+    </>
+  }
+>
+  {'字数统计'}
+</H3Sub>
+<ShowLimitExample />
+
+{/* ### 格式化输入值 */}
+
+<H3Sub
+  sub={
+    <>
+      在指定时机对用户输入的值进行格式化处理，前后值不一致时，会触发 <Code>onChange</Code> 事件
+    </>
+  }
+>
+  {'格式化输入值'}
+</H3Sub>
+<FormatExample />
+
+{/* ### 宽度自适应 */}
+
+<H3Sub
+  sub={
+    <>
+      通过 <Code>autoFitWidth</Code> 属性可以设置 <Code>Input</Code> 的宽度跟随文字自适应。
+    </>
+  }
+>
+  {'宽度自适应'}
+</H3Sub>
+<FitWidthExample />
+
+{/* ### 搜索框 */}
+
+<H3Sub
+  sub={
+    <>
+      搜索框是一种特殊的输入框，通常用于搜索功能。通过设置 <Code>showButton</Code> 属性可以在输入框右侧显示一个搜索按钮。
+    </>
+  }
+>
+  {'搜索框'}
+</H3Sub>
+<SearchExample />
+
+{/* ### 密码框 */}
+
+<H3Sub sub={<>用于密码的输入。</>}>{'密码框'}</H3Sub>
+<PasswordExample />

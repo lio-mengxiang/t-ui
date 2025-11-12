@@ -1,0 +1,49 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide } from '@/_components/typography';
+import { CodePreview } from '@/_components/code-preview';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import {
+  BasicExample,
+  TailwindBasicExample,
+  ModalAlertBasicExample,
+  ModalAlertBasicFormExample,
+  ModalAlertTailwindBasicExample,
+  ModalAlertTailwindBasicFormExample,
+} from './example';
+import { TModal } from '@/alert/t-modal-box';
+
+<H1 subheading="功能说明">封装 Alert 组件</H1>
+
+<ImageTypography src="/alert/alert.webp" fill alt="button" />
+
+## 前言
+
+`Alter` 组件主要是为了 `Message` 和 `Notification` 组件使用，并且实现上仅仅涉及到样式的变化，而没有 `javascript` 部分。
+
+所以这篇文章就分别封装 `css` 和 `tailwindcss` 版本的 `Alert` 组件。实际生产中，可以根据项目需求选择使用和改造。
+
+## CSS 版本 Alert
+
+<BasicExample />
+
+以上代码对于大家来说应该没什么难度，这里就不展开讲了。以下是 Tailwindcss 版本:
+
+## Tailwindcss 版本 Alert
+
+<TailwindBasicExample />
+
+## CSS 版本 Modal-alert
+
+<ModalAlertBasicExample />
+
+<ModalAlertBasicFormExample />
+
+## Tailwindcss 版本 Modal-alert
+
+<ModalAlertTailwindBasicExample />
+
+<ModalAlertTailwindBasicFormExample />
+
+## 附录
+
+因为 `headless` 组件是无样式的，所以`Alert` 组件并没有在 `@t-headless-ui/react` 中。
+但是大家如果要想现成的，完全可以参考这篇文章的内容，拷贝到项目中改造。

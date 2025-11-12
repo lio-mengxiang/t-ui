@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint", // eslint 插件
+    "esbenp.prettier-vscode", // prettier 插件
+    "stylelint.vscode-stylelint", // stylelint 插件
+    "shardulm94.trailing-spaces" // editorConfig 插件
+  ]
+}
+

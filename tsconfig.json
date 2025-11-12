@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    // 目标 ECMAScript 版本：使用最新标准，允许使用最前沿语法
+    "target": "ESNext",
+    // 跳过对 node_modules 中声明文件的类型检查，加快编译速度
+    "skipLibCheck": true,
+    // 启用对 CommonJS/AMD 模块的默认导出互操作，减少导入写法差异
+    "esModuleInterop": true,
+    // 启用装饰器实验语法（如 @Component），用于元编程或框架注解
+    "experimentalDecorators": true,
+    // 允许从没有默认导出的模块中按默认方式导入，提升兼容性
+    "allowSyntheticDefaultImports": true,
+    // 输出模块格式：使用 ES 模块，以便 tree-shaking 与现代打包工具配合
+    "module": "ESNext",
+    // 模块解析策略：按 Node.js 规则解析，支持 node_modules 查找
+    "moduleResolution": "node",
+    // JSX 编译方式：保留 React 形式，交由 babel/rollup 等后续处理
+    "jsx": "react",
+    // 允许直接 import 导入 .json 文件，并将其内容作为对象使用
+    "resolveJsonModule": true,
+    // 编译时可用的标准库：包含 ESNext 与 DOM API 的类型定义
+    "lib": ["esnext", "dom"],
+    // 使用原生 class fields 语义（true 时与标准一致，false 时与旧装饰器兼容）
+    "useDefineForClassFields": true,
+    // 强制文件名大小写一致，避免因文件系统差异导致的引入错误
+    "forceConsistentCasingInFileNames": true,
+    // 允许在项目中同时存在 .js/.jsx 文件，便于渐进迁移
+    "allowJs": true,
+    // 对 .js 文件也进行类型检查，提前发现潜在问题
+    "checkJs": true
+  },
+  // 指定需要编译的文件路径：包含 packages 与 apps 下的 ts/tsx，以及一个 mdx 文件
+  "include": ["packages/**/*.ts", "packages/**/*.tsx", "apps/**/*.ts", "apps/**/*.tsx", "apps/react-pc-website/app/button/page.mdx"],
+  // 排除目录：跳过 node_modules，避免编译第三方库
+  "exclude": ["node_modules"]
+}

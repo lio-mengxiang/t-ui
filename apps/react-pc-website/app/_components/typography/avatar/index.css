@@ -1,0 +1,23 @@
+div.m-avatar-typography-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  background-color: var(--bg-color-1);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 20px;
+}
+
+.m-avatar-text {
+  color: var(--text-color-2);
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}
+
+.m-avatar-text span:nth-child(1) {
+  font-weight: 500;
+}

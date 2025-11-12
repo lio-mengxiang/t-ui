@@ -1,0 +1,185 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide } from '@/_components/typography';
+import { CodePreview } from '@/_components/code-preview';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { BasicExample, BasicTailwindExample, BasicTailwindContentExample, ArrowExample, TPopoverExample } from './example';
+
+<H1 subheading="使用 css/less/sass 构建篇">弹框组件自定义样式</H1>
+
+<ImageTypography src="/popover/popover.webp" fill alt="popover" />
+
+## 1、基础封装
+
+注：这篇是讲的使用 `tailwindcss` 封装弹框组件，其它原子化 `css` 也是类似封装思路，如果想看 `css`（`less` 和 `sass` 原理一致）如何封装弹框组件的，请见上一篇文章。
+
+我们还是以下方的代码为例，可以发现，其实我们需要封装仅仅是弹出框内容的样式：
+
+<BasicExample />
+
+然后我们可以使用 `tailwindcss` 来修改上面的 `style` 样式。
+
+<BasicTailwindExample />
+
+上面代码有个一个明显的问题，
+
+- 然后 `tailwindcss` 样式设置了一个 `mb-1.5`(`mb` 是 `margin-bottom` 的意思) 来隔开按钮和弹框，但问题在于因为弹框的位置有很多种情况，比如：
+
+- 顶部
+- 底部
+- 左侧
+- 右侧
+- ...等等
+
+所以我们需要动态的设置 `CSS`, 而如何动态的设置呢，我特意在组件库的弹框中留了一个口子，也就是弹出框外层包裹了一个 `div` 元素，这个元素会有如下属性
+
+- data-placement = 弹出框的位置(例如 `top`)
+- class="t-popover-content"
+
+我们先拿 `top` 位置为例，如何动态设置 `top` 位置：
+
+<CodeBlock
+  code={`.t-popover-content[data-placement^='top'] .popover-content {
+    margin-bottom: 8px;
+}`}
+  language="css"
+/>
+
+上面的代码只是一个 `css` 样式示意，下方会使用 `tailwindcss` 来实现。
+
+其中 `t-popover-content` 就是 `<Popover.Content>` 组件的 `class` 类名, `[data-placement^='top']` 中 `data-placement` 自定义属性也是在 `<Popover.Content>` 组件上。
+
+所以我们通过 `data-placement` 属性来动态的设置不同方向的样式。例如 `[data-placement^='top']` 表示可能弹框的方向是 `top`, `top-start`, `top-end`。
+
+这里只说明了 `top` 方向，其它方向是类似的。
+
+所以我们可以借助这两个属性来动态的设置按钮和弹框隔开的距离，如下：
+
+<BasicTailwindContentExample />
+
+## 2、箭头样式封装
+
+很多时候，大家需要弹框有一个箭头，这个箭头的位置是根据弹框的位置来确定的，比如：
+
+- 顶部箭头指向按钮的底部
+- 底部箭头指向按钮的顶部
+- 左侧箭头指向按钮的右侧
+- 右侧箭头指向按钮的左侧
+
+首先，我们预想的箭头是这样插入的：
+
+<CodeBlock
+  code={`<Popover.Content className="内容的样式">
+        Popover Content
+        <div className="箭头的样式"></div>
+    </div>
+</Popover.Content>`}
+  language="jsx"
+/>
+
+这里我们将 `Popover.Content` 的 `position` 属性设置为 `relative`， 然后让箭头的样式设置为 `absolute`， 并根据 `data-placement` 属性来动态设置箭头的位置。
+
+<ArrowExample />
+
+## 3、更好的封装
+
+因为 `@t-headless-ui/react` 组件库是一个 `headless` 组件库（没有样式），属于比较低层次的封装，所以使用起来没有 `ant-design`、`M-UI` 这类高度封装的组件库简单，
+但 `headless` 组件库提供了更多的可定制化的空间，我们可以根据自己的需求来定制组件的样式。例如我可以进行如下封装出自己业务需要的弹框组件。
+
+<CodeBlock
+  code={`import React, { useContext } from 'react';
+  import { Popover, PopoverProps, PortalProps } from '@t-headless-ui/react';
+  import { TButton } from '@/button/tailwind-button';
+  interface TPopoverProps extends PopoverProps {
+    attach?: PortalProps['attach'];
+    children: React.ReactNode;
+    showArrow?: boolean;
+    popoverContent: React.ReactNode;
+  }
+  function TPopover({
+    placement = 'top',
+    trigger = 'hover',
+    attach = 'body',
+    disabled = false,
+    children,
+    offsetDistance = 0,
+    offsetSkidding = 0,
+    strategy = 'absolute',
+    visible,
+    defaultVisible,
+    onVisibleChange,
+    showArrow = false,
+    popoverContent,
+  }: TPopoverProps) {
+    return (
+      <Popover.Root
+        placement={placement}
+        trigger={trigger}
+        disabled={disabled}
+        strategy={strategy}
+        offsetDistance={offsetDistance}
+        offsetSkidding={offsetSkidding}
+        visible={visible}
+        defaultVisible={defaultVisible}
+        onVisibleChange={onVisibleChange}
+      >
+        <Popover.Trigger>{children}</Popover.Trigger>
+        <Popover.Content attach={attach}>
+          <div className="t-popup popover-content">
+            {popoverContent}
+            {showArrow && <Arrow />}
+          </div>
+        </Popover.Content>
+      </Popover.Root>
+    );
+  }
+  function Arrow() {
+    const { popperRef, placement } = useContext(Popover.PopoverContext);
+    const { state } = popperRef!.current;
+    return (
+      <div
+        data-placement={state?.placement || placement}
+        className="absolute z-[1] bg-inherit
+      before:absolute before:content-[''] before:w-[var(--popover-arrow-width)] before:h-[var(--popover-arrow-width)] before:rotate-45 before:bg-inherit
+      data-[placement^='top']:before:rounded-tl-full data-[placement^='top']:before:border-b data-[placement^='top']:before:border-r data-[placement^='top']:before:border-[var(--border-color)]
+      data-[placement^='bottom']:before:rounded-br-full data-[placement^='bottom']:before:border-t data-[placement^='bottom']:before:border-l data-[placement^='bottom']:before:border-[var(--border-color)]
+      data-[placement^='left']:before:border-t data-[placement^='left']:before:border-r data-[placement^='left']:before:border-[var(--border-color)]
+      data-[placement^='right']:before:border-b data-[placement^='right']:before:border-l data-[placement^='right']:before:border-[var(--border-color)]
+      data-[placement='top']:left-1/2 data-[placement='top']:ml-[calc(-1*var(--popover-arrow-width)/2)]
+      data-[placement='top-start']:left-[var(--popover-arrow-width)]
+      data-[placement='top-end']:left-[calc(100%_-_var(--popover-arrow-width)_*_2)]
+      data-[placement^='bottom']:-top-[calc(var(--popover-arrow-width)/2+1px)]
+      data-[placement='bottom-start']:left-[var(--popover-arrow-width)]
+      data-[placement='bottom']:left-1/2 data-[placement='bottom']:ml-[calc(-1*var(--popover-arrow-width)/2)]
+      data-[placement='bottom-end']:left-[calc(100%_-_var(--popover-arrow-width)_*_2)]
+      data-[placement^='left']:right-[calc(var(--popover-arrow-width)/2)]
+      data-[placement='left-start']:top-[var(--popover-arrow-width)]
+      data-[placement='left']:top-1/2 data-[placement='left']:mt-[calc(-1*var(--popover-arrow-width)/2)]
+      data-[placement='left-end']:top-[calc(100%_-_var(--popover-arrow-width)_*_2)]
+      data-[placement^='right']:left-[calc(-1*var(--popover-arrow-width)/2)]
+      data-[placement='right-start']:top-[var(--popover-arrow-width)]
+      data-[placement='right']:top-1/2 data-[placement='right']:mt-[calc(-1*var(--popover-arrow-width)/2)]
+      data-[placement='right-end']:top-[calc(100%_-_var(--popover-arrow-width)_*_2)]
+      "
+      ></div>
+    );
+  }`}
+  language="jsx"
+/>
+
+使用的话就会很简单，如下是一个例子，`<TButton>` 组件的封装，可以去看 `button` 篇的内容：
+
+<CodeBlock
+  code={`<TPopover popoverContent="Popover Content" showArrow>
+      <TButton status="success">Hover me!</TButton>
+  </TPopover>`}
+  language="jsx"
+/>
+
+效果如下：
+
+<TPopoverExample />
+## 4、总结
+
+最后，如果你想了解源码实现细节，欢迎加入到组件库交流群，里面会有直播解释源码和实现思路 。
+
+同时如果你想让自己的简历有一些与众不同高难度的项目，也欢迎咨询，例如对于前端组件库项目，在询问你的前端技术栈和意愿的情况下，
+可以帮助到初级前端到资深前端范围的求职者拥有一个亮眼的项目写在简历中，让你在面试时脱颖而出，给面试官一点惊喜😁。

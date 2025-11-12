@@ -1,0 +1,58 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { BasicExample, ColumnExample, AlignExample, WrapExample } from './example';
+
+{/* ### 基本用法 */}
+
+<H3Sub
+  sub={
+    <>
+      <Code>columns</Code> 表示容器分为多少列, <Code>width</Code> 表示子元素占据多少列，<Code>middle</Code> 表示子元素垂直居中，
+      <Code>center</Code> 表示子元素水平居中
+    </>
+  }
+>
+  {'基本用法'}
+</H3Sub>
+<BasicExample />
+
+{/* ### 子元素从上到下排列 */}
+
+<H3Sub
+  sub={
+    <>
+      使用 <Code>flow="column"</Code> 可以使子元素从上到下排列（默认从左到右）. 这是 <Code>css</Code> 属性 <Code>grid-auto-flow</Code>
+      的映射
+    </>
+  }
+>
+  {'子元素从上到下排列'}
+</H3Sub>
+<ColumnExample />
+
+{/* ### 对齐方式 */}
+
+<H3Sub
+  sub={
+    <>
+      使用 <Code>items-start</Code>, <Code>items-center</Code>, <Code>items-end</Code>{' '}
+      可以分别使子元素垂直对齐到顶部、居中、底部。实际上使用的是 <Code>CSS</Code> 属性 <Code>align-items</Code>。
+    </>
+  }
+>
+  {'对齐方式'}
+</H3Sub>
+<AlignExample />
+
+{/* ### 换行 */}
+
+<H3Sub
+  sub={
+    <>
+      使用 <Code>flex-wrap</Code> 可以使子元素在容器宽度不足时换行。实际上使用的是 <Code>CSS</Code> 属性 <Code>flex-wrap</Code>。
+    </>
+  }
+>
+  {'换行'}
+</H3Sub>
+<WrapExample />

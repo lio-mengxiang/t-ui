@@ -1,0 +1,3 @@
+export function getAltAxis(axis: 'x' | 'y'): 'x' | 'y' {
+  return axis === 'x' ? 'y' : 'x';
+}

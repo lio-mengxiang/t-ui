@@ -1,0 +1,89 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import {
+  BasicExample,
+  TIconExample,
+  StatusExample,
+  DisabledExample,
+  LoadingExample,
+  SizeExample,
+  GroupExample,
+  SourceTButtonExample,
+} from './example';
+
+{/* ### 基本用法 */}
+
+<H3Sub
+  sub={
+    <>
+      按钮分为<Code>品牌色按钮</Code>、<Code>线形按钮</Code> 等等按钮
+    </>
+  }
+>
+  {'基本用法'}
+</H3Sub>
+<BasicExample />
+
+{/* ### 图标按钮 */}
+
+<H3Sub
+  sub={
+    <>
+      <Code>Button</Code>可以嵌入图标，在只设置图标而没有 children 时，按钮的高宽相等
+    </>
+  }
+>
+  {'图标按钮'}
+</H3Sub>
+<TIconExample />
+
+{/* ### 按钮状态 */}
+
+<H3Sub
+  sub={
+    <>
+      通过设置<Code>Loading</Code>可以让一个按钮处于加载中状态。处于加载中状态的按钮不会触发点击事件
+    </>
+  }
+>
+  {'按钮状态'}
+</H3Sub>
+<StatusExample />
+
+{/* ### 禁用按钮 */}
+
+<H3Sub sub={<>按钮的禁用状态</>}>{'禁用按钮'}</H3Sub>
+
+<DisabledExample />
+
+{/* ### Loading 按钮 */}
+
+<H3Sub
+  sub={
+    <>
+      通过设置<Code>Loading</Code>可以让一个按钮处于加载中状态。处于加载中状态的按钮不会触发点击事件
+    </>
+  }
+>
+  {'Loading 按钮'}
+</H3Sub>
+
+<LoadingExample />
+
+{/* ### 不同按钮尺寸 */}
+
+<H3Sub sub={<>可用在同级多项操作，以按钮组合方式出现</>}>{'不同按钮尺寸'}</H3Sub>
+
+<SizeExample />
+
+{/* ### 组合按钮 */}
+
+<H3Sub sub={<>可用在同级多项操作，以按钮组合方式出现</>}>{'组合按钮'}</H3Sub>
+
+<GroupExample />
+
+{/* ### 组件源码 */}
+
+<H3Sub>组件源码</H3Sub>
+
+<SourceTButtonExample />

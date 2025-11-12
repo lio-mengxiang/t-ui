@@ -1,0 +1,63 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide } from '@/_components/typography';
+import { CodePreview } from '@/_components/code-preview';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { BasicExample } from './example/basic';
+
+<H1 subheading="flex 布局的 gap 属性">1 个 CSS 属性实现 Space 组件</H1>
+
+<ImageTypography src="/space/space.webp" fill alt="icon" />
+
+## 前言
+
+很多时候，我们希望几个按钮排成一排，并且间距相等。这是一个非常常见的需求，此时 `Space` 组件就可以派上用场了。
+
+由于 `flex` 布局中 `gap` 属性兼容性越来越好（chrome 84+），所以我们可以使用 `gap` 属性来实现 `Space` 组件。
+
+`Space` 组件原理很简单，就是遍历 `children`，并在每个子元素之间添加一个 `margin`。但注意的是，例如单行横向布局时， `margin` 不能给最后一个元素的右边添加。
+
+更复杂的问题，是`Space` 组件往往都会用 `display: flex` 来实现。然后使用 `flex-wrap: wrap` 来实现多行布局。那么最后一行的元素底部也应该不出现 `margin`。
+
+这就会导致一个问题，就是当 `Space` 组件的子元素数量超过一行时，就会出现问题。因为 `flex-wrap: wrap` 会导致子元素换行，就需要动态计算最后一行的元素数量，才能判断是否需要添加 `margin`。
+
+在我们教程出来的时候，`flex` 布局的 `gap` 属性兼容性已经很好了，如下，可以很轻松的实现 `Space` 组件。
+
+<BasicExample />
+
+## 降级方案
+
+对于单行很简单，只要遍历所有子元素，并且给所有子元素套一个 `div`，如果是横向排列，这些 `div` 都加一个 `margin-right` 即可。纵向单行排列同理，加一个 `margin-bottom` 即可。
+
+<CodeBlock
+  code={`<div>
+    {React.Children.toArray(children).map((child, index) => {
+        // 这里可以添加元素间的间隔元素
+        const shouldRenderSplit = split !== undefined && split !== null && index > 0;
+        return (
+          <Fragment key={index}>
+            {shouldRenderSplit && <div>{split}</div>}
+            // 这里给每个元素包裹一个 div ，然后给 div 添加 margin
+            <div className={className}>
+              {child}
+            </div>
+          </Fragment>
+        );
+    })}
+    </div>`}
+  language="jsx"
+/>
+
+复杂性来自于多行，也就是 `flex-wrap: wrap`。此时对于最后一行， 是否加 `margin` 是一个问题。
+
+一种简单的降级方案可以使用字节的 `arco design` 组件库的方法, 对于 `Space` 组件的 `margin` ，干脆换行最后一排，仍然保留 `margin`，让业务方自己去在容器上使用负 `margin` 来解决这个问题。
+
+一种降级方案是阿里的 `fusion-ui`, 干脆自己包裹一个外部容器，使用负的 `margin` 来解决这个问题，也就是肯定会使用负 `margin`，就看是用户自己处理，还是组件库帮你处理。
+
+随着 `flex` 中 `gap` 属性的兼容性越来越好，这个组件逐渐都不太需要单独拿出作为一个组件了。
+
+## 总结
+
+因为 `@t-headless-ui/react` 是 `headless` 组件，所以是跟样式无关的，所以 `Space` 组件并没有单独拿出作为一个组件。大家可以看下面的案例，自己用 `css` 实现即可。
+
+最后，欢迎加入到我们的组件库交流群中。有什么疑问都可以在群里讨论，并且会有视频直播每个组件的实现。
+
+更重要的是,我可以帮助你增加一些简历中的核心项目，例如我们这个组件库级别的。无论你是面试初级开发还是到前端技术专家，都会帮助你在面试中脱颖而出。

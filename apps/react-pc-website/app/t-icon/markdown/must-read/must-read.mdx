@@ -1,0 +1,207 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide } from '@/_components/typography';
+import { CodePreview } from '@/_components/code-preview';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { BasicExample, CoordinateExample, Coordinate2Example } from './example';
+
+<H1 subheading="赶快来看看吧！">高拓展性的 Icon 组件如何设计</H1>
+
+<ImageTypography src="/icon/icon.webp" fill alt="icon" />
+
+## 前言
+
+`headless` 组件库的 `Icon` 方案，目的是提供一个组件，类似如下的 `createIcon` 的 `API`：
+
+<CodeBlock
+  code={`import React from 'react';
+import { createIcon } from '../createIcon';
+ 
+export const IconChromeLine = createIcon({
+    iconProps: { useStrokeCurrentColor: true },
+    paths: (
+      <path
+        xmlns="http://www.w3.org/2000/svg"
+        d="M24 15C28.9706 15 33 19.0294 33 24C33 28.9706 28.9706 33 24 33C19.0294 33 15 28.9706 15 24C15 19.0294 19.0294 15 24 15ZM24 15H41.8654M17 42.7408L29.6439 31M6 15.2717L16.8751 29.552M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z"
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    ),
+});`}
+  language="jsx"
+/>
+
+然后，我们只要知道 `svg` 图标的 `path` 值，就可以使用 `createIcon` 来创建一个 `Icon` 组件。
+
+首先我们要谈两个重要的知识点
+
+- 为什么使用 `svg` 图标方案
+- 为什么要支持自定义图标
+
+### 为什么使用 SVG
+
+前端曾经流行过使用图片来做 `icon`, 并且由于 `icon` 数量一般都比较多，后来又流行一种叫做 `雪碧图` 的技术方案，也就是将多个图标放到一张图上，
+这样可以减少 `http` 请求次数然后通过 `background-position` 来定位到所需要的具体图标。
+
+图片大家都清楚，放大缩小是会失真的，而且 `image` 是属于 `inline` 元素(但是表现上跟 `inline-block` 更靠近)，所以会有一些间距问题。什么意思呢，你可以尝试使用 `div` 包裹一个 `image` 元素，
+然后你会发现图片跟 `div` 元素下方是有一些空隙的，这就是这个方案的一个小坑。当然解决方案网上有很多，例如给 `div` 元素设置 `font-size: 0`，也可以将 `image` 元素
+的 `display` 属性设置为 `block` 等等方法解决。
+
+产生这个问题的本质是，`inline` 元素一般是基于基线（baseline）来对齐的（不是基于 `bottom` 对齐）, 所以基线跟真正的 `div` 的 `bottom` 之间是有空隙，
+
+这个问题其实下面的 `svg` 方案也有，这下我们知道原理和解决方案就好说啦。
+
+我们开始说说 `svg` 方案，`svg` 是矢量图，所以无论图标大小如何改变，相对于图片，`svg` 图标都不会失真。
+
+`svg` 体积很小，浏览器原生支持，比图片可定要小很多，然后天然支持 `css` 样式，所以我们可以直接在 `svg` 上添加 `css` 样式（需要经过一些特殊处理，就可以使用常用的 `color` 和 `font-size` 这两个 `css` 属性）。并且天然跟很多动画库，例如 `framer-motion`、`GSAP` 可以进行很好的结合。
+
+这些优点，基本上就让 `svg` 元素跟常规的字体使用方式一致了，这样的优势让 `svg` 的灵活性、实用性和易用性大大提升。
+
+### 为什么要支持自定义图标
+
+一个通用的 `Icon` 组件库，绝不能只满足「官方内置图标」的使用场景。不同项目、不同品牌，往往都有自己独特的设计语言和图标需求，因此支持自定义图标就显得尤为重要。
+
+现在很多设计工具（如 `Figma`、`Sketch`、`Iconfont` 平台）都可以直接导出 `svg`。
+只要能拿到 `svg` 中 `path` 标签中的路径值，开发者就能一键创建新的 `Icon` 组件，形成设计到开发的高效闭环，减少沟通和资源转换的损耗。
+
+而且 `headless` 组件库（无样式），本来就是让业务方二次封装的，所以需要提炼出一个封装组件的 `API`。
+
+## 基础使用
+
+我们来看看如何使用上面的提到的 `createIcon` API，自定义团队的 `Icon` 组件吧。
+
+<BasicExample />
+
+上面的示例的代码中，有个初学者难以理解的概念，叫 `viewBox`，如果你想快速深入了解这个概念，请看文章末尾的附录，会有解读（有些朋友不感兴趣，所以没有直接写在正文）。
+
+通过这个 `createIcon` API，就很容易指定一套自己的 `Icon` 集合，例如可以找不同的各种 `svg` 图标网站，将自己觉得合适的图标放到 `createIcon` 中。
+
+## createIcon 实现
+
+这个组件的一些灵感来源于 ` chakra ui`,是国外一个很著名的组件库。
+
+<CodeBlock
+  code={`import React, { forwardRef } from 'react';
+import { Icon } from './icon';
+// type
+import type { IconProps } from './interface';
+ 
+interface CreateIconOptions {
+    /**
+    * If the has a single path, simply copy the path's \`d\` attribute
+    */
+    paths: React.ReactNode;
+    /**
+    * Default props automatically passed to the component; overridable
+    */
+    iconProps?: IconProps;
+    viewBox?: string;
+}
+ 
+export function createIcon(options: CreateIconOptions) {
+    const { paths, iconProps = {}, viewBox = '0 0 48 48' } = options
+    return forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+      <Icon ref={ref} viewBox={viewBox} {...iconProps} {...props}>
+        {paths}
+      </Icon>
+    ));
+}`}
+  language="jsx"
+/>
+
+代码中引用了 `Icon` 组件，我们后续说具体实现，目前我们主要看到的是， `createIcon` 主要提供了传入 `svg` 内容的 `paths`（本质上是插入到 `svg` 元素的子元素中）
+
+还有一个就是 `viewBox`,因为不同 `svg` 网站的图标 `viewBox` 经常不一致。最后 `iconProps` 我们在后续的 `Icon` 组件参数中说明。
+
+## Icon 组件
+
+`Icon` 组件内容不多，也很简单，我们来看看：
+
+<CodeBlock
+  code={`import React, { PropsWithChildren, forwardRef } from 'react';
+import { IconProps } from './interface';
+import { getSize } from './utils';
+ 
+const defaultProps = {
+    size: '1em',
+};
+ 
+export const Icon = forwardRef<SVGSVGElement, PropsWithChildren<IconProps>>((baseProps, ref) => {
+    const mergeProps = { ...defaultProps, ...baseProps };
+    const { className, size, style, children, useStrokeCurrentColor, useFillCurrentColor, ...rest } = mergeProps;
+    const [width, height] = getSize(size);
+    return (
+      <svg
+        ref={ref}
+        className={className}
+        width={width}
+        height={height}
+        style={style}
+        focusable="false"
+        stroke={useStrokeCurrentColor ? 'currentColor' : 'none'}
+        fill={useFillCurrentColor ? 'currentColor' : 'none'}
+        {...rest}
+      >
+        {children}
+      </svg>
+    );
+})`}
+  language="jsx"
+/>
+
+这里有两个细节，是需要注意的：
+
+1. `Icon` 组件的 `size` 默认值是 `1em`，这是为了方便使用 `font-size` 来控制图标大小。你要知道，`svg` 元素本身是不支持使用 `font-size` 来控制图标大小的，但是我们可以使用 `width` 和 `height` 来控制图标大小。
+   当我们将 `width` 和 `height` 都设置为 `1em` 时，图标就会根据 `font-size` 来改变大小(`em` 是 `css` 里的相对长度单位，它参考当前元素的 `font-size` 控制大小)。又因为 `font-size` 是可以继承的，所以我们可以在 `Icon` 组件的父元素中设置 `font-size`，来改变图标大小。
+
+2. `Icon` 组件的 `useStrokeCurrentColor` 和 `useFillCurrentColor` 这两个属性是为了方便使用 `currentColor` 来控制图标颜色，`currentColor` 关键字，让我们外部传入 `css` 颜色值，例如使用 `css` 颜色的关键字 `red` 就可以按照 `css` 的逻辑来改变颜色了。
+   再因为，`Icon` 往往有的需要 `线框描边`，不填充颜色，所以此时需要设置 `useStrokeCurrentColor` 为 `true`, 反之亦然。
+
+## 总结
+
+经过如此包装之后，我们使用的 `svg` 组件，就基本上将其转化为了普通的可以应用 `css` 的 `html` 元素，然后加上最终呈现形式是以 `语义化` 的组件形式。这似乎是一个比较好的 `Icon` 解决方案了。
+
+如果像更加高大上一些，例如自动化生成 `Icon` 组件，就需要额外的工作了。例如可以让你们的 `ui` 团队将设计的 `svg` 文件上传到一个后端的存储中（意思前端可以使用 `url` 访问到 `Icon` 资源），然后写一个服务，可以使用 `node.js` 部署，访问这个 `url` 会提取所有 `svg` 文件中你需要的内容。
+
+最终前端可以一键下载所有的 `Icon` 业务组件，或者封装成一个 `Icon` 库，直接更新到 `npm` 上，业务组件使用者自己引入或者升级。
+
+## 安装 Icon 组件
+
+<CodeBlock
+  code={`npm i @t-headless-ui/react
+yarn i @t-headless-ui/react
+pnpm i @t-headless-ui/react`}
+  language="bash"
+/>
+
+### 引入 Icon
+
+<CodeBlock code={`import { createIcon } from '@t-headless-ui/react';`} language="tsx" />
+
+### SVG viewBox
+
+`SVG` 本身是有自己的坐标系的。我们拿一个 `SVG` 代码举例。
+
+SVG 默认使用一个 二维笛卡尔坐标系。
+
+- 原点 (0,0) 在左上角：
+- x 轴：向右递增
+- y 轴：向下递增
+
+所有图形（`<rect>`、`<circle>`、`<path>` 等）的绘制，都是基于这个坐标系统进行的。
+
+如下示例，我们在 `svg` 中绘制一个 `40x40` 的矩形，矩形的左上角坐标是 `(50,50)`。
+
+<CoordinateExample />
+
+此时 `svg` 的 `viewBox` 是 `0 0 200 200`，和 `svg` 本身的宽高一致。你可以把 `viewBox` 看做是我们眼睛，
+`svg` 画布包含了所有的 `svg` 元素，但是我们看到的区域不一定非要把整个 `svg` 画布看完，我们可以只看一部分。
+
+这一部分就可以使用 `viewBox` 来实现。
+
+请看修改 `viewBox` 后的表现：
+
+<Coordinate2Example />
+
+比如我们还拿上面的例子来讲，我们把 `viewBox` 改为 `50 50 200 200`，也就是我们把视觉的起点移动到 `svg` 画布的 `(50,50)` 位置。
+
+这下是不是完全明白了 `viewBox` 是个啥了。`svg` 就是画布，但是画布我们还可以控制它的可见范围，`viewBox` 就是这个可见范围的矩形而已。

@@ -1,0 +1,39 @@
+.modal-alert {
+  display: grid;
+  gap: 24px;
+  overflow-y: auto;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  padding: 1.5rem; /* p-6 */
+  border-radius: 1rem;
+  border: 1px solid var(--border-color);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.05),
+    0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  max-width: 400px;
+}
+
+.modal-alert-container {
+  display: flex; /* flex */
+  flex-direction: column; /* flex-col */
+  text-align: left; /* text-center */
+  gap: 8px;
+}
+
+.modal-alert-title {
+  font-size: 1.125rem; /* text-lg → 18px (在默认16px根字体下) */
+  line-height: 1.75rem; /* 28px，对应 Tailwind 的行高 */
+  font-weight: 600; /* font-semibold */
+}
+
+.modal-alert-content {
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.25rem; /* 20px */
+  color: var(--text-color-400); /* 语义化的灰色 */
+}
+
+.modal-alert-footer {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: end;
+}

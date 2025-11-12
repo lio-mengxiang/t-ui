@@ -1,0 +1,72 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide } from '@/_components/typography';
+import { CodePreview } from '@/_components/code-preview';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { BasicExample, TailwindBasicExample, CssBasicExample } from './example';
+
+<H1 subheading="功能说明">Button 基础</H1>
+
+<ImageTypography src="/button/button.webp" fill alt="button" />
+
+## 基础使用
+
+T-UI 的 Button 只封装了 `onClick` 事件，即在 Button 是 `disabled` 或者 `loading` 状态时，不会触发传入 Button 的 `onClick` 事件。
+如下，可以看到 T-UI 的组件对于 Button 都不添加任何 `CSS`， 也就是它支持跟任何 CSS 框架配合使用，例如 `Less / Sass`, `Tailwindcss` 等等。
+下面分别会有配合 `Css` 和 `Tailwind CSS` 版本的 Button 组件 Demo。在后续章节中，也会详细介绍如何自定义自己组件库的生产环境可用的 Button 组件。
+
+注：以下 Button 除了没有任何样式，还传入了 `disabled` 和 `loading` 状态（loading 需要配合一个 loading icon 来展示 Button 正在等待的感觉，这里并没有封装此功能，后续【如何自定义 Button】章节会补充）。然后，
+点击 Button 控制台并不会打印任何内容，因为 `disabled` 和 `loading` 状态下，不会触发传入的 `onClick` 事件。
+
+<BasicExample />
+
+T-UI Button 可以传入所有 `button` 标签支持的属性，比如 `type`、`autofocus` 等。这也是 headless 组件的一种设计思想，就是在保留
+`button`、`div`、`form` 等原生标签基本功能的基础上，丰富更多的功能。有兴趣的同学可以看一下文章 《如何实现一个 headless》组件（`headless` 可以理解为无样式组件）。
+
+这也是我为什么放弃之前 `@mx-design/react` 的开发，专向新的 `ui` 库开发，因为类似 `ant-design`， `material-ui` 这类大而全的组件库，我相信绝大多数在复杂场景，尤其是商业项目的使用中，都会有自己的 UI 规范，
+在更改新 UI 时，首先修改样式极其痛苦，可维护性低。同时拓展 `javascript` 功能也很困难，因为需要操作的一些 `dom` 被封装了起来，外部很难直接访问。这促使了类似 `shadcn/ui` 这类的 headless 组件库流行，他们对于自定义 `css`, 拓展 `javascript` 功能也很容易。
+
+接下来我们实现一个简单版 Button 组件，主要是为了让大家入门如何使用 T-UI 的 Button:
+
+### Tailwind CSS 版本
+
+注1：我借助 `Tailwind CSS` 的色彩体系，配置出自己的亮色和暗色皮肤，所以一些 `CSS` 类名可能会和你使用的 `Tailwind CSS` 颜色名字不一致，你需要打开开发者工具查看具体颜色，如果你想更深入的了解 T-UI 的换肤方案，欢迎阅读《组件库架构设计 - 换肤方案篇》。
+
+注2：以下的 Button 只是非常简单的封装了一下，还有诸多状态没有考虑，会在后续自定义 Button 篇章详细介绍。
+
+<TailwindBasicExample />
+
+需要注意的是，你分别点击以上案例的两个按钮，当点击第一个按钮时，你可以在开发者工具的控制台看到打印日志，
+而点击第二个 `disabled` 状态的按钮是不会触发 `onClick` 事件的。
+
+### 非 Tailwind CSS 版本
+
+以下使用普通 `CSS` 来实现 Button 组件。`Less / Sass` 同理。为了外部可以控制 Button 的样式，我们使用 `CSS` 变量来定义部分的关键 Button 的样式。这也是你再使用非原子 `CSS` 时，推荐写组件的方法，使你的样式拓展性更强。
+
+<CssBasicExample />
+## 进阶封装
+
+实际上，上面的直接使用 T-UI 的 Button 组件，是远远无法覆盖 `material-ui`、`ant-design` 等组件库的 Button 的所有功能的。
+在查看这些知名的组件库 Button 文档，我列举了还需要实现的功能，如下（也列举了可以轻易用 CSS 实现的功能）：
+
+- group 按钮【轻易用 CSS 实现】
+- 单个图标的 Button【轻易用 CSS 实现】
+- loading 状态出现 loading 图标
+- 按钮尺寸【轻易用 CSS 实现】
+- 边框按钮、纯文字按钮【轻易用 CSS 实现】
+- 按钮状态，例如成功状态按钮【轻易用 CSS 实现，但需要结合组件库换肤方案一起实现】
+
+以上功能我们在接下来【如何自定义 Button】章节实现。
+
+## 附录
+
+### 安装 button
+
+<CodeBlock
+  code={`npm i @t-headless-ui/react
+yarn i @t-headless-ui/react
+pnpm i @t-headless-ui/react`}
+  language="bash"
+/>
+
+### 引入 button
+
+<CodeBlock code={`import { Button, ButtonGroup } from '@t-headless-ui/react';`} language="tsx" />

@@ -1,0 +1,298 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide } from '@/_components/typography';
+import { CodePreview } from '@/_components/code-preview';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+
+<H1 subheading="技术难点解析">我去！modal 组件这么难写你知道吗？</H1>
+
+<ImageTypography src="/modal/modal.webp" fill alt="button" />
+
+## 前言
+
+很多人对于 `modal` 组件的第一印象就是一个弹框居中，然后一个黑色蒙层 `fixed` 布局放在后面，感觉很简单啊，但是深入研究各个组件库的 `modal` 源码，发现技术细节有很多，不信你就接着看！保证没做过 `modal` 组件的同学不知道。
+我简单列一下技术难点,你可以测试一下你用的组件库是否注意这些细节了，欢迎留言讨论！
+
+## 如何处理滚动条
+
+### 为什么要处理滚动条样式？
+
+首先，一般 `modal` 框弹出的时候，我们是不想页面还能滚动的，这个如何处理？一般情况我们会给 `body`（此时往往会给 modal 设置 `position: fixed`） 或者是你自定义的挂载容器（此时往往会给 modal 设置 `position: absolute`）。
+
+设置 `overflow: hidden` 样式。但此时又出现一个问题，如果之前有滚动条，`overflow: hidden` 会导致滚动条消失，滚动条原本就占了一定宽度的，当消失的瞬间，宽度消失，那么意味着容器就会占据这部分消失的空间。
+所以布局上就会有 `抖一下` 的感觉。为了不让用户感知到这个过程，我们需要在 `modal` 弹出的时候，给 `body` 或者是你自定义的挂载容器的 `style` `width` 值需要减去滚动条的宽度。
+
+## 如何解决嵌套 modal
+
+指的是是点击按钮弹出 `modal` 弹窗，弹窗里又有一个按钮，点击之后再之前的基础上又有一个 `modal`，以此类推，嵌套的 `modal` 弹窗。
+
+### 为什么要处理嵌套 modal？
+
+首先数据结构的设计上，最后天然支持多个 `modal` 弹窗，例如设计为数组，但还有一个问题，就是刚才我们说了，弹出 `modal` 会给容器处理添加 `overflow: hidden` 样式，以及更改 `width` 值，那么什么时候恢复样式呢？是不是还不能是关闭 `modal` 的时候，
+因为有可能是有多个 `modal`，只有关闭最后一个的时候，才需要恢复容器原先的样式。
+
+### 解决方案
+
+这里的解决方案一般有两种，一种是例如 `material ui`，`chakra-ui`, 小米公司的 `modal` 组件，都是用一个数据结构保存所有 `modal`，然后每次关闭一个 `modal`，就去所有 `modal` 里找是否是最后一个 `modal`，如果是最后一个才恢复 `body` 原本的 `style`。
+
+第二种是字节 `arco design` 的处理方法，还是比较巧妙的，我的组件库也学习了这种方式。
+
+请看下面的 `useOverflowHidden`, 我们详细的看下如何处理隐藏 `body` 滚动条和恢复的时机和具体方法。
+
+<CodeBlock
+  code={`import { useEffect, useRef } from "react";
+import { resetContainerStyle, setContainerStyle } from "../utils";
+ 
+export function useOverflowHidden(
+    getContainer: () => HTMLElement,
+    hidden: boolean
+) {
+  const needResetContainerStyle = useRef < boolean > false;
+  const originContainerStyle = useRef < Partial < CSSStyleDeclaration >> {};
+ 
+  useEffect(() => {
+    hidden
+      ? setContainerStyle({
+          needResetContainerStyle,
+          originContainerStyle,
+          getContainer,
+        })
+      : resetContainerStyle({
+          needResetContainerStyle,
+          originContainerStyle,
+          getContainer,
+        });
+    return () => {
+      resetContainerStyle({
+        needResetContainerStyle,
+        originContainerStyle,
+        getContainer,
+      });
+    };
+  }, [getContainer, hidden]);
+}`}
+  language="jsx"
+/>
+
+- `getContainer` 代码要挂载到 `html` 文档流哪个 `dom` 中，我们默认是 `body` 元素中
+
+- `hidden` 是指是否弹框的时候，我们需要黑色蒙层，也就是有时候我们传参不需要这个蒙层，也就意味着我们不想让 `body` 滚动条消失，所以我们在看到 `modal` 弹框的同时，也能滚动后面的页面，当然，我们这里大家可以看为是 `true`，我们是需要黑色蒙层的
+
+- `needResetContainerStyle` 用来记录是否重置 `body` 的 `style` 样式，只有调用 `setContainerStyle` 方法后，并且是第一个触发的 `modal` 框，这个值才会是 `true`
+
+我们马上看下 `setContainerStyle`，也就是设置 `body` 滚动条隐藏的函数：
+
+<CodeBlock
+  code={`import { getScrollBarWidth } from "./getScrollBarWidth";
+ 
+/**
+ * Hides the container's scroll bar
+ */
+export const setContainerStyle = ({
+    getContainer,
+    needResetContainerStyle,
+    originContainerStyle,
+}) => {
+    const container = getContainer();
+    if (container && container.style.overflow !== "hidden") {
+      /**
+      * @zh 记录container的style属性, 因为后续要将container.style.overflow设为hidden
+      * @en Record the container's style property, because I'll set container.style.overflow to hidden later
+      */
+      const originStyle = container.style;
+  
+      /**
+      * @zh 记录是否 container.style.overflow 被覆盖为hidden
+      * @en Note whether container.style.overflow is overwritten as hidden
+      */
+      needResetContainerStyle.current = true;
+  
+      const containerScrollBarWidth = getScrollBarWidth(container);
+      if (containerScrollBarWidth) {
+        originContainerStyle.current.width = originStyle.width;
+        container.style.width = \`calc(\${
+          container.style.width || "100%"
+        } - \${containerScrollBarWidth}px)\`;
+      }
+  
+      /**
+      * @zh 设置container的overflow为hidden
+      * @en Set container overflow to hidden
+      */
+      originContainerStyle.current.overflow = originStyle.overflow;
+      container.style.overflow = "hidden";
+    }
+};`}
+  language="jsx"
+/>
+
+上面的重点有两部分
+
+- 需要将 `container` (默认是 `body` 元素) 的 `style.overflow` 设置为 `hidden`。`needResetContainerStyle` 也记录下，已经设置过 `container` 的 `style.overflow` 样式了用来后续还原样式。
+- 需要记录下 `container` 的 `width` 设置的值减去滚动条的宽度。因为如果不减去滚动条宽度，那么当 `container` 的 `width` 减小了，视觉上会有抖动，这是个很细的交互细节。
+
+## 如何锁定焦点
+
+### 什么是锁定焦点
+
+当你打开 `modal` 的时候，在键盘上按下 `tab` 键，会出现 `button` 元素 `focus` 的状态。
+
+<ImageTypography src="/modal/focus.jpg" fill alt="modal focus" />
+
+上图所示的 `focus` 状态，会在你按下回车键的时候触发这个按钮的 `onClick` 事件。而且你一直按 `Tab` 键，焦点只会在当前 `Modal` 框里，不会移除到 `Modal` 框外，这种 `focus` 状态锁定技术是需要解决的。
+并且有些同学可能不了解 `tabIndex`,有兴趣的同学可以搜索一下，通过 `tabIndex`,我们可以让关闭按钮，也就是右上角的 `x` 也能获取焦点，我的组件库并没有处理这个细节，是因为按 `ESC` 键就可以关闭弹窗，这样做我感觉多此一举。
+
+在网页中，模态框（Modal）、弹出层（Dialog）等组件出现时，通常希望用户的键盘焦点始终被限制在这个弹出层内部，防止按下 Tab 键后焦点跳出模态框、误操作到页面其他区域。这种机制被称为 “焦点陷阱（Focus Trap）”。
+
+### 解决方案
+
+我们会用一段简单的代码来实现这个功能。后面会有详细的讲解。
+
+<CodeBlock
+  code={`function createFocusTrap(element) {
+  const focusableElements = Array.from(
+    element.querySelectorAll(
+      'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    )
+  );
+ 
+  let firstFocusableElement = focusableElements[0];
+  let lastFocusableElement = focusableElements[focusableElements.length - 1];
+ 
+  function handleKeyDown(event) {
+    if (event.key === "Tab") {
+      if (event.shiftKey && document.activeElement === firstFocusableElement) {
+        event.preventDefault();
+        lastFocusableElement.focus();
+      } else if (
+        !event.shiftKey &&
+        document.activeElement === lastFocusableElement
+      ) {
+        event.preventDefault();
+        firstFocusableElement.focus();
+      }
+    }
+  }
+ 
+  element.addEventListener("keydown", handleKeyDown);
+  element.focus();
+}`}
+  language="jsx"
+/>
+
+这段代码的核心目标，就是在指定的容器元素中创建这样一个焦点陷阱，让用户在使用键盘 `Tab` 或 `Shift + Tab` 切换焦点时，始终在容器内循环切换焦点。
+
+核心分为三部分：
+
+- 找到容器内所有可聚焦的元素
+  通过选择器筛选出 `a`、`button`、`input`、`select`、`textarea` 等常见可聚焦元素，以及显式设置了 `tabindex` 的元素，并将它们存入数组中，方便后续处理。
+
+- 记录首尾焦点节点
+  取出第一个和最后一个可聚焦元素，分别用于判断焦点循环的“边界条件”。
+
+- 拦截键盘事件，实现循环焦点
+  监听容器的 `keydown` 事件。当用户按下 `Tab` 键：
+  如果是 `Shift + Tab` 且当前焦点在第一个元素上，就阻止默认行为，让焦点跳到最后一个元素；
+  如果是普通 `Tab` 且当前焦点在最后一个元素上，就跳回第一个元素。
+  这样就实现了焦点在容器内部首尾循环，形成“焦点陷阱”。
+
+## 难点：支持函数调用
+
+很多弹窗类的组件，在实际业务中，很多都是点击事件触发，或者某个用户触发交互事件触发的，而这些交互事件往往是回调函数的形式存在。
+那么这些弹窗如果能是函数调用的方式弹出，就会非常方便。例如：
+
+- Modal.add 增加 `modal` 组件
+- Modal.remove 关闭 `modal` 组件
+- Modal.update 更新 `modal` 组件
+- Modal.removeAll 关闭所有 `modal` 组件
+
+也就是再也不用如下的调用方式了：
+
+<CodeBlock code={`<Modal />`} language="jsx" />
+
+而是：
+
+<CodeBlock code={`Modal.add({ ...xxx参数 });`} language="jsx" />
+
+## 支持自定义 modal
+
+我们最终支持通过 `content` 属性传入自定义的 `modal` 组件。例如：
+
+<CodeBlock code={`Modal.add({ content: xx传入自定义的 Modal 组件 });`} language="jsx" />
+
+这时候就有问题了，我们的 `Modal.add` 如何给这个自定义 `modal` 组件传入参数呢？然后 `Modal.update` 更新参数的时候，还能自动更新传入到 `content` 组件中？
+我采取了一个比较简单的方式，借助 `React.cloneElement` 方法。类似于：
+
+<CodeBlock code={`React.cloneElement(content, { contentProps });`} language="jsx" />
+
+也就是在 `Modal.add` 方法中传入了 `contentProps` 参数会自动透传给 `content` 组件。从而达到函数调用的方式传入参数的效果。
+
+## 其它技术难点
+
+其实还有很多细节，例如：
+
+- 如何设计第一次获得焦点的元素。（有些表单想打开的时候，某个元素获得焦点）
+- 嵌套 `modal` 设计，例如：一个 `modal` 组件中再嵌套一个 `modal` 组件，这个时候我们需要注意什么问题？
+- 如何处理 `modal` 组件的关闭事件。（例如：点击关闭按钮、点击蒙层、按下 `ESC` 键）
+- 等等
+
+所有关于 `modal` 组件的技术难点，欢迎加入到我们的组件库交流群中。有什么疑问都可以在群里讨论，并且会有视频直播每个组件的实现。
+
+更重要的是,我可以帮助你增加一些简历中的核心项目，例如我们这个组件库级别的。无论你是面试初级开发还是到前端技术专家，都会帮助你在面试中脱颖而出。
+
+## 附录
+
+### 安装 modal
+
+<CodeBlock
+  code={`npm i @t-headless-ui/react
+yarn i @t-headless-ui/react
+pnpm i @t-headless-ui/react`}
+  language="bash"
+/>
+
+### 引入和使用 modal
+
+`modal` 组件跟别的组件不太一样，首先需要你调用创建一个 `store` 实例：
+
+<CodeBlock
+  code={`import { createModalStore } from '@t-headless-ui/react';
+const modalStore = createModalStore()
+`}
+  language="tsx"
+/>
+
+目的是用这个 `store` 来管理 `modal` 组件的状态，例如添加、删除、更新 `modal` 组件的状态。
+
+然后引入 `ModalProvider` 组件，将 `store` 实例作为 `prop` 传递给 `ModalProvider` 组件。`ModalProvider` 组件一般放在你的项目的入口文件中，
+例如 `App.tsx` 或者 `App.jsx` 文件。目的是初始化 `Modal` 组件（其背后默认会在 `document.body` 创建一个可以出现 `modal` 信息框），当然我们也支持自定义插入
+到某个 `dom` 元素中，一般情况使用默认的即可。
+
+<CodeBlock
+  code={`import { ModalProvider } from '@t-headless-ui/react';
+<ModalProvider store={modalStore} />`}
+  language="tsx"
+/>
+
+`ModalProvider` 支持传入一些全局参数，包括：
+
+- `maskCls`：指定 `modal` 组件蒙层的类名。
+- `maskStyle`：指定 `modal` 组件蒙层的样式。
+- `focusLock`: 是否开启焦点锁定。默认是 `true`。
+
+以上参数也可以在使用 `Modal.add` 方法时单独传入，会覆盖 `ModalProvider` 组件的全局参数。
+
+最后，就可以引入 `modalStore` 开始调用了：
+
+<CodeBlock
+  code={`<button
+  onClick={() =>
+    modalStore.add({
+      content: xxx 自己封装的 Modal 组件,
+    })
+  }
+>
+  open modal
+</button>`}
+  language="tsx"
+/>
+
+因为我们的 `modal` 组件是一个 `headless` 组件，所以弹出的内容完全是自定义的，在 `Alert` 组件中，我们提供了一个简单的样例，大家可以去参考一下。

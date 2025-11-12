@@ -1,0 +1,142 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import {
+  BasicExample,
+  TransposeExample,
+  PositionExample,
+  HolyGrailExample,
+  AreaExample,
+  JustifyExample,
+  AlignExample,
+  Responsive1Example,
+  Responsive2Example,
+} from './example';
+
+{/* ### 基本用法 */}
+
+<H3Sub
+  sub={
+    <>
+      <Code>columns</Code> 表示容器分为多少列, <Code>width</Code> 表示子元素占据多少列，<Code>middle</Code> 表示子元素垂直居中，
+      <Code>center</Code> 表示子元素水平居中
+    </>
+  }
+>
+  {'基本用法'}
+</H3Sub>
+<BasicExample />
+
+{/* ### 子元素从上到下排列 */}
+
+<H3Sub
+  sub={
+    <>
+      使用 <Code>flow="column"</Code> 可以使子元素从上到下排列（默认从左到右）. 这是 <Code>css</Code> 属性 <Code>grid-auto-flow</Code>
+      的映射
+    </>
+  }
+>
+  {'子元素从上到下排列'}
+</H3Sub>
+<TransposeExample />
+
+{/* ### 位置偏移 */}
+
+<H3Sub
+  sub={
+    <>
+      您可以使用<Code>left</Code>和<Code>top</Code> 属性也设置偏移量，对应 <Code>CSS</Code>属性中的<Code>grid-column-start</Code>和
+      <Code>grid-row-start</Code>
+    </>
+  }
+>
+  {'位置偏移'}
+</H3Sub>
+<PositionExample />
+
+{/* ### 圣杯布局 */}
+
+<H3Sub
+  sub={
+    <>
+      我们可以完全自定义<Code>columns</Code>和<Code>rows</Code>，实现不同的布局效果。其中 <Code>1fr</Code> 表示占据剩余空间，
+      <Code>minmax(45px,auto)</Code> 表示子元素最小高度为 45px，最大高度为元素本身高度（元素内容可能会撑开高度）
+    </>
+  }
+>
+  {'圣杯布局'}
+</H3Sub>
+<HolyGrailExample />
+
+{/* ### Areas 关键字 */}
+
+<H3Sub
+  sub={
+    <>
+      之前的圣杯布局还可以使用 <Code>areas</Code> 属性实现，我们可以自定义布局区域。这意味着我们可以不使用 <Code>width</Code>和
+      <Code>height</Code> 在 <Code>Cell</Code> 组件上，取而代之的是 <Code>area</Code> 属性，对应 <Code>CSS</Code> 中的{' '}
+      <Code>grid-area</Code>。
+    </>
+  }
+>
+  {'Areas 关键字'}
+</H3Sub>
+<AreaExample />
+
+{/* ### 水平对齐 */}
+
+<H3Sub
+  sub={
+    <>
+      可以使用 <Code>justifyContent</Code> 来修改行的水平对齐。
+    </>
+  }
+>
+  {'水平对齐'}
+</H3Sub>
+<JustifyExample />
+
+{/* ### 垂直对齐 */}
+
+<H3Sub
+  sub={
+    <>
+      可以使用 <Code>alignContent</Code> 来修改行的垂直对齐。
+    </>
+  }
+>
+  {'垂直对齐'}
+</H3Sub>
+<AlignExample />
+
+{/* ### 响应式流动布局 */}
+
+<H3Sub
+  sub={
+    <>
+      <Code>CSS</Code> 中的 <Code>grid</Code> 布局本身就是支持响应式的。例如使用
+      <Code>grid-template-rows: repeat(auto-fit, minmax(N, 1fr))</Code> 表示每列元素 最小宽度为 N，最大宽度为 <Code>1fr</Code>。
+      <Code>1fr</Code> 指的是剩余空间的一等分。如果 <Code>1fr</Code> 小于 N，那么元素就会换行。
+    </>
+  }
+>
+  {'响应式流动布局'}
+</H3Sub>
+
+<Responsive1Example />
+
+{/* ### 响应式断点布局 */}
+
+<H3Sub
+  sub={
+    <>
+      <Code>CSS</Code> 中的 <Code>grid</Code> 布局本身就是支持响应式的。例如使用
+      <Code>grid-template-rows: repeat(auto-fit, minmax(N, 1fr))</Code> 表示每列元素 最小宽度为 N，最大宽度为 <Code>1fr</Code>。
+      <Code>1fr</Code> 指的是剩余空间的一等分。如果 <Code>1fr</Code> 小于 N，那么元素就会换行。
+    </>
+  }
+>
+  {'响应式断点布局'}
+</H3Sub>
+
+<Responsive2Example />

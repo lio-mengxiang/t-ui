@@ -1,0 +1,42 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { BasicExample, FaceExample, ParticleExample } from './example';
+
+{/* ### 水波效果 */}
+
+<H3Sub
+  sub={
+    <>
+      是一种非常常见的<code>按钮</code>点击效果
+    </>
+  }
+>
+  {'水波效果'}
+</H3Sub>
+<BasicExample />
+
+{/* ### 粒子效果 */}
+
+<H3Sub
+  sub={
+    <>
+      点击<code>按钮</code>会出现粒子
+    </>
+  }
+>
+  {'粒子效果'}
+</H3Sub>
+<ParticleExample />
+
+{/* ### 抛物线效果 */}
+
+<H3Sub
+  sub={
+    <>
+      一种有趣的 <code>增强交互</code>的效果
+    </>
+  }
+>
+  {'抛物线效果'}
+</H3Sub>
+<FaceExample />

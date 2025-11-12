@@ -1,0 +1,156 @@
+import { CodePreview } from '@/_components/code-preview';
+import React from 'react';
+import './alert.css';
+
+const code = `const Alert = ({ title, message, type = 'default', icon, onClose }) => {
+  return (
+    <div
+      className={cs('alert', {
+        'alert-default': type === 'default',
+        'alert-success': type === 'success',
+        'alert-warning': type === 'warning',
+        'alert-error': type === 'error',
+      })}
+    >
+      <div className="alert-content-wrapper">
+        <span
+          className={cs('alert-icon', {
+            'alert-icon-default': type === 'default',
+            'alert-icon-success': type === 'success',
+            'alert-icon-warning': type === 'warning',
+            'alert-icon-error': type === 'error',
+            'alert-icon-only-title': !message,
+          })}
+        >
+          {icon}
+          {type === 'default' && !icon && <IconInfoLine />}
+          {type === 'success' && !icon && <IconSuccessLine />}
+          {type === 'warning' && !icon && <IconWarningLine />}
+          {type === 'error' && !icon && <IconErrorLine />}
+        </span>
+        <div className="alert-content">
+          <div>{title}</div>
+          <p>{message}</p>
+        </div>
+      </div>
+      <div>
+        <button className="alert-close" onClick={onClose}>
+          &times;
+        </button>
+      </div>
+    </div>
+  );
+};
+
+function App() {
+  return (
+    <div className="flex flex-col gap-y-4">
+      <Alert title="Alert" message="This is an alert message" />
+      <Alert title="Alert" message="This is an alert message" type="success" />
+      <Alert title="Alert" message="This is an alert message" type="warning" />
+      <Alert title="Alert" message="This is an alert message" type="error" />
+      <Alert title="Alert" />
+      <Alert title="Alert" type="success" />
+      <Alert title="Alert" type="warning" />
+      <Alert title="Alert" type="error" />
+    </div>
+  );
+}`;
+
+const cssCode = `.alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background: #fff;
+  border-radius: 10px;
+  width: 320px;
+}
+
+.alert-default {
+  border: 1px solid #e5e5e5;
+}
+
+.alert-success {
+  border: 1px solid #00a63e;
+}
+
+.alert-warning {
+  border: 1px solid #f59e0b;
+}
+
+.alert-error {
+  border: 1px solid #e53e3e;
+}
+
+.alert-content-wrapper {
+  display: flex;
+  align-items: start;
+  gap: 8px;
+}
+
+.alert-icon {
+  font-size: 1.25rem;
+  margin-top: 4px;
+}
+
+.alert-icon-only-title {
+  margin-top: 2px;
+}
+
+.alert-icon-default {
+  color: #737373;
+}
+
+.alert-icon-success {
+  color: #00a63e;
+}
+
+.alert-icon-warning {
+  color: #f59e0b;
+}
+
+.alert-icon-error {
+  color: #e53e3e;
+}
+
+.alert-content {
+  flex: 1;
+}
+
+.alert-content div {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #111827;
+}
+
+.alert-content p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #737373;
+}
+
+.alert-close {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 8px;
+}
+
+.alert-close:hover {
+  color: #737373;
+}
+
+@media screen and (max-width: 768px) {
+  .alert {
+    width: 100%;
+  }
+}`;
+
+export function BasicExample() {
+  return <CodePreview code={code} cssCode={cssCode} />;
+}

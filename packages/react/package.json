@@ -1,0 +1,35 @@
+{
+  "name": "@t-headless-ui/react",
+  "version": "1.1.1",
+  "description": "T-UI React.",
+  "keywords": [
+    "ui",
+    "ui-components",
+    "react"
+  ],
+  "sideEffects": false,
+  "author": "liomeng<2298613245@qq.com>",
+  "license": "Apache-2.0",
+  "types": "./dist/types/index.d.ts",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/es/index.mjs",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build"
+  },
+  "peerDependencies": {
+    "react": ">=18.2.0",
+    "react-dom": ">=18.2.0",
+    "motion": ">=12.9.2"
+  },
+  "dependencies": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19"
+  }
+}

@@ -1,0 +1,319 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide } from '@/_components/typography';
+import { CodePreview } from '@/_components/code-preview';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+
+<H1 subheading="Input 组件难点解析">探索 React 中文输入下的惊人问题，你绝对不能错过！</H1>
+
+<ImageTypography src="/input/input.webp" fill alt="input" />
+
+## 前言
+
+`Input` 组件大家都用过，是吧，但是你有没有想过这样一个场景，如下图，我正在搜索数据
+
+同时组件上注册了 `onChange` 事件，然后边输入，底下会显示你搜索相关的内容，
+
+<ImageTypography src="/input/example1.webp" fill alt="input" imageClassName="object-contain" />
+
+但是有一个问题，输入中文的时候，比如你输入三国的 `三` 字，要先输入 `san` 然后才出现汉字 `三`
+
+<ImageTypography
+  src="/input/example2.webp"
+  width={400}
+  height={200}
+  alt="input"
+  imageClassName="object-contain"
+  containerClassName="h-[200px]"
+/>
+
+可问题来了，`onChange` 事件监听的是 `san`，只要 `onChange` 事件触发，就会开始向后端请求数据，那么输入 `san` 意味着，在 `s`, `sa` 和 `san` 的时候，分别发了三次请求。
+其实我们根本不想这样，我们想的是等中文显示在输入框，也就是输入完 `三` 这个字的时候才搜索。加上请求后端接口本身就是异步的，意味着 `s`, `sa` 和 `san` 三个请求发出去，返回的顺序也不一定，所以这是一个很严重的问题。
+异步问题我们暂且不谈，一般用 `debounce` 去解决，这种方式不是治本的，我建议最好上 `rxjs`(或者自己封装一个能取消之前请求操作的工具函数)来从根上解决这个问题。
+
+## 解决方案
+
+这种问题在英文输入法是没有任务问题的，所以参考国外的组件库是不行的，拿国内来说
+
+- 阿里的 `ant design`、字节的 `semi design` 是完全不管这个问题的，所以你在远程搜索的时候，交互很糟糕
+- 腾讯的 `tdesign` 处理了此问题，但在非 `chrome` 浏览器下，会触发两次 `onChange` ,也就是中文输入会执行两次远程搜索，我觉得这个体验也不好，但起码用户侧能轻松解决，就是对比两次搜索值是否相同，不同才去搜索
+- 字节 `arco design` 完美解决这个问题
+
+现在我们把这个问题的解决思路先描述一下。这里涉及到两个事件 `Compositionstart` 和 `Compositionend` 事件。
+
+## Composition 事件
+
+我们主要借助 `Composition` 事件中的 `compositionstart` 和 `compositionend` 事件来解决这个问题。
+
+`compositionstart` 事件在用户开始进行非直接输入的时候触发（非直接输入就是上面提到的 `san` 这个过程），而在非直接输入结束，也即用户点选候选词或者点击 `选定` 按钮之后，比如按 `回车键`，会触发 `compositionend` 事件。
+举个例子，还是上面输入三这个字的过程，当你输入 `s` 的时候，已经打开了中文输入法，此时 `compositionstart` 事件触发了，当你输入完三并且确认的时候，`compositionend`事件触发。
+还有一个`compositionupdate`事件， 此事件触发于字符被输入到一段文字的时候，如在用户开始输入拼音到确定结束的过程都会触发该事件。
+
+所以说`compositionstart`与`compositionend`都只会会被触发一次，而`compositionupdate`则是有可能多次触发。
+
+## 受控和非受控组件
+
+讲后面的知识点之前，我们需要铺垫一个基础知识，就是了解什么是 `受控` 和 `非受控组件`。我们就那 `input` 组件举例。
+
+### 受控组件
+
+受控组件的值是由 `React` 来管理的，每次输入触发 `onChange` 事件。
+
+<CodeBlock
+  code={`function ControlledInput() {
+    const [value, setValue] = useState('');
+  
+    return (
+      <input
+        value={value}                      // React 通过 state 控制值
+        onChange={(e) => setValue(e.target.value)} // 每次输入时更新 state
+      />
+    );
+}`}
+  language="jsx"
+/>
+
+特点：
+
+- `value` 完全由 `React 状态驱动`。
+- 任何用户输入都会触发 `onChange` 事件，然后更新 `state`。
+- React 再通过 `value={state}` 渲染出新值。
+
+注意：
+
+- 如果设置了 `value` 却 没有 `onChange`，React 会发警告。
+- 一旦组件是受控的，就不能再变回非受控（反之亦然）。
+
+### 非受控组件
+
+受控组件的值是由 `DOM` 来管理的，使用 `defaultValue` 初始化，通过 `ref` 读取值。
+
+<CodeBlock
+  code={`function UncontrolledInput() {
+    const inputRef = useRef();
+  
+    const handleSubmit = () => {
+      alert(inputRef.current.value); // 从 DOM 读取值
+    };
+  
+    return (
+      <>
+        <input defaultValue="hello" ref={inputRef} />
+        <button onClick={handleSubmit}>提交</button>
+      </>
+    );
+}`}
+  language="jsx"
+/>
+特点:
+
+- 使用 `defaultValue` 设定初始值。
+- 输入变化由 `DOM` 自己维护，`React` 不干涉。
+- 用 `ref` 访问当前输入值
+
+但这里因为我们是想自己控制是否触发 `onChange` 事件， 在非受控状态是无法做到的，所以我们内部的 `input` 组件其实最终无论外界是用受控还是非受控的方式，我们都转化为了受控组件。
+
+## 基本解决思路
+
+以利用`CompositionStart`作为一个信号，如果正在输入中文，`change`事件中的代码就先不要运行，等`compositionend`触发时，接着的`change`事件才可以运行其中的代码。
+
+示例代码如下：
+
+首先 `Input` 组件如下：
+
+<CodeBlock
+  code={`<input
+    value={innerValue}
+    onCompositionStart={handleCompositionStart}
+    onCompositionEnd={handleCompositionEnd}
+    onChange={handleChange}
+/>`}
+  language="jsx"
+/>
+
+然后我们看下`value` 属性的`innerValue` 是什么。
+
+<CodeBlock
+  code={`// 用来记录此时是否Compositionstart事件触发了，如果触发就置为true
+// Compositionend结束就置为false
+const composingRef = useRef(false);
+ 
+const [composingValue, setComposingValue] = useState<string>('');
+// 如果启动了中文输入法，那么 innerValue 就是 composingValue
+// composingValue 就是中文输入的时候比如 “三国”，你输入从 “s” 到 “sanguo”，此时 innerValue 都是 composingValue
+// 除了中文输入法外，innerValue 都是 value
+const innerValue = composingRef.current ? composingValue : value ?? '';`}
+  language="javascript"
+/>
+
+上面可以看到 `innerValue` 是最终渲染给 `input` 框的 `value`，用户一般通过 `onChange` 事件获取值，所以我们在中文输入的时候，只要不触发 `onChange` 事件，是不是就好了！
+
+<CodeBlock
+  code={`// 开始输入中文的时候把 composingRef.current 置为 true
+  function handleCompositionStart(e: React.CompositionEvent<HTMLInputElement>) {
+      composingRef.current = true;
+      const {
+        currentTarget: { value },
+      } = e;
+    }
+    // 中文输入完毕，把 composingRef.current 置为 false，并把此时输入完的值给 handleChange（handleChange 会触发 onChange）
+    function handleCompositionEnd(e: React.CompositionEvent<HTMLInputElement>) {
+      if (composingRef.current) {
+        composingRef.current = false;
+        handleChange(e);
+      }
+    }
+ 
+ function handleChange(e: React.ChangeEvent<HTMLInputElement> | React.CompositionEvent<HTMLInputElement>) {
+      let { value: newStr } = e.currentTarget;
+      // 当中文输入的时候，不触发 onChange 事件，触发 setComposingValue 只是为了让输入框同步你输入的 text
+      if (composingRef.current) {
+        setComposingValue(newStr);
+      } else {
+        // 完成中文输入时同步一次 composingValue
+        setComposingValue(newStr);
+        // 中文输入完毕，此时触发 onChange
+        onChange(newStr, { e });
+      }
+    }
+`}
+  language="javascript"
+/>
+
+## 你以为就解决了？ NO！
+
+其他浏览器不会有问题，但谷歌浏览器却不行。这里要注意的是谷歌浏览器跟其他浏览器的执行顺序不同：
+
+- 谷歌浏览器：`compositionstart` -> `onChange` -> `compositionend`
+- 其他浏览器： `compositionstart` -> `compositionend` -> `onChange`
+
+所以上述代码运行在谷歌浏览器的话，会有什么问题呢？一开始中文输入我们就将 `composingRef.current` 设置为 `true`，最后一步 `compositionend` 方法我们才将 `composingRef.current` 恢复为 false,而 `onChange` 已经执行完了， 按这个逻辑中文输入法打字都改不了 input 的 value 值。
+所以有的同学就会说，那么就专门对谷歌浏览器做一次处理就好了，例如判断是否为谷歌浏览器，在 `compositionend` 方法最后再执行一次 `onChange` 方法
+
+## 还没解决？
+
+我们之前说了，要把 `input` 的受控和非受控都内部都转为 `受控的形式`，所以外部不传 `value` 的时候，我们依然要在内部转化为 `value` 属性的值。怎么做呢，其实就是拦截 `onChange` 事件，我们用自己的 `setState` 来更新 `value` 属性的值。
+
+<CodeBlock
+  code={`const [value, setValue]= useState(props.value)
+  const onChange = (value, e) => {
+    if (!('value' in props)) {
+      setValue(value);
+    }
+    props.onChange?.(value, e);
+  };
+  <input onChange={onChange}>
+`}
+  language="jsx"
+/>
+
+## 好像探讨结束了？no!
+
+最后一个边界 `case`，很烦人，比如我们还是最开始的案例，输了`san`。
+
+此时，如果我们按回车会触发键盘的`Enter事件`，因为一般情况`input`组件都支持`Enter`事件处理函数作为`props`传递给`input`
+问题来了，这种外界传入的`Enter`事件处理函数的目的一般都是比如校验`input`框的值，比如格式化`input`框的值，但是此时我们中文输入法里，这个`Enter`只是想结束输入，而不是想校验`input`框的值！
+所以我们还要劫持`onKeyDown`事件，处理一下！
+
+## 最后
+
+文末我会把 `arco design` 封装的 `useComposition`函数分享会出来，有英文注释，很简单的英文。
+然后我们再解决一个文章开始说的问题，为什么腾讯的 `Tdesign` 在中文输入法下，会造成两次`onChange`, `arco design` 就能解决呢？
+其实很简单，答案在以下代码的 `32` 行。也就是我们每次 `onChange` 刷新值的时候，要做一个判断，如果 `input` 的框里新的值跟旧值一样，那么就不会触发 `onChange` 事件，这就让虽然触发两次 `onChange`，但是由于第二次 `onChange` 的值跟第一次一样，所以第二次 `onChange` 就被拒绝了。
+
+`useComposition` 完整代码如下(收藏代码吧吧，很少有库把这个问题处理的很好的):
+
+<CodeBlock
+  code={`import { ChangeEventHandler, CompositionEventHandler, KeyboardEventHandler, useRef, useState } from 'react';
+import { InputProps, TextAreaProps } from '../interface';
+ 
+interface useCompositionProps {
+    value: string;
+    maxLength: number;
+    onChange: InputProps['onChange'];
+    onKeyDown: InputProps['onKeyDown'] | TextAreaProps['onKeyDown'];
+    onPressEnter: InputProps['onPressEnter'];
+    normalizeHandler?: (type: InputProps['normalizeTrigger'][number]) => InputProps['normalize'];
+}
+ 
+/**
+ * Handle input text like Chinese
+ * chrome： compositionstart -> onChange -> compositionend
+ * other browser: compositionstart -> compositionend -> onChange
+ */
+export function useComposition({ value, maxLength, onChange, onKeyDown, onPressEnter, normalizeHandler }: useCompositionProps): {
+    compositionValue: string;
+    triggerValueChange: typeof onChange;
+    handleCompositionStart: CompositionEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+    handleCompositionEnd: CompositionEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+    handleValueChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+    handleKeyDown: KeyboardEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+} {
+    const refIsComposition = useRef(false);
+    const [compositionValue, setCompositionValue] = useState('');
+  
+    const triggerValueChange: typeof onChange = (newValue, e) => {
+      if (
+        onChange &&
+        // Prevents onchange from being triggered twice
+        newValue !== value &&
+        (maxLength === undefined || newValue.length <= maxLength)
+      ) {
+        onChange(newValue, e);
+      }
+    };
+  
+    return {
+      compositionValue,
+      triggerValueChange,
+      handleCompositionStart: (e: any) => {
+        refIsComposition.current = true;
+      },
+      handleCompositionEnd: (e: any) => {
+        setCompositionValue(undefined);
+        triggerValueChange(e.target.value, e);
+      },
+      handleValueChange: (e: any) => {
+        const newValue = e.target.value;
+        if (!refIsComposition.current) {
+          // if e.type is compositionend event, the following content will trigger
+          compositionValue && setCompositionValue(undefined);
+          triggerValueChange(newValue, e);
+        } else {
+          refIsComposition.current = false;
+          setCompositionValue(newValue);
+        }
+      },
+      handleKeyDown: (e: any) => {
+        const keyCode = e.key;
+        if (!refIsComposition.current) {
+          onKeyDown?.(e);
+          if (keyCode === 'Enter') {
+            onPressEnter?.(e);
+            normalizeHandler && triggerValueChange(normalizeHandler('onPressEnter')(e.target.value), e);
+          }
+        }
+      },
+    };
+}`}
+  language="jsx"
+/>
+
+## 附录
+
+### 安装 input
+
+<CodeBlock
+  code={`npm i @t-headless-ui/react
+yarn i @t-headless-ui/react
+pnpm i @t-headless-ui/react`}
+  language="bash"
+/>
+
+### 引入和使用 input
+
+<CodeBlock
+  code={`import { InputComponent } from '@t-headless-ui/react';
+  
+// 使用
+<InputComponent />`}
+  language="tsx"
+/>

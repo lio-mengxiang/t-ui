@@ -1,0 +1,5 @@
+export { getFirstComponent } from './getFirstComponent'
+export { isElement } from './isElement'
+export { isArrayChildren } from './isArrayChildren'
+export { isSlotsChildren } from './isSlotsChildren'
+export { isComponentInstance } from './isComponentInstance'

@@ -1,0 +1,19 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { FadeExample, BounceScaleExample } from './example';
+
+## 前言
+
+对于弹框组件而言，创意基本上来自弹框的动画，所以这里我们使用了 `react` 目前可谓最火的动画库之一的 `motion` 的 `react` 版本来设置弹框动画。
+
+在弹框组件，我们可以使用 `animateFn` 来自定义自己的想要的动画效果。
+
+{/* ### 淡入淡出动画 */}
+
+<H3Sub sub={<>是一种最常见于其它组件库的弹框动画类型</>}>{'淡入淡出动画'}</H3Sub>
+<FadeExample />
+
+{/* ### 弹跳缩放动画 */}
+
+<H3Sub sub={<>更加动感的弹框动画类型</>}>{'弹跳缩放动画'}</H3Sub>
+<BounceScaleExample />

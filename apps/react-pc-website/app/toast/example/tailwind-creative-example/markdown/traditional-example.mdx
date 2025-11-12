@@ -1,0 +1,29 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { StackExample, CountDownExample } from './example';
+
+{/* ### 堆叠效果 */}
+
+<H3Sub
+  sub={
+    <>
+      点击<Code>按钮</Code>会出现堆叠的通知，是一种比较
+    </>
+  }
+>
+  {'堆叠效果'}
+</H3Sub>
+<StackExample />
+
+{/* ### 倒计时 */}
+
+<H3Sub
+  sub={
+    <>
+      点击<Code>按钮</Code>会出现倒计时的通知
+    </>
+  }
+>
+  {'倒计时'}
+</H3Sub>
+<CountDownExample />

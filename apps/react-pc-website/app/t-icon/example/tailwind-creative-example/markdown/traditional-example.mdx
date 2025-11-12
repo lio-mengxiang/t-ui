@@ -1,0 +1,32 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { FadeExample, BounceScaleExample, TagCloud3DExample, DYIcon } from './example';
+import { Preview } from '@/_components/code-preview';
+
+## 前言
+
+本质我们这里的 `Icon` 组件是 `svg`，所以可以分类到 `svg` 动画，但 `svg` 动画里面的内容很多很多，有机会专门写一个 `svg` 进阶的小册，给社区的同学分享，也算我自己的一个知识的升级。
+
+{/* ### 3D Icon 云 */}
+
+<H3Sub sub={<>可拖拽旋转，是一中很酷炫的动画形式</>}>{'3D Icon 云'}</H3Sub>
+
+<Preview>
+  <TagCloud3DExample />
+</Preview>
+
+{/* ### hover路径动画 */}
+
+<H3Sub
+  sub={
+    <>
+      很常见的 <Code>SVG</Code> 动画效果
+    </>
+  }
+>
+  {'hover路径动画'}
+</H3Sub>
+
+<Preview>
+  <DYIcon />
+</Preview>

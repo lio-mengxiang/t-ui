@@ -1,0 +1,21 @@
+.ͼ1 .cm-scroller,
+.ͼ3s.cm-editor .cm-scroller {
+  line-height: 1.6em;
+  font-family: Menlo, Consolas;
+}
+
+.cm-gutters {
+  opacity: 0.4;
+}
+
+.ͼ1.cm-focused {
+  outline: none;
+}
+
+.cm-gutters {
+  opacity: 1;
+}
+
+.cm-editor {
+  padding: 24px 48px;
+}

@@ -1,0 +1,94 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import {
+  BasicExample,
+  TriggerExample,
+  PlacementExample,
+  GetTriggerElementExample,
+  VisibleExample,
+  DisabledExample,
+  AdaptiveExample,
+} from './example';
+
+{/* ### 基本用法 */}
+
+<H3Sub
+  sub={
+    <>
+      使用 <Code>popoverContent</Code>自定义浮层内容，<Code>TPopover</Code> 的子元素作为触发元素
+    </>
+  }
+>
+  {'基本用法'}
+</H3Sub>
+<BasicExample />
+
+{/* ### 不同触发方式 */}
+
+<H3Sub
+  sub={
+    <>
+      提供 <Code>悬浮时触发(默认)</Code>、<Code>点击时触发</Code>、<Code>获取焦点时触发</Code>、<Code>右击时触发</Code>等方式
+    </>
+  }
+>
+  {'不同触发方式'}
+</H3Sub>
+<TriggerExample />
+
+{/* ### 不同的位置 */}
+
+<H3Sub
+  sub={
+    <>
+      使用 <Code>placement</Code> 控制浮层方向，如果需要浮层箭头，设置 <Code>showArrow=true</Code> 即可
+    </>
+  }
+>
+  {'不同的位置'}
+</H3Sub>
+<PlacementExample />
+
+{/* ### 获取触发元素 */}
+
+<H3Sub
+  sub={
+    <>
+      使用 <Code>useContext(Popover.PopoverContext)</Code> 可以获取到触发元素的 <Code>dom 节点</Code>
+    </>
+  }
+>
+  {'获取触发元素'}
+</H3Sub>
+<GetTriggerElementExample />
+
+{/* ### 可控制显示的弹出层 */}
+
+<H3Sub
+  sub={
+    <>
+      可以通过 <Code>visible</Code> 自由控制弹出层的显示或隐藏
+    </>
+  }
+>
+  {'可控制显示的弹出层'}
+</H3Sub>
+<VisibleExample />
+
+{/* ### 禁用状态的弹出层 */}
+
+<H3Sub sub={<>组件禁用后，不再显示弹出层</>}>{'禁用状态的弹出层'}</H3Sub>
+<DisabledExample />
+
+{/* ### 动态自适应 */}
+
+<H3Sub
+  sub={
+    <>
+      当 <Code>trigger</Code> 或 <Code>弹框内容</Code> 显示内容动态变化时，自适应调整位置
+    </>
+  }
+>
+  {'动态自适应'}
+</H3Sub>
+<AdaptiveExample />

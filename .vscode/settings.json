@@ -1,0 +1,35 @@
+{
+  /**
+   * @zh 括号对着色
+   * @en Parentheses coloring
+   */
+  "editor.guides.bracketPairs": true,
+  "editor.bracketPairColorization.enabled": true,
+  "javascript.preferences.quoteStyle": "double",
+  "typescript.preferences.quoteStyle": "double",
+  /**
+   * @zh 根据文件内容进行缩进替换为 4 个空格
+   * @en Indent replace with 4 Spaces according to the contents of the file
+   */
+  "editor.detectIndentation": false,
+  "editor.tabSize": 2,
+  /**
+   * @zh 代码单词拼写检查
+   * @en Code Spell Checker
+   */
+  "cSpell.words": ["codemirror", "esbenp"],
+  "cSpell.enabled": true,
+  // eslint
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.fixAll.eslint": "never",
+    "source.organiazeImports": "explicit",
+    "source.addMissingImports": "explicit"
+  },
+  // prettier
+  "editor.formatOnSave": true,
+
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "css.validate": false,
+  "tailwindCSS.classFunctions": ["cva", "cx"]
+}

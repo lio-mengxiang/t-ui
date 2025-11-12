@@ -1,0 +1,40 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { BasicExample, LoadingExample, SizeExample, GroupExample, BasicTailwindExample, ActiveExample } from './example';
+
+<H1 subheading="使用 Tailwind CSS 构建篇">专业 Input 组件如何封装？</H1>
+
+<AvatarM />
+
+<ImageTypography src="/input/input.webp" fill alt="input" />
+
+注：这篇是讲的使用 `tailwindcss` 添加样式。如果你对 `css/less/sass` 的 `Input` 感兴趣， 请移步上一篇文章。我
+这篇完全是上一篇文章复制，只是将 `css` 修改为 `tailwindcss`。
+
+基础用法和效果如下, 我们的 `Input` 是没有任何样式的：
+
+<BasicExample />
+
+但其实它包含很多高级功能,参数如下：
+
+- allowClear: 是否允许清空输入框（需要配合 `clearIcon` 使用）
+- clearIcon: 自定义清除按钮图标
+- disabled: 是否禁用输入框
+- readOnly: 是否只读
+- onChange: 输入时的回调（注意，跟原生的 `onChange` 不同，第一个参数是值，类型如下：(value: string, e) => void
+- onClear: 点击清除按钮的回调
+- normalizeTrigger: 指定 normalize 执行的时机('onBlur' | 'onPressEnter')，需要配合 `normalize` 参数。
+- normalize: 在指定时机对用户输入的值进行格式化处理。前后值不一致时，会触发 `onChange`。类型：(value: string) => string;
+- maxLength: 输入框最大输入的长度；类型是 `{ length?: number; errorOnly?: boolean }`。设置 `errorOnly`为 `true` 后，超过 `maxLength` 会展示 `error` 状态，并不限制用户输入。
+- autoFitWidth: 是否自动调整输入框宽度，默认是 `true`。类型：boolean; 配合 `css` 中的 `min-width` 和 `max-width` 可以实现输入框宽度的自适应。
+
+我们的目标主要是拓展现在的 `Input` 组件，添加更多的功能，例如：
+
+- 添加 `css` 样式
+- 增加 `input` 框内部的前后缀图标
+- 增加 `input group` 组件，用于在 `input` 框外部添加前缀或后缀图标。
+- 字数统计功能
+
+## 1、基础封装
+
+我们先在 `@t-headless-ui/react` 中的 `Input` 组件封装一下 `css`。

@@ -1,0 +1,147 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide } from '@/_components/typography';
+import { CodePreview } from '@/_components/code-preview';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { BasicExample, TailwindBasicExample, CssBasicExample } from './example';
+
+<H1>Tailwindcss 换肤方案</H1>
+
+<AvatarM />
+
+<ImageTypography src="/solution/theme.webp" fill alt="button" containerClassName="h-96" />
+
+## 介绍
+
+上篇文章讲了 `css` 的主题色方案，其实 `Tailwindcss` 也可以通过 `css` 变量来实现。原理几乎是一样的，这里我们使用的 `Tailwindcss` 版本是 `3.x`, 主要原因是
+`4.x` 版本所支持的浏览器太新了，在国内很容易引起不兼容的问题。但本质上还是借助 `css` 变量实现换肤，懂得原理后，跟版本没什么太大关系。
+
+请从上面 `CSS 换肤方案` 了解 `css 变量换肤方案` 的具体实现。这里就不赘述了。实现思路主要分为两层:
+
+1、局部样式改变
+
+比如所有的 `button` 默认都是蓝色，但是某个 `button` 我想是黄色，允许单独给 `button` 传递主题色。
+
+2、全局样式改变
+
+比如我想对所有的 `button` 的主色都设为绿色，提供一个全局更换颜色配置的入口。
+
+## 实现
+
+### 1. 定义 css 变量
+
+首先我们抽象的业务颜色会放在 `tailwind.config.ts`(这是 `tailwindcss 3.x` 版本的配置文件，`4.x` 版本貌似被移除了)，以下是一个简单的示例，
+包含对业务颜色的定义，以及 `border` 颜色的定义，当然你可以根据自己的业务需要，跟 `ui` 同学对齐所有变量。
+
+<CodeBlock
+  code={`import type { Config } from 'tailwindcss';
+
+export default {
+  content: ['./pages/**/*.{js,ts,jsx,tsx,mdx}', './components/**/*.{js,ts,jsx,tsx,mdx}', './app/**/*.{js,ts,jsx,tsx,mdx}'],
+  theme: {
+    extend: {
+      borderColor: () => ({
+        color: 'var(--border-color)',
+        'color-50': 'var(--border-color-50)',
+        'color-100': 'var(--border-color-100)',
+        'color-200': 'var(--border-color-200)',
+        'color-800': 'var(--border-color-800)',
+      }),
+      colors: () => ({
+        primary: {
+          color: 'var(--primary-color-blue-600)',
+          hover: 'var(--primary-color-blue-500)',
+          focus: 'var(--primary-color-blue-200)',
+          active: 'var(--primary-color-blue-700)',
+          disabled: 'var(--primary-color-blue-300)',
+        },
+        warning: {//...},
+        error: {//...},
+        success: {//...},
+      }),
+    },
+  },
+  plugins: [],
+}`}
+  language="javascript"
+/>
+
+我们的可以看到，其中颜色，例如 `primary` 也就是网站品牌的主色调，我分为了
+
+- color：常规色
+- hover: hover 态颜色
+- focus：聚焦颜色
+- active：激活态颜色
+- disabled：禁用态颜色
+
+### 2. 全局样式改变
+
+其中 `css` 变量的引入，可以在项目入口文件，例如 App.tsx，引入 `css` 变量。
+
+例如我们在 html 定义一个自定义属性 `class`，值为 `light` 或者 `dark`。
+
+<CodeBlock
+  code={`html.light {
+    --primary-blue-600: #366ef4;
+    --primary-blue-500: #2557e7;
+    --primary-blue-200: #c3dafe;
+    --primary-blue-700: #204ed6;
+    --primary-blue-300: #93c5fd;
+    /* .... */
+}`}
+  language="css"
+/>
+
+同时，初始化的时候，我们在 html 标签中添加 `class` 属性，值为 `light` 或者 `dark`，这样我们就可以根据 `class` 的值，来切换主题。
+
+<CodeBlock code={`<html class="light"></html>`} language="html" />
+
+一般情况，切换主初始化还需要把当前的主题的值存到 `localStorage` 里面。因为 `SPA` 页面初始化 html 是没有内容的，所以是可以在框架里，例如 `React` 中渲染初始化获取到
+`localStorage` 的值，赋予 `html` 相应的 `class` 属性。
+
+### 3. 局部样式改变
+
+局部样式改变很简单，利用 `css` 的优先级机制即可。我们来举一个例子：
+
+看这一段 `HTML`：
+
+<CodeBlock
+  code={`<div class="one">
+  <div class="two">
+    <div class="three"></div>
+    <div class="four"></div>
+  </div>
+</div>`}
+  language="javascript"
+/>
+
+配套的 CSS：
+
+<CodeBlock
+  code={`.two {
+    --test: 10px;
+}
+.three {
+    --test: 2em;
+}`}
+  language="css"
+/>
+
+在这个情况下， `var(--test)` 的结果分别是：
+
+对于元素 `class="two" ：10px`
+对于元素 `class="three" ：2em`
+对于元素 `class="four" ：10px` （继承自父属性）
+啥意思呢，就是我的 `button` 组件，我可以默认用全局变量的样式，比如我设置在 `body` 上，然后 `button` 组件包裹一个 `div`， `div` 上也有同名的一个变量，那么 `button` 组件会优先使用 `div` 上的变量。
+
+基于以上原理我可以在 `button` 组件里，直接在 `style` 中用来设置 `css` 变量，代码如下
+
+<CodeBlock
+  code={`const localBtnTheme = {
+    "--btn-color": "red",
+    "--btn-width": 12
+};
+
+<div style={{ style, ...localBtnTheme }} >`}
+  language="javascript"
+/>
+
+其中 `style` 是正常外面传给组件的 `style`， `localBtnTheme` 是指 `css` 变量。所以我们只需要使用跟全局变量定义一样的 `css` 变量，就可以覆盖全局的样式。

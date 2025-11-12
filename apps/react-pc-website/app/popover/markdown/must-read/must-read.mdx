@@ -1,0 +1,313 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide } from '@/_components/typography';
+import { CodePreview } from '@/_components/code-preview';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { BasicExample, TailwindBasicExample, CssBasicExample } from './example';
+
+<H1 subheading="功能说明">弹框组件核心难点概要</H1>
+
+<ImageTypography src="/popover/popover.webp" fill alt="popover" />
+
+## 基础使用
+
+T-UI 的 Popover(弹框) 只封装了基础的弹出逻辑，没有加入任何 `css` 样式，也就是不跟任何 `css` 框架耦合，
+你可以选择自己业务中使用的 `css` 框架进行进一步封装。
+
+以下是基本功能展示(使用 style 简单封装了样式)，大家可以 `hover` 以下的按钮，看看弹框组件是什么。
+
+<BasicExample />
+
+如上所示，其实就是将 `hover` 出现的弹出内容，定位到另一个元素上，上面案例的另一个元素是一个 `Button`, 其实是可以是任何 `HTML` 元素。
+但注意，这个 HTML 元素，一定要提供元素最外层 DOM 元素 `ref` 引用，否则组件定位会失效（这里这是因为 `Button` 组件内部，已经使用 `React.forwardRef`
+包裹，所以这里我们不需要关心这个问题，其它组件库基本都是类似的）。
+
+`ant-design` 、`M-UI` 和 `shadcn/ui`等等知名组件库都有 `Popover` 组件。
+
+这个组件非常重要，例如 `Tooltip`、 `Select` 等等组件，就依赖于 `Popover` 组件来弹框。
+
+需要注意的是， `ant-design` 在使用 `Popover` 组件过程中一直有一个痛点：
+
+- 不具备自动跟踪的定位的功能，也就是容器如果不是 `window` 窗口，而是别的容器，在滚动条滚动的时候，需要手动
+  使用 `getPopupContainer` 参数来指定滚动容器，否则无法自动定位。
+
+当时自己在开发项目的时候，很多次遇到这个问题，所以特地在自己组件库中优化了一下。
+
+这些组件库大多数是自己实现了定位逻辑，而我们的 `Popover` 组件，是基于知名的定位组件库 `floating-ui` 改造，抽离核心逻辑，实现了一个 `mini-floating-ui`。
+这也算我们的目标之一，就是项目本身尽量不依赖任何第三方库，如果需要依赖，将其源码研究一下，抽离 `mini` 版（生产环境可用的）到我们组件库里。
+
+弹框组件算是所有组件中相对比较复杂的组件，首先最基本的，最核心要解决的就是，如何将一个 `dom` 元素定位到另一个 `dom` 上。接下来我们就详细谈谈，如何
+实现这个逻辑。
+
+这里我们统一定位方式是 `absolute` 定位（我们的库是既支持 `absolute` 定位，也支持 `fixed` 定位）。
+
+## 定位上下文
+
+弹框是绝对定位，那么就会有一个绝对定位的上下文，所以我们计算按钮的坐标的时候，实际上是相对于这个上下文去计算的。
+
+相对定位的上下文是什么？举个例子，假设一个元素的 `position` 属性是 `absolute`，那么它是相当于谁定位？例如：
+
+相信很多学过 `html` 和 `css` 同学都在很多教程和培训中了解过，即 `position` 属性为 `absolute` 时，相对定位的上下文是最近的 `position` 属性为非 `static` 定位的元素。
+
+这个没错，但是只答对一部分，还有一些其他情况也会视为定位上下文，比如本身元素是 `static` 元素也会成为定位上下文，比如给它加一个 `transform` 属性，你可以试试下面的代码，李四是相对于 `transform` 属性的 `div` 定位的。
+
+<CodeBlock
+  code={`<body>
+    <div>
+      王二
+    </div>
+    <div style="transform: translateX(2px);">
+      <span style="position: absolute; top: 0" >李四</span>
+    </div>
+  </body>`}
+  language="html"
+/>
+
+不仅仅是 `transform` 属性，下面的方式都可以成定位上下文元素（当时看源码这里我是怎么也不明白为啥要判断下面这些）
+
+有 `transform`、`perspective`、`filter` 属性中任意一个不为 `none`。
+是 `will-change` 属性值为以上任意一个属性的祖先元素。
+是 `contain` 属性值包含 `paint`、`layout`、`strict` 或 `content` 的祖先元素。
+（注：更详细的内容请查看 `mnd`，包含块的概念）
+
+关于如何找到真正的定位上下文，我们后续会讲，这里我们先把之前第一个核心问题解决，就是如何让一个 `dom` 元素定位到另一个 `dom` 元素上。
+
+这里我们假设已经找到定位上下文元素，如下图，在此基础上，如何计算要定位的元素，到按钮的距离（使用绝对定位）示意图如下：
+
+<ImageTypography src="/popover/context.webp" fill alt="popover" imageClassName="object-contain" />
+
+所以 按钮到视口顶部的距离 - 定位上下文到视口顶部的距离，就是按钮相对于定位上下的距离。
+
+但是还需要注意，这是定位上下文没有滚动条的情况，如果定位上下文可以滚动，我们还需要加上滚动距离。至此，我们推导出了定位公式：
+
+<CodeBlock
+  code={`x =  按钮到视口左边的距离 - 定位上下文到视口左边的距离 + 定位上下文的横向滚动距离
+y = 按钮到视口顶部的距离 - 定位上下文到视口顶部的距离 + 定位上下文的纵向滚动距离`}
+  language="bash"
+/>
+
+还需要注意：
+到视口的距离，都可以用 `getBoundingClientRect` 这个API来实现，滚动距离需要区分是定位上下文是文档元素还是其他普通 `html` 元素，比如 `div` 元素
+
+- 普通 `html` 元素，比如 `div` 元素，使用 `scrollTop` 这个 `api` 来获取滚动距离
+- `html` 元素，也就是文档，可以使用 `Window.pageYOffset` 来获取滚动距离
+
+这里有个很坑的点，就是 `document.body` 的 `scrollTop` 是 `0`，所以弹框组件一定要在发现定位上下文是 `body` 的时候单独处理
+
+当然这部分定位代码还有很多细节，有兴趣了解的伙伴，可以加入到我们的 `超强组件库教程社区` 中，一起学习，一起进步。
+
+### offsetParent 的坑
+
+接下来，我们要抓到什么是定位上下文，一般情况下，我们会使用 `offsetParent`, 但是它有坑，
+以下是 `mnd 对其的介绍：
+
+- `HTMLElement.offsetParent` 是一个只读属性，返回一个指向最近的（指包含层级上的最近）包含该元素的定位元素或者最近的 `table`, `td`, `th`, `body` 元素。当元素的 `style.display` 设置为 "none" 时，`offsetParent` 返回 `null`。
+  也就是说，`table`, `td`, `th`, `body` 元素，我们要做特殊处理，因为我们是想获取最近的定位的父元素，但是这几个，比如body元素就算是static定位，也会被获取到，我们就要排除这些可能。
+
+所以我们要实现一个更好版本的 `offsetParent`, 后面会逐行解释代码
+
+<CodeBlock
+  code={`
+function getOffsetParent(element: HTMLElement): Element | Window {
+    let offsetParent = getTrueOffsetParent(element);
+    // https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLElement/offsetParent
+    while (offsetParent && isTableElement(offsetParent) && getComputedStyle(offsetParent).position === 'static') {
+      offsetParent = getTrueOffsetParent(offsetParent as HTMLElement);
+    }
+    // https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLElement/offsetParent
+    if (
+      offsetParent &&
+      (getNodeName(offsetParent) === 'html' ||
+        (getNodeName(offsetParent) === 'body' && getComputedStyle(offsetParent).position === 'static' && !isContainingBlock(offsetParent)))
+    ) {
+      return window;
+    }
+    return offsetParent || getContainingBlock(element) || window;
+}
+`}
+  language="javascript"
+/>
+
+首先解释:
+
+<CodeBlock code={`let offsetParent = getTrueOffsetParent(element);`} language="javascript" />
+
+`getTrueOffsetParent` 要排除一些特殊情况，而不是直接使用 `element.offsetParent` 来获取 `offsetParent`，因为例如 `element` 不是 `HTMLElement` 类型，它是没有 `offsetParent` 这个属性的，所以此时如果不是对应的类型要返回 `null`
+还有，如果一个 `dom` 元素是 `position` 是 `fixed`，它的 `offsetParent` 属性也是 `null`
+
+接着
+
+<CodeBlock
+  code={`while (offsetParent && isTableElement(offsetParent) && getComputedStyle(offsetParent).position === 'static') {
+    offsetParent = getTrueOffsetParent(offsetParent as HTMLElement);
+}`}
+  language="javascript"
+/>
+
+`isTableElement` 的实现：
+
+<CodeBlock
+  code={`export function isTableElement(element: Element): boolean {
+    return ['table', 'td', 'th'].indexOf(getNodeName(element)) >= 0;
+}`}
+  language="javascript"
+/>
+
+以上代码排除了之前我们说的 `'table', 'td', 'th'` 元素，因为它们可能会得到错误的 `offsetParent`
+但是这里的写法我觉得是有 bug 的，因为如果这些 `table` 元素有 `transform`，就是他们是包含块的话，依然可以是定位上下文（现实中几乎遇不到这种情况），所以还需要判断是否是包含块，这样就可以返回这些 `table` 元素了。
+
+接着：
+
+<CodeBlock
+  code={`if (
+    offsetParent &&
+    (getNodeName(offsetParent) === 'html' ||
+      (getNodeName(offsetParent) === 'body' && getComputedStyle(offsetParent).position === 'static' && !isContainingBlock(offsetParent)))
+  ) {
+    return window;
+  }`}
+  language="javascript"
+/>
+
+你看，上面这里处理 `body` 这种特殊的 `offsetParent` 的情况，同时还判断了是否是包含块，因为即使一个 `dom` 元素的 `offsetParent` 是 `body`，定位是 `static`，得到错误的 `offsetParent`，但是如果 `body` 元素是包含块，绝对定位依然是拿它当做定位上下文的。
+最后，代码里 `offsetParent` 设置了一个封顶，基本上到 `html`，就结束寻找了，统一返回 `window`
+
+接着：
+
+<CodeBlock code={`return offsetParent || getContainingBlock(element) || window`} language="javascript" />
+
+如果 offsetParent 没有得到 `dom` 元素的值，就会寻找包含块，最后用 `window` 元素兜底（包含块也不存在）
+
+我们附上判断包含块的函数：
+
+<CodeBlock
+  code={`export function getContainingBlock(element: Element): HTMLElement | null {
+    let currentNode: Node | null = getParentNode(element);
+    while (isHTMLElement(currentNode) && !['html', 'body', '#document'].includes(getNodeName(currentNode))) {
+      if (isContainingBlock(currentNode)) {
+        return currentNode;
+      } else {
+        currentNode = getParentNode(currentNode);
+      }
+    }
+    return null;
+}`}
+  language="javascript"
+/>
+
+关键函数在于：`isContainingBlock`，这个是根据 `mdn` 的描述来判断的：
+
+<CodeBlock
+  code={`export function isContainingBlock(element: Element): boolean {
+    const safari = isSafari();
+    const css = getComputedStyle(element);
+    // https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block#identifying_the_containing_block
+    return (
+      css.transform !== 'none' ||
+      css.perspective !== 'none' ||
+      (css.containerType ? css.containerType !== 'normal' : false) ||
+      (!safari && (css.backdropFilter ? css.backdropFilter !== 'none' : false)) ||
+      (!safari && (css.filter ? css.filter !== 'none' : false)) ||
+      ['transform', 'perspective', 'filter'].some((value) => (css.willChange || '').includes(value)) ||
+      ['paint', 'layout', 'strict', 'content'].some((value) => (css.contain || '').includes(value))
+    );
+}`}
+  language="javascript"
+/>
+
+至此，我们就完成了 `getOffsetParent` 函数的实现，也就是知道获取某个元素的定位上下文。
+
+核心的逻辑其实很简单，只是实现上会有非常多的细节需要注意。
+
+以下是整体求定位上下文的 `x` 坐标和 `y` 坐标完整逻辑。
+
+<CodeBlock
+  code={`export function getCompositeRect(element: Element | VirtualElement, offsetParent: Element | Window, isFixed: boolean = false): Rect {
+    const isOffsetParentAnElement = isHTMLElement(offsetParent);
+    const documentElement = getDocumentElement(offsetParent);
+    const rect = getBoundingClientRect(element);
+    let scroll = { scrollLeft: 0, scrollTop: 0 };
+    let offsets = { x: 0, y: 0 };
+    // offsetParent 有可能是 window
+    if (isOffsetParentAnElement || (!isOffsetParentAnElement && !isFixed)) {
+      if (
+        getNodeName(offsetParent as Element) !== 'body' ||
+        // https://github.com/popperjs/popper-core/issues/1078
+        isScrollParent(documentElement)
+      ) {
+        scroll = getNodeScroll(offsetParent as HTMLElement | Window);
+      }
+      if (isOffsetParentAnElement) {
+        offsets = getBoundingClientRect(offsetParent as HTMLElement);
+        offsets.x += (offsetParent as HTMLElement).clientLeft;
+        offsets.y += (offsetParent as HTMLElement).clientTop;
+      } else if (documentElement as HTMLElement) {
+        offsets.x = getWindowScrollBarX(documentElement);
+      }
+    }
+    return {
+      x: rect.left + scroll.scrollLeft - offsets.x,
+      y: rect.top + scroll.scrollTop - offsets.y,
+      width: rect.width,
+      height: rect.height,
+    };
+}`}
+  language="javascript"
+/>
+
+第一个细节：
+
+- 首先在我们的组件里可以 `absolute` 或者 `fixed` , 所以在判断逻辑上会有不同，这里我们专注以 `absolute` 为例。
+
+第二个细节：
+
+- 如果我们的定位上下文是一个能滚动的容器，我们就可以获取滚动距离：`scroll = getNodeScroll(offsetParent as HTMLElement | Window)`,
+  但注意 `body` 如果是滚动容器，它的 `scrollLeft` 和 `scrollTop` 是 0，所以我们需要判断一下。这里会有同学说，那万一 `body` 就是定位上下文并且
+  同样可以滚动怎么办？其实在我们之前 `offsetParent` 的判断逻辑里，已经处理了这个情况，就是如果 `body` 是定位上下文，并且 `position` 是 `static`，
+  那么就会返回 `window` 作为定位上下文。
+
+第三个细节：
+
+- 注意代码：`offsets.x += (offsetParent as HTMLElement).clientLeft;`, 可以看到在减去 `clientLeft`，这是因为 `clientLeft` 是 `border` 的宽度。
+  其实 `getBoundingClientRect` 本身已经加上 `width` 的宽度，这里又减去的目的是不想让 `border` 算入定位中，其实在我看来没有特别的必要，所以我很可能后续要把这部分代码删掉。
+
+## 更多功能
+
+还有一些核心的功能是弹框组件必须处理的。
+
+- 监听所有跟元素有关滚动父容器的 `scroll` 事件，以防在滚动过程中，定位失效。同理，`window` 窗口的 `resize` 事件也需要监听，以防窗口变化导致定位失效。
+- 多种定位方式：例如 `top`, `start-top`, `end-top`,`bottom`, `left`,`right`等等。
+- 偏移功能：我们定位在下面，我想向左偏移 `8px`，向下偏移 `3px`，你是不是应该有暴露 `api` 让用户可以自定义偏移量。
+- 翻转功能：例如，定位置方式是 `top`，也就是弹框向上，那么当你滚动容器的时候，向上的弹框即将被遮挡，这个时候你可以设置翻转功能，
+  当弹框被遮挡的时候，自动切换为 `bottom` 定位方式。
+- 固定功能：例如，是不是还有可能超出浏览器视口了，如下图：
+
+<ImageTypography src="/popover/stick-before.webp" fill alt="popover" imageClassName="object-contain" />
+
+我们想自动处理，遇到超出就自动变为下方样子：
+
+<ImageTypography src="/popover/stick-after.webp" fill alt="popover" imageClassName="object-contain" />
+
+以上功能因为逻辑稍微还是有点复杂，我们采取的是中间件方式来实现，从最大程度降低耦合，以及降低代码理解难度，类似：
+
+定位方向选择中间件 -> 算出定位上下文的 `x` 坐标和 `y` 坐标 -> 偏移量（`x` 和 `y` 偏移多少）中间件-> 滚动过程是否需要翻转中间件 -> 滚动过程是否需要固定中间件 -> 弹框组件最后效果
+
+## 总结
+
+最后，如果你想了解源码实现细节，欢迎加入到组件库交流群，里面会有直播解释源码和实现思路 。
+
+同时如果你想让自己的简历有一些与众不同高难度的项目，也欢迎咨询，例如对于前端组件库项目，在询问你的前端技术栈和意愿的情况下，
+可以帮助到初级前端到资深前端范围的求职者拥有一个亮眼的项目写在简历中，让你在面试时脱颖而出，给面试官一点惊喜😁。
+
+## 附录
+
+### 安装 Popover
+
+<CodeBlock
+  code={`npm i @t-headless-ui/react
+yarn i @t-headless-ui/react
+pnpm i @t-headless-ui/react`}
+  language="bash"
+/>
+
+### 引入 Popover
+
+<CodeBlock code={`import { Popover } from '@t-headless-ui/react';`} language="tsx" />

@@ -1,0 +1,200 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, Link } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { BasicExample, BasicMessageExample, CloseMessageExample, UpdateMessageExample } from './example';
+
+<H1>封装一个专业的 Toast 组件</H1>
+
+<AvatarM />
+
+<ImageTypography src="/toast/toast.webp" fill alt="toast" />
+
+注：这篇是讲的使用 `css` 添加样式。如果你对原子类添加样式感兴趣，例如 `tailwindcss`， 请移步下面的篇文章。
+
+基础用法和效果如下：
+
+<BasicExample />
+
+从上面的可以看出，我们其实可以自定义 `toast` 组件弹出的样式，传递给 `component` 参数即可。
+
+注：强烈建议看一下 `必读指南` 中的 `引入和使用 toast` 章节，理解 `toastStore` 是如何来的，以及如何使用。简单来说 `toastStore` 具有如下方法：
+
+- add: 添加 `Message` 或者 `Notification`
+- remove: 删除 `Message` 或者 `Notification`
+- removeAll: 删除所有弹出的 `Message` 或者 `Notification`
+- update: 更新特定的 `Message` 或者 `Notification` 的内容
+
+好了，为了我们能够更好的使用 `toast` 组件，我们需要封装的更简单一些，主要是增加不同的状态，例如:
+
+- `Message.info({ content: '这是一条 info 消息' })`
+- `Message.success({ content: '这是一条 success 消息' })`
+- `Message.error({ content: '这是一条 error 消息' })`
+- `Notification.info({ content: '这是一条 info 消息' })`
+- `Notification.success({ content: '这是一条 success 消息' })`
+- `Notification.error({ content: '这是一条 error 消息' })`
+- ...等等
+
+所以我第一步先从封装 `Message` 组件的状态开始。
+
+其中 `Alert` 组件的代码，可以在 `Alert` 章节查看，感兴趣的可以通过导航跳转到这个章节。
+
+## 1、Message 基础封装
+
+以下是一个简单的封装，封装了 `Message` 组件的状态，包括 `info`、`success`、`error` 等状态。
+
+<CodeBlock
+  code={`import React from 'react';
+// 来自自定义封装的 Alter 组件
+import { TAlert } from '@/component/t-alert';
+// 来自在 app.js/ts 创建的 toast store 实例
+import { toastStore } from '@/app';
+ 
+interface MessageProps {
+  message?: string;
+  title?: string;
+  // 单位是秒
+  duration?: number | null;
+  onClose?: () => void;
+  icon?: React.ReactNode;
+  containerClassName?: string;
+  showClose?: boolean;
+  type?: 'info' | 'loading' | 'success' | 'warning' | 'error';
+  showProgress?: boolean;
+}
+ 
+const handleMessage = (options: MessageProps) => {
+  const {
+    message,
+    title,
+    duration = 3,
+    onClose,
+    icon,
+    containerClassName = 'pb-2',
+    showClose = false,
+    type = 'info',
+    showProgress = false,
+  } = options;
+ 
+  return toastStore.add({
+    duration,
+    showProgress,
+    component: (
+      <TAlert
+        message={message}
+        title={title}
+        showClose={showClose}
+        onClose={onClose}
+        type={type}
+        containerClassName={containerClassName}
+        icon={icon}
+      />
+    ),
+  });
+};
+ 
+export const TMessage = {
+  info: (options: MessageProps) => {
+    return handleMessage({ ...options, type: 'info' });
+  },
+  loading: (options: MessageProps) => {
+    return handleMessage({ ...options, type: 'loading' });
+  },
+  success: (options: MessageProps) => {
+    return handleMessage({ ...options, type: 'success' });
+  },
+  warning: (options: MessageProps) => {
+    return handleMessage({ ...options, type: 'warning' });
+  },
+  error: (options: MessageProps) => {
+    return handleMessage({ ...options, type: 'error' });
+  },
+};`}
+  language="jsx"
+/>
+
+以上代码在封装后，我们就实现了可以弹出 `Message` 组件的功能，我们来试一试。
+
+<BasicMessageExample />
+
+## 2、hover 暂停特效
+
+当鼠标移入 `message` 组件时，`message` 组件会暂停倒计时，当鼠标移出时，`message` 组件会恢复倒计时。
+
+这个功能是在 `headless` 组件库中实现的, 即 `@t-headless-ui/react`, 这里为什么提一下，因为整体实现的思路值得大家学习借鉴, 核心代码如下：
+
+<CodeBlock
+  code={`
+const [spentTime, setSpentTime] = useState(0);
+const [hovering, setHovering] = useState(false);
+ 
+useEffect(() => {
+    if (!hovering && duration > 0) {
+      const start = Date.now() - spentTime;
+      const timeout = setTimeout(
+        () => {
+          store.remove?.(id);
+        },
+        duration * 1000 - spentTime,
+      );
+ 
+      return () => {
+        clearTimeout(timeout);
+        setSpentTime(Date.now() - start);
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [duration, mergedHovering]);`}
+  language="css"
+/>
+
+简单介绍一下上面的代码，初始化时，会启动一个 `setTimeout` 定时器，并且记录一个 `start` 时间点，目的是当鼠标 `hover` 上去的时候，就会触发在 `toast` 中注册的 `onMouseEnter` 事件，此时 `hovering` 变量会设为 `true`
+
+这会触发 `useEffect` 注册的 `return` 返回函数。
+
+- ` clearTimeout(timeout)` 方法，清除之前的定时器
+- 并且使用 `Date.now() - start` 计算出还剩余的时间
+
+当 `hover` 移开时，会触发 `onMouseLeave` 事件，此时 `hovering` 变量会设为 `false`，这会触发 `useEffect` 注册的 `return` 返回函数。然后更重要的是，定时器重启启动。
+
+这里注意，组件支持 `duration` 传值为 `null`，这样就可以让 `message` 组件一直存在，直到9用户手动关闭它，或者超出在 `createToastStore` 时设置的最大 `message` 组件同时存在的个数，也就是 `maxCount` 范围（默认是 `6`）。
+
+## 3、增加取消按钮
+
+`headless` 组件库中，我们会透传一个函数名为 `closeToast`，可以用来关闭 `message` 组件。所以我们可以在 `Alert` 组件中使用。 `Alert` 组件代码如下：
+
+<CodeBlock
+  code={`{showClose && (
+            <div>
+              <button
+                className="bg-transparent border-none text-[1.1rem] text-gray-400 cursor-pointer p-0 ml-2 hover:text-neutral-500"
+                onClick={() => {
+                  onClose?.();
+                  closeToast?.();
+                }}
+              >
+                &times;
+              </button>
+            </div>
+          )}`}
+  language="jsx"
+/>
+
+可以看到，只要传入 `showClose`, 就会显示关闭按钮，并且点击后能关闭 `message` 组件, 示例如下：
+
+<CloseMessageExample />
+
+## 5、更新组件状态
+
+很常见的一个需求是开始 `message` 组件状态是 `loading`，然后后端返回数据后，根据数据状态更新 `message` 组件状态。我们举个小例子, 首先，触发 `loading` 状态的 `message` 时，一般要加一个 `duration: null`, 此时 `message` 组件会一直存在，等到后端返回（这里使用 `setTimeout` 模拟），然后使用 `update` 方法更新状态、
+
+<UpdateMessageExample />
+
+## 6、总结
+
+作为一名合格的前端开发，毫无疑问需要对页面常见功能和组件了解基本原理，如果要向更高级的前端工程师段位进阶，这些组件需要自己实现
+也是必须的。最后，希望文章对你有帮助，有任何疑惑，欢迎加入目前国内最好手写组件库交流群。
+
+完整代码可以去我的 `@t-headless-ui/react` 组件库中查看。也欢迎报名我的质量超超超高的 `React` 组件库开发教程。
+
+我也很乐意直接帮助你打造自己的核心项目，放入简历中，让你在面试中脱颖而出。
+
+`Vue` 组件库也在开发中，vue 的同伴也欢迎加群哦。

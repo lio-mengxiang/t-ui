@@ -1,0 +1,34 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { BasicExample, IconsExample, CustomExample } from './example';
+
+{/* ### 基本用法 */}
+
+<H3Sub
+  sub={
+    <>
+      使用 <Code>{'<IconXXX />'}</Code> 的来使用 <Code>Icon</Code>
+    </>
+  }
+>
+  {'基本用法'}
+</H3Sub>
+<BasicExample />
+
+{/* ### 自定义 Icon */}
+
+<H3Sub
+  sub={
+    <>
+      这个示例展示了如何自定义 <Code>Icon</Code>。配合 <Code>createIcon</Code> API 生成 <Code>React Icon</Code> 组件
+    </>
+  }
+>
+  {'自定义 Icon'}
+</H3Sub>
+<CustomExample />
+
+{/* ### Icon Demo */}
+
+<H3Sub> {'Icon Demo'} </H3Sub>
+<IconsExample />

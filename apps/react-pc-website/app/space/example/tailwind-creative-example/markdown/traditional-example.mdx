@@ -1,0 +1,18 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { RippleGrid, CardLayoutIdDemo } from './example';
+import { Preview } from '@/_components/code-preview';
+
+{/* ### 卡片过渡动画 */}
+
+<H3Sub sub={<>点击卡片，会出现过渡动画</>}>{'卡片过渡动画'}</H3Sub>
+
+<Preview>
+  <CardLayoutIdDemo />
+</Preview>
+
+{/* ### 网格水波动画 */}
+
+<H3Sub sub={<>点击网格，会出现水波动画</>}>{'网格水波动画'}</H3Sub>
+
+<RippleGrid />

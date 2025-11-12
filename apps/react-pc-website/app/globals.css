@@ -1,0 +1,93 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@import './_theme/light.css';
+@import './_theme/dark.css';
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE & Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .mouse-up-down {
+    animation: moveUpDown 1s infinite;
+  }
+
+  @keyframes moveUpDown {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(2px);
+    }
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-size: 15px;
+}
+
+/* 定义动画关键帧 */
+@keyframes slide-left-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-20%);
+  }
+}
+
+@keyframes slide-left-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-right-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slide-right-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* 定义动画类 */
+.slide-left-out {
+  animation: slide-left-out 4s ease-in forwards;
+}
+
+.slide-left-in {
+  animation: slide-left-in 4s ease-out;
+}
+
+.slide-right-out {
+  animation: slide-right-out 4s ease-in forwards;
+}
+
+.slide-right-in {
+  animation: slide-right-in 4s ease-out;
+}

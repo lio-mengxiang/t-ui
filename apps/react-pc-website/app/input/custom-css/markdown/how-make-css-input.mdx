@@ -1,0 +1,181 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, Link } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { BasicExample, BasicInputExample, AddonExample } from './example';
+
+<H1 subheading="css/less/sass 篇">Input 组件的封装思路</H1>
+
+<AvatarM />
+
+<ImageTypography src="/input/input.webp" fill alt="input" />
+
+注：这篇是讲的使用 `css` 添加样式。如果你对原子类添加样式感兴趣，例如 `tailwindcss`， 请移步下面的篇文章,`tailwindcss` 篇会更加详细。
+
+基础用法和效果如下, 我们的 `Input` 是没有任何样式的：
+
+<BasicExample />
+
+但其实它包含很多高级功能,参数如下：
+
+- allowClear: 是否允许清空输入框（需要配合 `clearIcon` 使用）
+- clearIcon: 自定义清除按钮图标
+- disabled: 是否禁用输入框
+- readOnly: 是否只读
+- onChange: 输入时的回调（注意，跟原生的 `onChange` 不同，第一个参数是值，类型如下：(value: string, e) => void
+- onClear: 点击清除按钮的回调
+- normalizeTrigger: 指定 normalize 执行的时机('onBlur' | 'onPressEnter')，需要配合 `normalize` 参数。
+- normalize: 在指定时机对用户输入的值进行格式化处理。前后值不一致时，会触发 `onChange`。类型：(value: string) => string;
+- maxLength: 输入框最大输入的长度；类型是 `{ length?: number; errorOnly?: boolean }`。设置 `errorOnly`为 `true` 后，超过 `maxLength` 会展示 `error` 状态，并不限制用户输入。
+- autoFitWidth: 是否自动调整输入框宽度，默认是 `true`。类型：boolean; 配合 `css` 中的 `min-width` 和 `max-width` 可以实现输入框宽度的自适应。
+
+我们的目标主要是拓展现在的 `Input` 组件，添加更多的功能，例如：
+
+- 添加 `css` 样式
+- 增加 `input` 框内部的前后缀图标
+- 增加 `input group` 组件，用于在 `input` 框外部添加前缀或后缀图标。
+- 字数统计功能
+
+## 1、基础封装
+
+我们先在 `@t-headless-ui/react` 中的 `Input` 组件封装一下 `css`。
+
+<BasicInputExample />
+
+这里 `css` 还不完善，我们还需要补充：
+
+- disabled 禁用样式
+- readOnly 只读样式
+- 增加 input 状态，例如 `error`, `warning` 状态
+
+同时，后面我们要实现可以增加前后缀图标的功能，例如搜索框的图标。那么就需要包裹一下目前的 `InputComponent` 组件，例如用一个 `div` 包裹起来。那么此时就会有一个很严重的问题。
+
+- 首先，本身的 `InputComponent` 组件需要 `disabled` , `readOnly` 参数，这样才能实现 `input` 元素本身的 `disabled` 和 `readOnly` 的原生功能。
+- 然后，加上 `status` 这个参数，同样需要共享给包裹 `InputComponent` 组件的父元素，父元素的 `css` 才能根据状态的变化而显示不同的样式。例如 `disabled` 状态时，给父元素的 `css` 添加 `cursor: not-allowed`。
+
+## 2、增加前后缀图标
+
+增加前后缀简单来看只需要修改 `css`，但其实有个很大的坑，我们看完下面的示例后再说：
+
+<AddonExample />
+
+这里最大的问题点击前后缀图标的时候，应该让 `input` 组件聚焦，这样就看起来是一个整体，而不是仅仅增加了图标而已。
+这个功能简单做法是给外层 `div` 标签加一个 `onClick` 事件，判断：
+
+<CodeBlock
+  code={`// inputWrapperRef 就是包裹 input 组件的 div 元素的 ref 引用
+  // inputRef 是 input 组件的 ref 引用，我们是的 InputComponent 对外暴露了 focus 方法用来聚焦
+  const onClick = (e) => {
+    if (inputWrapperRef.current && inputWrapperRef.current.contains(e?.target)) {
+      inputRef.current?.focus();
+    }
+  };`}
+  language="javascript"
+/>
+
+完整效果可以在后面的 `Input` 完整案例查看。
+
+## 3、增加状态
+
+`input` 很长见的状态包括，`默认` 状态，`warning` 状态，`error` 状态，`disabled` 状态 和 `readOnly` 状态。来到这里其实已经有点复杂了，
+我们需要重新封装一下 `InputComponent` 组件，添加 `status` 参数。
+
+为了简化这部分逻辑，`@t-headless-ui/react` 组件库中导出了一个 `useInputGroup` 的 `hook`, 来帮助我们简化这部分逻辑。完整实现在 `tailwindcss` 章节，这里我们写个示例代码。
+
+<CodeBlock
+  code={`const TInput = forwardRef<RefInputType, TInputProps>((props, ref) => {
+  const {
+    clearIcon = (
+      <IconCloseLine className="group-hover:visible invisible transition-all duration-150 ease-linear cursor-pointer hover:rounded-full hover:bg-color-100" />
+    ),
+    prefixElement,
+    suffixElement,
+    showWordLimit,
+    className,
+    inputClassName,
+    style,
+    inputStyle,
+    ...rest
+  } = props;
+  const { status, inputRef, inputWrapperRef, hasLengthError, value, onChange, onMouseDown, onClick } = useInputGroup(props);
+ 
+  const valueLength = value?.length;
+  const trueMaxLength = props?.maxLength?.length;
+ 
+  useImperativeHandle(ref, () => {
+    return {
+      ...inputRef.current,
+      // 暴露这个属性给 popover 组件使用
+      dom: inputWrapperRef.current,
+    };
+  }, []);
+ 
+  return (
+    <div
+      className={cs(
+        'input',
+        {
+          // disabled 的 css
+          'input-disabled':
+            props.disabled,
+          // readOnly 的 css
+          'input-readOnly': props.readOnly,
+          // status 为 error 的 css
+          'input-error': status === 'error' && !props.disabled,
+          // status 为 warning 的 css
+          'input-warning': status === 'warning' && !props.disabled,
+        },
+
+        className,
+      )}
+      ref={inputWrapperRef}
+      style={style}
+      onMouseDown={onMouseDown}
+      onClick={onClick}
+    >
+      <span className="input-addon">{prefixElement}</span>
+      <InputComponent
+        ref={inputRef}
+        {...rest}
+        value={value}
+        onChange={onChange}
+        className={cs(
+          'input-inner',
+          {
+            'input-inner-disabled': props.disabled,
+            'input-inner-readOnly': props.readOnly,
+          },
+          inputClassName,
+        )}
+        style={inputStyle}
+        clearIcon={clearIcon}
+      />
+      {trueMaxLength !== undefined && showWordLimit && (
+        // 单独封装一个显示字数的组件
+        <SuffixElement trueMaxLength={trueMaxLength} valueLength={valueLength} hasLengthError={hasLengthError} />
+      )}
+      <span className="input-addon">{suffixElement}</span>
+    </div>
+
+);
+});`}
+language="jsx"
+/>
+
+## 4、更多功能
+
+更多功能是本身 `@t-headless-ui/react` 组件库中 `InputComponent` 组件的功能，会在完整案例中展示。
+
+- normalizeTrigger: 指定 normalize 执行的时机('onBlur' | 'onPressEnter')，需要配合 `normalize` 参数。
+- normalize: 在指定时机对用户输入的值进行格式化处理。前后值不一致时，会触发 `onChange`。类型：(value: string) => string;
+- maxLength: 输入框最大输入的长度；类型是 `{ length?: number; errorOnly?: boolean }`。设置 `errorOnly`为 `true` 后，超过 `maxLength` 会展示 `error` 状态，并不限制用户输入。
+- autoFitWidth: 是否自动调整输入框宽度，默认是 `true`。类型：boolean; 配合 `css` 中的 `min-width` 和 `max-width` 可以实现输入框宽度的自适应。
+
+## 5、总结
+
+作为一名合格的前端开发，毫无疑问需要对页面常见功能和组件了解基本原理，如果要向更高级的前端工程师段位进阶，这些组件需要自己实现
+也是必须的。最后，希望文章对你有帮助，有任何疑惑，欢迎加入目前国内最好手写组件库交流群。
+
+完整代码可以去我的 `@t-headless-ui/react` 组件库中查看。也欢迎报名我的质量超超超高的 `React` 组件库开发教程。
+
+我也很乐意直接帮助你打造自己的核心项目，放入简历中，让你在面试中脱颖而出。
+
+`Vue` 组件库也在开发中，vue 的同伴也欢迎加群哦。
