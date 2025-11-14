@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -H 0.0.0.0",
-    "build": "next build",
+    "build": "next build && mv out ../../",
     "build:github-page": "rm -rf ../../docs && EXPORT_DIR=docs APP_ENV=github-page next build && touch ./docs/.nojekyll && mv docs ../../ ",
     "start": "next start",
     "lint": "next lint",
