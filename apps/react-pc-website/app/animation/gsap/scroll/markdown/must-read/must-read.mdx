@@ -1,0 +1,30 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide } from '@/_components/typography';
+import { CodePreview } from '@/_components/code-preview';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { BasicExample, TailwindBasicExample, CssBasicExample } from './example';
+
+<H1 subheading="gsap 入门指引">GSAP 说：“Scroll 动画最能打的库还有谁！”</H1>
+
+<ImageTypography src="/gsap/gsap.jpg" fill alt="button" />
+
+## GSAP 简单介绍
+
+`GSAP` 是国外顶尖的专业动画库，大多数让人“眼前一亮”的网页动画，背后都有它的身影（当然，像 `Framer Motion` 这类新秀也同样强大，后续我们也会推出相关高阶教程）。
+厉害的库都无需多言，现在，就来看看 `GSAP` 能做出哪些炸裂的视觉效果吧！
+
+<ImageTypography src="/gsap/all.webp" fill alt="GSAP" imageClassName="object-contain" />
+
+里面涉及的 `3D` 效果，其实是结合了 `three.js` 与 `GSAP` 共同实现的。也就是说，光会 `three.js`，离做出真正酷炫的动画还差一步。
+
+所以，我们不妨从易到难，先掌握 `2D` 动画，做出看得见的效果——这不仅能帮你夯实基础，也会极大增强你的信心。
+
+我们这个动画系列，将专注于 `GSAP` 在 `scroll` 滚动动画方面的应用。其它效果会在后续的教程中介绍。
+
+你们可以看看一些效果
+
+<CodeBlock
+  code={`npm i @t-headless-ui/react
+yarn i @t-headless-ui/react
+pnpm i @t-headless-ui/react`}
+  language="bash"
+/>

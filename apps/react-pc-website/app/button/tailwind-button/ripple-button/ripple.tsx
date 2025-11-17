@@ -29,6 +29,7 @@ export interface RippleProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 export const Ripple: FC<RippleProps> = (props) => {
+  // currentColor 是一个 CSS 变量，当前元素的 color 属性值
   const { ripples = [], motionProps, color = 'currentColor', style, onClear } = props;
 
   return (
@@ -48,6 +49,7 @@ export const Ripple: FC<RippleProps> = (props) => {
                   backgroundColor: color,
                   borderRadius: '100%',
                   transformOrigin: 'center',
+                  // 很重要的属性，点击穿透
                   pointerEvents: 'none',
                   overflow: 'hidden',
                   inset: 0,
@@ -71,5 +73,3 @@ export const Ripple: FC<RippleProps> = (props) => {
     </>
   );
 };
-
-Ripple.displayName = 'HeroUI.Ripple';

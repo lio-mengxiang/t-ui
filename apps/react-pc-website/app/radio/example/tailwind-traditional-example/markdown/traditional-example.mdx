@@ -1,0 +1,85 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { BasicExample, SizeExample, FocusExample, ScrollExample, NestedExample, AsyncExample, AttachExample } from './example';
+
+这里必须强调一下，我们的 `modal` 框是完全自定义的，所以很多别的组件库的类似自定义页脚，自定义标题的功能，就没有举例了。
+香料如何自定义 `modal` 框，请本系列第一章节《必读指南》。
+
+以下 `demo` 中自定义样式是基于 `Alter` 组件实现章节中的 `TModalBox` 组件，可以在 `Alter` 章节中查看详细代码。
+
+{/* ### 基本用法 */}
+
+<H3Sub
+  sub={
+    <>
+      最简单的例子。<Code>切记</Code>一定要看 <Code>必读指南</Code>中<Code>如何封装 modal</Code>，已经如何引入
+      <Code>ModalProvider</Code>。这样你可以自定义自己喜欢的 <Code>modal</Code> 样式。这里的案例仅仅是一系列例子而已。
+    </>
+  }
+>
+  {'基本用法'}
+</H3Sub>
+<BasicExample />
+
+{/* ### 自定义尺寸 */}
+
+<H3Sub
+  sub={
+    <>
+      你可以通过自定义 <Code>modal</Code> 的尺寸。当然你也可以自定义一个 <Code>modal</Code> 框，然后定义传参内容）
+    </>
+  }
+>
+  {'自定义尺寸'}
+</H3Sub>
+<SizeExample />
+
+{/* ### 聚焦元素 */}
+
+<H3Sub
+  sub={
+    <>
+      你可以通过自定义 <Code>initialFocusEl</Code> 函数来初始化需要聚焦的元素。
+    </>
+  }
+>
+  {'聚焦元素'}
+</H3Sub>
+<FocusExample />
+
+{/* ### 滚动方式 */}
+
+<H3Sub
+  sub={
+    <>
+      你可以通过自定义 <Code>modal</Code> 样式来设置内部滚动。
+    </>
+  }
+>
+  {'滚动方式'}
+</H3Sub>
+<ScrollExample />
+
+{/* ### 嵌套弹窗 */}
+
+<H3Sub sub={<>如何嵌套弹窗。</>}>{'嵌套弹窗'}</H3Sub>
+<NestedExample />
+
+{/* ### 异步关闭 */}
+
+<H3Sub sub={<>在对话框中使用表单时，如提交表单，点击确定后异步关闭对话框。</>}>{'异步关闭'}</H3Sub>
+<AsyncExample />
+
+{/* ### 挂载位置 */}
+
+<H3Sub
+  sub={
+    <>
+      默认情况下，弹窗会挂载到 <Code>body</Code> 上。你可以通过自定义 <Code>attach</Code> 来改变挂载位置。<Code>attach</Code>{' '}
+      是一个字符串，组件内部使用 <Code>document.querySelector(attach)</Code> 来获取挂载位置。
+    </>
+  }
+>
+  {'挂载位置'}
+</H3Sub>
+<AttachExample />

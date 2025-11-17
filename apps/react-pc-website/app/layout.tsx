@@ -26,6 +26,19 @@ export default function RootLayout({
     const theme = localStorage.getItem(themeKey) || defaultTheme;
     localStorage.setItem(themeKey, theme);
     document.documentElement.setAttribute('class', theme);
+    // ------- 初始化 dvh，自定义兼容 css 的 dvh, 为了移动端的优化 -----
+    // 将值设置为CSS自定义属性
+    function updateViewportHeight() {
+      // 计算动态视口高度，并转换为1dvh对应的像素值
+      const dvh = window.innerHeight * 0.01;
+      // 将值设置为CSS自定义属性
+      document.documentElement.style.setProperty('--dvh', `${dvh}px`);
+    }
+    updateViewportHeight();
+    // 监听窗口大小变化和横竖屏切换事件，及时更新
+    window.addEventListener('resize', updateViewportHeight);
+    window.addEventListener('orientationchange', updateViewportHeight);
+    // ------- ↑ -----
   };
 
   return (

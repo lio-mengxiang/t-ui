@@ -1,13 +1,12 @@
 import { ChangeThemeButton } from '@/_components/change-theme-button';
 import { GithubButton } from '@/_components/github-button';
 import { cs } from '@/_utils';
-import { IconLeftLine, IconRightLine, IconTLogo } from '@t-headless-ui/react';
-import { useRouter } from 'next/navigation';
+import { IconLeftLine, IconRightLine } from '@t-headless-ui/react';
 import React, { useEffect, useState } from 'react';
 import { NavOverlay } from './nav-overlay';
+import { TUI } from './t-ui';
 
 export function ComponentLayout({ menu, children }: any) {
-  const router = useRouter();
   const [open, setOpen] = useState({
     status: true,
   });
@@ -27,12 +26,7 @@ export function ComponentLayout({ menu, children }: any) {
       </div>
 
       <nav className="sticky top-0 w-full flex justify-between items-center pl-6 pr-6 h-16 border-b border-solid border-color bg-color z-[999]">
-        <div className="text-sm flex cursor-pointer items-center" onClick={() => router.push('/')}>
-          <IconTLogo className="text-4xl" />
-          <span className="text-xl mt-[6px] text-nowrap">
-            headless <span className="text-primary-hover dark:text-[#4cc3fa]">ui</span>
-          </span>
-        </div>
+        <TUI />
         <div className="flex gap-x-2 items-center">
           <NavOverlay />
           <GithubButton />

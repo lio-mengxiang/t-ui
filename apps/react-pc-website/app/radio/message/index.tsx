@@ -1,0 +1,1 @@
+export { TMessage } from './message';
