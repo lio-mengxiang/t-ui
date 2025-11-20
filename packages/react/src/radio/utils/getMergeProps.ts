@@ -11,6 +11,7 @@ export function getMergeProps({ props, context }: IGetMergeProps) {
   if (context.group) {
     mergeProps.checked = context.value === props.value;
     mergeProps.disabled = !!(context.disabled || props.disabled);
+    mergeProps.readonly = !!(context.readonly || props.readonly);
   }
 
   return mergeProps;

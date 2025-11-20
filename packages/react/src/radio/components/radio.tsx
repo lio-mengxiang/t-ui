@@ -1,3 +1,4 @@
+'use client';
 import React, { useContext, useRef } from 'react';
 import { RadioGroupContext } from '../radioContext';
 import { useMergeValue } from '../../hooks';
@@ -6,17 +7,13 @@ import { getMergeProps } from '../utils';
 
 // types
 import type { RadioGroupContextProps, RadioProps } from '../interface';
-
-const handleInputClick = (e) => {
-  // 阻止事件冒泡，确保点击 label 时不会触发 input 的点击事件
-  e.stopPropagation();
-};
+import { RadioContext } from './context';
 
 export function Radio(props: RadioProps) {
   // context
   const context = useContext<RadioGroupContextProps>(RadioGroupContext);
   const mergeProps = getMergeProps({ props, context });
-  const { disabled, children, value, checked: propsChecked, onChange: propsOnChange, ...rest } = mergeProps;
+  const { disabled, readonly, children, value, checked: propsChecked, onChange: propsOnChange, ...rest } = mergeProps;
 
   // ref
   const inputRef = useRef<HTMLInputElement>(null);
@@ -31,50 +28,52 @@ export function Radio(props: RadioProps) {
   const onChange = (e) => {
     e.persist();
     e.stopPropagation();
+
+    // 禁用或只读都不改变状态，不触发外部 onChange
+    if (disabled || readonly) return;
+
     if (context.group) {
       context?.onChangeValue?.(value, e);
     } else if (!('checked' in props) && !checked) {
       setChecked(true);
     }
     if (!checked) {
-      // 因为 html 标准就是只有 checked 为 true 时，才会触发 onChange 事件
       propsOnChange?.(true, e);
     }
   };
 
-  // 当点击 label 时触发：
-  // 1. 如果 children 是函数（render prop），则阻止默认行为并手动触发隐藏 input 的点击，确保原生 radio 状态更新
-  // 2. 无论是否 render prop，都继续调用外部传入的 onClick
   const onLabelClick = function (e) {
+    // 只读或禁用时，阻止点击产生任何行为
+    if (disabled || readonly) {
+      e.preventDefault();
+      return;
+    }
     if (isFunction(mergeProps.children)) {
       e.preventDefault();
       inputRef.current?.click();
     }
     rest?.onClick?.(e);
   };
+
   return (
-    <label {...rest} onClick={onLabelClick}>
-      {/* 为什么没有 readonly 状态， 标准里本来也没有 */}
-      <input
-        ref={inputRef}
-        disabled={!!disabled}
-        value={value}
-        type="radio"
-        checked={!!checked}
-        onChange={onChange}
-        onClick={handleInputClick}
-      />
-      {isFunction(children) ? (
-        children({ checked })
-      ) : context.type === 'radio' ? (
-        <>
-          children
-          {/* <div className={maskCls} />
-          {children && <span className={textCls}>{children}</span>} */}
-        </>
-      ) : (
-        context.type === 'button' && children
-      )}
-    </label>
+    <RadioContext.Provider value={{ checked, disabled, readonly }}>
+      <label {...rest} onClick={onLabelClick} aria-disabled={!!disabled} aria-readonly={!!readonly}>
+        {/* 为什么没有 readonly 状态， 标准里本来也没有 */}
+        <input
+          ref={inputRef}
+          disabled={!!disabled}
+          value={value}
+          type="radio"
+          checked={!!checked}
+          onChange={onChange}
+          onClick={(e) => {
+            // 阻止 input 的点击事件冒泡，避免重复处理
+            e.stopPropagation();
+          }}
+          aria-readonly={!!readonly}
+        />
+        {children}
+      </label>
+    </RadioContext.Provider>
   );
 }

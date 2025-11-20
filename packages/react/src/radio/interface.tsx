@@ -29,7 +29,12 @@ export interface RadioProps<T = any> extends Omit<HTMLAttributes<HTMLLabelElemen
    * @en Callback when radio status change
    */
   onChange?: (checked: boolean, event: ChangeEvent) => void;
-  children?: ReactNode | ((value: { checked: boolean }) => ReactNode);
+  children?: ReactNode;
+  /**
+   * @zh 是否只读
+   * @en Whether the radio is readonly
+   */
+  readonly?: boolean;
 }
 
 /**
@@ -49,12 +54,6 @@ export interface RadioGroupProps extends Omit<HTMLAttributes<HTMLDivElement>, 'c
    */
   type?: 'radio' | 'button';
   /**
-   * @zh 方向
-   * @en Arrangement direction
-   * @defaultValue horizontal
-   */
-  direction?: 'vertical' | 'horizontal';
-  /**
    * @zh 点击单选的回调
    * @en Callback when radio status change
    */
@@ -69,12 +68,12 @@ export interface RadioGroupProps extends Omit<HTMLAttributes<HTMLDivElement>, 'c
    * @en To set value
    */
   value?: any;
-  /**
-   * @zh 以数组配置的形式来设置单选组
-   * @en Set children options
-   */
-  options?: (string | number | { label: ReactNode; value: any; disabled?: boolean })[];
   children: ReactNode;
+  /**
+   * @zh 是否只读
+   * @en Whether the radio group is readonly
+   */
+  readonly?: boolean;
 }
 
 export interface RadioGroupContextProps {
@@ -84,4 +83,9 @@ export interface RadioGroupContextProps {
   group?: boolean;
   name?: RadioGroupProps['name'];
   onChangeValue?: (value: any, event: ChangeEvent) => void;
+  /**
+   * @zh 是否只读
+   * @en Whether the radio group is readonly
+   */
+  readonly?: boolean;
 }
