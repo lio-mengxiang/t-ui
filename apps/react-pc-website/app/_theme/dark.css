@@ -76,9 +76,11 @@
   --text-color-50: var(--tw-color-zinc-900);
   --text-color-400: var(--tw-color-zinc-200);
   --text-color-500: var(--tw-color-zinc-300);
+  --text-color-600: var(--tw-color-zinc-400);
 
   /* border */
   --border-color: var(--tw-color-zinc-600);
+  --border-color-300: var(--tw-color-zinc-300);
   --border-color-800: var(--tw-color-zinc-100);
 
   /* border-radius */

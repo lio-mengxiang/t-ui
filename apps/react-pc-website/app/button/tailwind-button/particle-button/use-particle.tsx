@@ -33,12 +33,14 @@ export function useParticle() {
 
     // 生成多个粒子
     const particleArray = Array.from({ length: 12 }, (_, i) => {
+      // 计算当前粒子在圆周上的角度，使 12 个粒子均匀分布，Math.PI * 2 表示 360 度
       const angle = (i / 12) * Math.PI * 2;
       const velocity = 2 + Math.random() * 3;
       return {
         id: getUniqueID(`particle-${i}`),
         x: clickX,
         y: clickY,
+        // 根据 angle 计算要到达的目标坐标的 x，y 坐标，velocity 是半径
         vx: Math.cos(angle) * velocity,
         vy: Math.sin(angle) * velocity,
         size: 3 + Math.random() * 4,

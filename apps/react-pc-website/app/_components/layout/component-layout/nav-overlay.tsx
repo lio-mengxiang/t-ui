@@ -61,7 +61,7 @@ export function NavOverlay() {
 
   return (
     <div ref={container} className="mr-2">
-      <div className="hover:bg-slate-50 px-2 py-0.5 text-sm border border-color rounded-lg" onClick={toggleMenu}>
+      <div className="hover:bg-slate-50 dark:hover:bg-gray-700 px-2 py-0.5 text-sm border border-color rounded-lg" onClick={toggleMenu}>
         <NavButton word="导 航" stagger={0.02} />
       </div>
       <div

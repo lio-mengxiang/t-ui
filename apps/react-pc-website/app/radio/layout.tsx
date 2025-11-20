@@ -38,17 +38,17 @@ export default function ButtonLayout({ children }: { children: React.ReactNode }
     {
       content: (
         <SubMenu>
-          <IconClickFill size="1.6em" className="text-[#4cc3fa]" /> Modal 完整案例
+          <IconClickFill size="1.6em" className="text-[#4cc3fa]" /> Radio 完整案例
         </SubMenu>
       ),
-      value: '/modal/example',
+      value: '/radio/example',
       items: [
         {
           content: <MenuItem className="text-sm font-light">传统案例</MenuItem>,
           onClick: () => {
-            router.push('/modal/example/tailwind-traditional-example');
+            router.push('/radio/example/tailwind-traditional-example');
           },
-          value: '/modal/example/tailwind-traditional-example',
+          value: '/radio/example/tailwind-traditional-example',
         },
       ],
     },

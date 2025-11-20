@@ -3,17 +3,20 @@ import { CodePreview } from '@/_components/code-preview';
 
 const code = `function App() {
   return (
-    <TButton
-      status="primary"
-      onClick={() => {
-        TModal.add({
-          title: 'Modal Alert',
-          content: 'This is a message!',
-        });
-      }}
-    >
-      Open Modal
-    </TButton>
+    <div className="flex flex-wrap gap-4 flex-col">
+     <div className="text-sm">Not Checked:</div>
+     <div className="flex gap-4 flex-wrap">
+       <TRadio>Default</TRadio>
+       <TRadio disabled>Disabled</TRadio>
+       <TRadio readonly>Readonly</TRadio>
+     </div>
+     <div className="text-sm">Checked:</div>
+     <div className="flex gap-4 flex-wrap">
+       <TRadio checked>Default</TRadio>
+       <TRadio disabled checked>Disabled</TRadio>
+       <TRadio readonly checked>Readonly</TRadio>
+     </div>
+    </div>
   );
 }`;
 

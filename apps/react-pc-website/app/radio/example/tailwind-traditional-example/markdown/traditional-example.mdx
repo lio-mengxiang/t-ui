@@ -1,85 +1,64 @@
 import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
 import { IconMuiLogo, Button } from '@t-headless-ui/react';
-import { BasicExample, SizeExample, FocusExample, ScrollExample, NestedExample, AsyncExample, AttachExample } from './example';
+import { BasicExample, CheckedExample, GroupExample, ButtonExample } from './example';
 
-这里必须强调一下，我们的 `modal` 框是完全自定义的，所以很多别的组件库的类似自定义页脚，自定义标题的功能，就没有举例了。
-香料如何自定义 `modal` 框，请本系列第一章节《必读指南》。
+本质上 `radio` 组件的就是一个单选的逻辑，但很多组件库的单选按钮仅限于圆形的 `radio` 按钮。
 
-以下 `demo` 中自定义样式是基于 `Alter` 组件实现章节中的 `TModalBox` 组件，可以在 `Alter` 章节中查看详细代码。
+而我们的 `radio` 组件，默认我封装为了 `TRadio` 组件是圆形的 `radio` 按钮外，也支持用户自己用 `tailwindcss` 或者 `css` 来自定义样式。
 
-{/* ### 基本用法 */}
+你会在创意案例中你后续会增加很多好玩的单选样式。
+
+{/* ### 基础多选框 */}
 
 <H3Sub
   sub={
     <>
-      最简单的例子。<Code>切记</Code>一定要看 <Code>必读指南</Code>中<Code>如何封装 modal</Code>，已经如何引入
-      <Code>ModalProvider</Code>。这样你可以自定义自己喜欢的 <Code>modal</Code> 样式。这里的案例仅仅是一系列例子而已。
+      <div className="mb-2">可以看到，我们的 <Code>radio</Code> 组件，主要有三种状态，分别是： <Code>default</Code>、 <Code>disabled</Code>、<Code>readonly</Code>。然后分别每种状态有选中和未选中的样式。 </div>
+      <div>需要注意，HTML 标准并不支持 <Code>readonly</Code> 属性，这是我们组件单独封装的。</div>
     </>
-  }
->
-  {'基本用法'}
-</H3Sub>
+
+}
+
+> {'基础多选框'}</H3Sub>
+
 <BasicExample />
 
-{/* ### 自定义尺寸 */}
+{/* ### 受控按钮 */}
 
 <H3Sub
   sub={
     <>
-      你可以通过自定义 <Code>modal</Code> 的尺寸。当然你也可以自定义一个 <Code>modal</Code> 框，然后定义传参内容）
+      通过 <Code>checked</Code> 属性控制是否选中
     </>
   }
 >
-  {'自定义尺寸'}
+  {'受控按钮'}
 </H3Sub>
-<SizeExample />
+<CheckedExample />
 
-{/* ### 聚焦元素 */}
+{/* ### 单选框 Group */}
 
 <H3Sub
   sub={
     <>
-      你可以通过自定义 <Code>initialFocusEl</Code> 函数来初始化需要聚焦的元素。
+      将多个 <Code>radio</Code> 组件放在一个 <Code>radio-group</Code> 组件中，注意一定要设置 <Code>defaultValue</Code> 或者
+      <Code>value</Code> 属性才能实现单选框组的功能。
     </>
   }
 >
-  {'聚焦元素'}
+  {'单选框 Group'}
 </H3Sub>
-<FocusExample />
+<GroupExample />
 
-{/* ### 滚动方式 */}
+{/* ### Button Radio */}
 
 <H3Sub
   sub={
     <>
-      你可以通过自定义 <Code>modal</Code> 样式来设置内部滚动。
+      属于自定义的 <Code>radio</Code> 组件。其实还可以加入背景移动的动画，我在创意案例里面用 <Code>motion/react</Code> 来实现一下。
     </>
   }
 >
-  {'滚动方式'}
+  {'Button Radio'}
 </H3Sub>
-<ScrollExample />
-
-{/* ### 嵌套弹窗 */}
-
-<H3Sub sub={<>如何嵌套弹窗。</>}>{'嵌套弹窗'}</H3Sub>
-<NestedExample />
-
-{/* ### 异步关闭 */}
-
-<H3Sub sub={<>在对话框中使用表单时，如提交表单，点击确定后异步关闭对话框。</>}>{'异步关闭'}</H3Sub>
-<AsyncExample />
-
-{/* ### 挂载位置 */}
-
-<H3Sub
-  sub={
-    <>
-      默认情况下，弹窗会挂载到 <Code>body</Code> 上。你可以通过自定义 <Code>attach</Code> 来改变挂载位置。<Code>attach</Code>{' '}
-      是一个字符串，组件内部使用 <Code>document.querySelector(attach)</Code> 来获取挂载位置。
-    </>
-  }
->
-  {'挂载位置'}
-</H3Sub>
-<AttachExample />
+<ButtonExample />

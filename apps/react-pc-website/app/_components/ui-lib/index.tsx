@@ -7,5 +7,8 @@ import { InputSearch } from '@/input/t-search';
 import { Password } from '@/input/t-password';
 import { TModalBox } from '@/alert/t-modal-box';
 import { TModal } from '@/modal/t-modal';
+import { TRadio } from '@/radio/t-radio';
+import { TButtonRadio } from '@/radio/t-button-radio';
+import { PixelButton } from '@/button/tailwind-button/pixel-button';
 
-export { TButton, TPopover, TAlert, TMessage, TInput, InputSearch, Password, TModalBox, TModal };
+export { TButton, TPopover, TAlert, TMessage, TInput, InputSearch, Password, TModalBox, TModal, TRadio, TButtonRadio, PixelButton };

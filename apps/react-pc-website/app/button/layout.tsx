@@ -62,7 +62,13 @@ export default function ButtonLayout({ children }: { children: React.ReactNode }
           },
           value: '/button/example/tailwind-traditional-example',
         },
-
+        {
+          content: <MenuItem className="text-sm font-light">像素 Button</MenuItem>,
+          onClick: () => {
+            router.push('/button/example/tailwind-pixel-example');
+          },
+          value: '/button/example/tailwind-pixel-example',
+        },
         {
           content: <MenuItem className="text-sm font-light">创意案例</MenuItem>,
           onClick: () => {

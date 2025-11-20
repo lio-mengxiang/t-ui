@@ -7,6 +7,7 @@ import { CodeTab, ErrorMessage } from './components';
 import * as TButtons from '@/button/tailwind-button/export-button';
 import * as TComponent from '@/_components/ui-lib';
 import * as T from '@t-headless-ui/react';
+import { LayoutGroup } from 'motion/react';
 import type { CodePreviewProps } from './interface';
 import { toastStore, toastBottomStore, toastBottomStackStore } from '@/layout';
 
@@ -19,6 +20,7 @@ const TUI = {
   toastBottomStore,
   toastBottomStackStore,
   ...React,
+  LayoutGroup,
 };
 export function CodePreview(props: CodePreviewProps) {
   const { code: _Code = '', dependencies = TUI, demoContainerStyle, cssCode, id } = props;

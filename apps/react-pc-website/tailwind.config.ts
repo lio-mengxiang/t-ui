@@ -22,6 +22,7 @@ export default {
         'color-50': 'var(--text-color-50)',
         'color-400': 'var(--text-color-400)',
         'color-500': 'var(--text-color-500)',
+        'color-600': 'var(--text-color-600)',
       }),
       backgroundColor: () => ({
         color: 'var(--bg-color)',
