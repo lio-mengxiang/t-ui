@@ -19,21 +19,21 @@ export default function ButtonLayout({ children }: { children: React.ReactNode }
         </MenuItem>
       ),
       onClick: () => {
-        router.push('/modal');
+        router.push('/radio');
       },
-      value: '/modal',
+      value: '/radio',
     },
     {
       content: (
         <MenuItem>
           <IconPlatteFill size={size} className="text-[#4cc3fa] mr-2" />
-          自定义 Modal
+          自定义 Radio
         </MenuItem>
       ),
       onClick: () => {
-        router.push('/modal/custom');
+        router.push('/radio/custom');
       },
-      value: '/modal/custom',
+      value: '/radio/custom',
     },
     {
       content: (
@@ -49,6 +49,13 @@ export default function ButtonLayout({ children }: { children: React.ReactNode }
             router.push('/radio/example/tailwind-traditional-example');
           },
           value: '/radio/example/tailwind-traditional-example',
+        },
+        {
+          content: <MenuItem className="text-sm font-light">创意案例</MenuItem>,
+          onClick: () => {
+            router.push('/radio/example/tailwind-creative-example');
+          },
+          value: '/radio/example/tailwind-creative-example',
         },
       ],
     },

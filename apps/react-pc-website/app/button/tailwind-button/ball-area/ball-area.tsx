@@ -12,6 +12,7 @@ export function ParabolaFaces() {
         const x0 = e.clientX - containerRect.left;
         const y0 = e.clientY - containerRect.top;
         const x1 = x0 + (Math.random() > 0.5 ? 200 : -200);
+        // 终点 y 坐标：在 400 到 500 之间随机取值，确保笑脸从屏幕下方飞出
         const y1 = 400 + Math.random() * 100;
         createFace(x0, y0, x1, y1, containerElement!);
       }

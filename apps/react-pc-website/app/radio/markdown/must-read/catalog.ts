@@ -6,53 +6,59 @@ export const catalogList = [
   },
   {
     level: 2,
-    text: '如何处理滚动条',
+    text: '可自定义性的核心原理',
     items: [
       {
         level: 3,
-        text: '为什么要处理滚动条样式？',
+        text: '核心洞察',
+      },
+      {
+        level: 3,
+        text: '更理想的解决方案',
       },
     ],
   },
   {
     level: 2,
-    text: '如何解决嵌套 modal',
+    text: 'radio 组件基本结构',
     items: [
       {
         level: 3,
-        text: '为什么要处理嵌套 modal？',
+        text: '方法一：MDN 推荐方式',
       },
       {
         level: 3,
-        text: '解决方案',
+        text: '方法二：嵌套包裹方式',
+      },
+      {
+        level: 3,
+        text: '状态切换的完整流程',
       },
     ],
   },
   {
     level: 2,
-    text: '如何锁定焦点',
-    items: [
-      {
-        level: 3,
-        text: '什么是锁定焦点',
-      },
-      {
-        level: 3,
-        text: '解决方案',
-      },
-    ],
+    text: '三个核心技术点',
   },
   {
     level: 2,
-    text: '难点：支持函数调用',
+    text: '如何将状态传递给子组件',
   },
   {
     level: 2,
-    text: '支持自定义 modal',
+    text: '如何保持语义性',
   },
   {
     level: 2,
-    text: '其它技术难点',
+    text: 'Radio Group 逻辑',
+  },
+  {
+    level: 2,
+    text: '小结',
+  },
+  {
+    level: 2,
+    text: '欢迎加入简历亮点交流群',
   },
   {
     level: 2,
@@ -60,11 +66,11 @@ export const catalogList = [
     items: [
       {
         level: 3,
-        text: '安装 modal',
+        text: '安装 radio',
       },
       {
         level: 3,
-        text: '引入和使用 modal',
+        text: '引入和使用 radio',
       },
     ],
   },

@@ -1,246 +1,380 @@
 import { ImageTypography, AvatarM, CodeBlock, H1, Divide } from '@/_components/typography';
 import { CodePreview } from '@/_components/code-preview';
 import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { Promote } from '@/_components/promote';
 
 <H1 subheading="高拓展性 radio 实现思路">拓展性如此强大的 Radio，有必要了解一下！</H1>
 
-<ImageTypography src="/modal/modal.webp" fill alt="button" />
+<ImageTypography src="/radio/radio.webp" fill alt="button" />
 
 ## 前言
 
-很多人对于 `modal` 组件的第一印象就是一个弹框居中，然后一个黑色蒙层 `fixed` 布局放在后面，感觉很简单啊，但是深入研究各个组件库的 `modal` 源码，发现技术细节有很多，不信你就接着看！保证没做过 `modal` 组件的同学不知道。
-我简单列一下技术难点,你可以测试一下你用的组件库是否注意这些细节了，欢迎留言讨论！
+为什么说我们的 Radio 组件拓展性高呢？
 
-## 如何处理滚动条
+从本质上讲，Radio 组件的核心就是单选逻辑。一旦实现了单选的核心机制，UI 表现形式就变得相对次要了。单选的本质无非就是：
 
-### 为什么要处理滚动条样式？
+- 定义选中和未选中状态的 UI 表现
 
-首先，一般 `modal` 框弹出的时候，我们是不想页面还能滚动的，这个如何处理？一般情况我们会给 `body`（此时往往会给 modal 设置 `position: fixed`） 或者是你自定义的挂载容器（此时往往会给 modal 设置 `position: absolute`）。
+- 确保同一时间只能有一个选项被选中
 
-设置 `overflow: hidden` 样式。但此时又出现一个问题，如果之前有滚动条，`overflow: hidden` 会导致滚动条消失，滚动条原本就占了一定宽度的，当消失的瞬间，宽度消失，那么意味着容器就会占据这部分消失的空间。
-所以布局上就会有 `抖一下` 的感觉。为了不让用户感知到这个过程，我们需要在 `modal` 弹出的时候，给 `body` 或者是你自定义的挂载容器的 `style` `width` 值需要减去滚动条的宽度。
+这就是单选逻辑的简单精髓。
 
-## 如何解决嵌套 modal
+在我们的 @t-headlessui/react 组件库中，`Radio` 组件（在库中命名为 `Radio.Root`）与 `Radio.Group` 已经完美实现了上述逻辑，两者配合使用即可轻松构建单选功能。
 
-指的是是点击按钮弹出 `modal` 弹窗，弹窗里又有一个按钮，点击之后再之前的基础上又有一个 `modal`，以此类推，嵌套的 `modal` 弹窗。
+本文不会逐行解析具体代码实现（对此感兴趣的同学欢迎进群交流，如果需要包装简历，我也可以手把手指导，甚至协助撰写简历内容），而是重点介绍如何实现 `UI` 自定义的核心逻辑。
 
-### 为什么要处理嵌套 modal？
+## 可自定义性的核心原理
 
-首先数据结构的设计上，最后天然支持多个 `modal` 弹窗，例如设计为数组，但还有一个问题，就是刚才我们说了，弹出 `modal` 会给容器处理添加 `overflow: hidden` 样式，以及更改 `width` 值，那么什么时候恢复样式呢？是不是还不能是关闭 `modal` 的时候，
-因为有可能是有多个 `modal`，只有关闭最后一个的时候，才需要恢复容器原先的样式。
+传统的 `Radio` 组件主要通过 `<input type="radio">` 标签实现，浏览器会为其渲染默认的样式：
 
-### 解决方案
+<ImageTypography src="/radio/default-radio.webp" fill alt="popover" imageClassName="object-contain" />
 
-这里的解决方案一般有两种，一种是例如 `material ui`，`chakra-ui`, 小米公司的 `modal` 组件，都是用一个数据结构保存所有 `modal`，然后每次关闭一个 `modal`，就去所有 `modal` 里找是否是最后一个 `modal`，如果是最后一个才恢复 `body` 原本的 `style`。
+### 核心洞察
 
-第二种是字节 `arco design` 的处理方法，还是比较巧妙的，我的组件库也学习了这种方式。
+要实现真正的样式自定义，我们就必须突破原生 `Radio` 的样式限制。但问题来了：只要实现了 `Radio` 的内在逻辑，本质上就实现了 `Radio` 组件。
 
-请看下面的 `useOverflowHidden`, 我们详细的看下如何处理隐藏 `body` 滚动条和恢复的时机和具体方法。
+那么，什么是 `Radio` 的内在逻辑呢？
+
+四大核心逻辑：
+
+- 选中状态逻辑，传入点击选项时切换选中状态（checked）
+
+- 禁用状态逻辑，传入 `disabled` 参数时，元素不可交互
+
+  - 视觉上表现为不可点击状态（如 cursor: not-allowed）
+
+- 只读状态逻辑：注意原生 `Radio` 不支持 `readonly` 状态，但业务场景中极为常见, 所以我们的组件增加了这个状态
+
+- 单选分组逻辑：个 radio 组合时，确保同一时间只能选中其中一个
+
+### 更理想的解决方案
+
+能否在保持 radio 组件原有逻辑的基础上，同时支持完全自定义的 `UI`？
+
+也就是说：
+
+- 用户仍可选择使用原生 radio（保持语义完整性）
+
+- 也支持完全自定义的 `UI` 表现
+
+答案是肯定的！ 我们的组件正是基于这一理念设计的。
+
+在介绍核心逻辑之前，我们先说一个小技巧。
+
+## radio 组件基本结构
+
+<ImageTypography src="/radio/default-radio.webp" fill alt="popover" imageClassName="object-contain" />
+
+观察上图可以发现，标准的 radio 组件通常包含两个部分：
+
+- 左侧的圆圈图标（表示选中状态）
+- 右侧的描述文字
+
+在实际使用中，我们期望不仅点击圆圈可以选中，点击右侧文字也应该能触发选中。这个功能是如何实现的呢？关键在于 `<label>` 标签的巧妙运用。
+
+### 方法一：MDN 推荐方式
 
 <CodeBlock
-  code={`import { useEffect, useRef } from "react";
-import { resetContainerStyle, setContainerStyle } from "../utils";
- 
-export function useOverflowHidden(
-    getContainer: () => HTMLElement,
-    hidden: boolean
-) {
-  const needResetContainerStyle = useRef < boolean > false;
-  const originContainerStyle = useRef < Partial < CSSStyleDeclaration >> {};
- 
-  useEffect(() => {
-    hidden
-      ? setContainerStyle({
-          needResetContainerStyle,
-          originContainerStyle,
-          getContainer,
-        })
-      : resetContainerStyle({
-          needResetContainerStyle,
-          originContainerStyle,
-          getContainer,
-        });
-    return () => {
-      resetContainerStyle({
-        needResetContainerStyle,
-        originContainerStyle,
-        getContainer,
-      });
-    };
-  }, [getContainer, hidden]);
-}`}
-  language="jsx"
+  code={`<div>
+  <input type="radio" id="huey" name="drone" value="huey" checked />
+  <label for="huey">Huey</label>
+</div>`}
+  language="html"
 />
 
-- `getContainer` 代码要挂载到 `html` 文档流哪个 `dom` 中，我们默认是 `body` 元素中
+实现要点：
 
-- `hidden` 是指是否弹框的时候，我们需要黑色蒙层，也就是有时候我们传参不需要这个蒙层，也就意味着我们不想让 `body` 滚动条消失，所以我们在看到 `modal` 弹框的同时，也能滚动后面的页面，当然，我们这里大家可以看为是 `true`，我们是需要黑色蒙层的
+- 在 `input` 上定义唯一的 `id` 属性
+- 在 `label` 上设置对应的 `for` 属性
+- 两者值匹配时，点击 `label` 即可选中关联的 `radio`
 
-- `needResetContainerStyle` 用来记录是否重置 `body` 的 `style` 样式，只有调用 `setContainerStyle` 方法后，并且是第一个触发的 `modal` 框，这个值才会是 `true`
+缺点： 需要维护 `input` 上的 `id` 属性与 `label` 上的 `for` 属性对应关系，较为繁琐。
 
-我们马上看下 `setContainerStyle`，也就是设置 `body` 滚动条隐藏的函数：
+### 方法二：嵌套包裹方式
 
 <CodeBlock
-  code={`import { getScrollBarWidth } from "./getScrollBarWidth";
- 
-/**
- * Hides the container's scroll bar
- */
-export const setContainerStyle = ({
-    getContainer,
-    needResetContainerStyle,
-    originContainerStyle,
-}) => {
-    const container = getContainer();
-    if (container && container.style.overflow !== "hidden") {
-      /**
-      * @zh 记录container的style属性, 因为后续要将container.style.overflow设为hidden
-      * @en Record the container's style property, because I'll set container.style.overflow to hidden later
-      */
-      const originStyle = container.style;
-  
-      /**
-      * @zh 记录是否 container.style.overflow 被覆盖为hidden
-      * @en Note whether container.style.overflow is overwritten as hidden
-      */
-      needResetContainerStyle.current = true;
-  
-      const containerScrollBarWidth = getScrollBarWidth(container);
-      if (containerScrollBarWidth) {
-        originContainerStyle.current.width = originStyle.width;
-        container.style.width = \`calc(\${
-          container.style.width || "100%"
-        } - \${containerScrollBarWidth}px)\`;
-      }
-  
-      /**
-      * @zh 设置container的overflow为hidden
-      * @en Set container overflow to hidden
-      */
-      originContainerStyle.current.overflow = originStyle.overflow;
-      container.style.overflow = "hidden";
-    }
+  code={`<label>
+  <input type="radio" value="huey" />
+  Huey
+</label>`}
+  language="html"
+/>
+
+优势：
+
+- 结构更简洁，无需维护 `id` 映射
+- `label` 自动与内部的 `input` 建立关联
+- 点击 `label` 内的任何区域（包括文字）都能触发 `radio` 选中
+
+了解完基本的结构后，我们开始先说一下触发 `radio` 选中的机制的完整流程。
+
+### 状态切换的完整流程
+
+基于上述结构，我们来梳理完整的状态切换逻辑，为后续实现提供清晰的蓝图：
+
+- 用户交互起点
+
+  - 用户点击 `label` 区域（包括图标或文字）
+  - 触发绑定在 `label` 上的 `onClick` 事件
+
+- 事件冒泡传递
+
+  - `label` 的点击事件会自动触发内部 `input` 的 `onClick` 事件
+  - 这是浏览器默认的事件冒泡机制
+
+- 状态变更核心
+  - `input` 的 `onClick` 最终触发自身的 `onChange` 事件
+  - 在 `onChange` 中将选中的值设置为当前 `input` 的 `value`
+
+补充说明：`input` 等表单元素的核心作用就是收集用户输入值，通过 `value` 属性传递给表单提交或状态管理。
+
+可视化流程：
+
+<CodeBlock
+  code={`用户点击 Label
+↓
+触发 label.onClick
+↓  
+冒泡至 input.onClick
+↓
+触发 input.onChange
+↓
+更新选中状态 (value)`}
+  language="bash"
+/>
+
+虽然整体逻辑看似清晰简单，但实际开发中隐藏着不少陷阱。我们将逐一剖析这些常见问题，一旦理解并规避了这些坑，您就能轻松实现一个健壮可靠的 `radio` 组件。
+
+## 三个核心技术点
+
+基于前述分析，我们构建三层事件处理机制来完善 Radio 组件的交互逻辑。
+
+第一个: `Label` 点击拦截
+
+<CodeBlock
+  code={`const onLabelClick = function (e) {
+  // 只读或禁用时，阻止点击产生任何行为
+  if (disabled || readonly) {
+    e.preventDefault();
+    return;
+  }
+  rest?.onClick?.(e);
 };`}
-  language="jsx"
+  language="javascript"
 />
 
-上面的重点有两部分
+关键要点：
 
-- 需要将 `container` (默认是 `body` 元素) 的 `style.overflow` 设置为 `hidden`。`needResetContainerStyle` 也记录下，已经设置过 `container` 的 `style.overflow` 样式了用来后续还原样式。
-- 需要记录下 `container` 的 `width` 设置的值减去滚动条的宽度。因为如果不减去滚动条宽度，那么当 `container` 的 `width` 减小了，视觉上会有抖动，这是个很细的交互细节。
+- 状态拦截：当组件处于 `disabled` 或 `readonly` 状态时，直接返回
+- 事件阻止：调用 `e.preventDefault()` 阻止浏览器默认行为，防止触发 `input` 的选中状态变更
 
-## 如何锁定焦点
+因为 `label` 点击会触发 `<input type="radio">` 的点击事件，所以我们需要在 `label` 点击事件中判断是否是 `disabled` 或 `readonly` 状态，如果是，就阻止点击事件的冒泡。
 
-### 什么是锁定焦点
-
-当你打开 `modal` 的时候，在键盘上按下 `tab` 键，会出现 `button` 元素 `focus` 的状态。
-
-<ImageTypography src="/modal/focus.jpg" fill alt="modal focus" />
-
-上图所示的 `focus` 状态，会在你按下回车键的时候触发这个按钮的 `onClick` 事件。而且你一直按 `Tab` 键，焦点只会在当前 `Modal` 框里，不会移除到 `Modal` 框外，这种 `focus` 状态锁定技术是需要解决的。
-并且有些同学可能不了解 `tabIndex`,有兴趣的同学可以搜索一下，通过 `tabIndex`,我们可以让关闭按钮，也就是右上角的 `x` 也能获取焦点，我的组件库并没有处理这个细节，是因为按 `ESC` 键就可以关闭弹窗，这样做我感觉多此一举。
-
-在网页中，模态框（Modal）、弹出层（Dialog）等组件出现时，通常希望用户的键盘焦点始终被限制在这个弹出层内部，防止按下 Tab 键后焦点跳出模态框、误操作到页面其他区域。这种机制被称为 “焦点陷阱（Focus Trap）”。
-
-### 解决方案
-
-我们会用一段简单的代码来实现这个功能。后面会有详细的讲解。
+第二个: `Input` 点击隔离
 
 <CodeBlock
-  code={`function createFocusTrap(element) {
-  const focusableElements = Array.from(
-    element.querySelectorAll(
-      'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    )
+  code={`onClick={(e) => {
+  // 阻止 input 的点击事件冒泡，避免重复处理
+  e.stopPropagation();
+}}`}
+  language="javascript"
+/>
+
+设计意图：
+
+有时候可能会只点击 `<input type="radio">` 而不点击 `<label>`，这时候我们需要在 `input` 点击事件中阻止事件冒泡，避免触发 `label` 的点击事件。
+
+第三个: `Change` 事件核心逻辑
+
+<CodeBlock
+  code={`const [checked, setChecked] = useMergeValue(false, {
+  value: propsChecked,
+  defaultValue: mergeProps.defaultChecked,
+});
+ 
+const onChange = (e) => {
+  e.persist();
+  e.stopPropagation();
+ 
+  // 禁用或只读都不改变状态，不触发外部 onChange
+  if (disabled || readonly) return;
+ 
+  if (context.group) {
+    context?.onChangeValue?.(value, e);
+  } else if (!('checked' in props) && !checked) {
+    setChecked(true);
+  }
+  if (!checked) {
+    propsOnChange?.(true, e);
+  }
+};`}
+  language="javascript"
+/>
+
+以下是一些坑点介绍：
+
+<CodeBlock code={`e.persist(); // React 17+ 可安全移除`} language="javascript" />
+
+历史背景：`React 16` 及之前版本使用事件池机制，异步代码中无法访问事件对象。现代 `React` 已移除此机制。
+
+- 事件冒泡控制
+
+<CodeBlock code={`e.stopPropagation();`} language="javascript" />
+
+防止 `Radio` 嵌套时，内层事件冒泡影响外层 `Radio` 组件的 `onChange` 事件，确保事件处理的独立性。
+
+<CodeBlock code={`if (disabled || readonly) return;`} language="javascript" />
+
+检查是否是 `disabled` 或者 `readonly` 状态，这样的状态不能让它触发 `onChange` 事件
+
+<CodeBlock
+  code={`if (context.group) {
+  context?.onChangeValue?.(value, e);
+}`}
+  language="javascript"
+/>
+
+上面这段代码我们暂且不讲，是要配合 `Radio.Group` 组件使用，这个 context 是使用 `useContext` api 获取的 `Radio.Group` 透传的数据。也就是状态最终会被 `Radio.Group` 接管。
+也就是 `Group` 来通知到底是谁被选中了。
+
+<CodeBlock
+  code={`} else if (!('checked' in props) && !checked) {
+  setChecked(true);
+}`}
+  language="javascript"
+/>
+
+- !('checked' in props)：检测是否未传入 checked 属性
+
+- 有的同学会问，为什么要用 `'checked' in props`, 这与 `checked === undefined` 有什么区别?请体会一下代码：
+
+<CodeBlock
+  code={`// 情况一：显式传递 undefined（受控模式）
+<Radio checked={undefined} />
+'checked' in props → true    // 正确识别为受控
+ 
+// 情况二：未传递属性（非受控模式）  
+<Radio />
+'checked' in props → false   // 正确识别为非受控`}
+  language="javascript"
+/>
+
+而上述代码 `'checked' in props` 逻辑改为 `checked === undefined` 是无法很多做到区分`受控`和`非受控`的。
+
+这里需要解释两点
+
+- 首先，很多组件库，一般都会用受控的形式来模拟非受控，为什么呢？因为我们要确确实实拿到 Radio 组件的 `checked`（选中） 还是 非 `checked` 状态，如果都交给原生，我们获取很不方便
+
+- 其次 `useMergeValue` 是组件库很常用函数，它把受控和非受控组合起来，是个非常实用的函数，我们来介绍一下逻辑。相信你写组件库也一定会用到。
+
+以下是 `useMergeValue` 函数的逻辑：
+
+<CodeBlock
+  code={`export function useMergeValue<T>(
+  defaultStateValue: T,
+  props?: {
+    defaultValue?: T;
+    value?: T;
+  },
+) {
+  const { defaultValue, value } = props || {};
+  
+  const [stateValue, setStateValue] = useState<T>(
+    !isUndefined(value) ? value : !isUndefined(defaultValue) ? defaultValue : defaultStateValue,
   );
  
-  let firstFocusableElement = focusableElements[0];
-  let lastFocusableElement = focusableElements[focusableElements.length - 1];
+  // 处理受控转非受控的场景
+  useEffect(() => {
+    // 实现细节...
+  }, [value]);
  
-  function handleKeyDown(event) {
-    if (event.key === "Tab") {
-      if (event.shiftKey && document.activeElement === firstFocusableElement) {
-        event.preventDefault();
-        lastFocusableElement.focus();
-      } else if (
-        !event.shiftKey &&
-        document.activeElement === lastFocusableElement
-      ) {
-        event.preventDefault();
-        firstFocusableElement.focus();
-      }
-    }
-  }
- 
-  element.addEventListener("keydown", handleKeyDown);
-  element.focus();
+  const mergedValue = isUndefined(value) ? stateValue : value;
+  return [mergedValue, setStateValue, stateValue];
 }`}
-  language="jsx"
+  language="javascript"
 />
 
-这段代码的核心目标，就是在指定的容器元素中创建这样一个焦点陷阱，让用户在使用键盘 `Tab` 或 `Shift + Tab` 切换焦点时，始终在容器内循环切换焦点。
+这里简单解释一下，其实就是你传了 `value` 我就认为你是受控组件，然后 `value` 就透传出去， `defaultValue` 或者组件库想默认给个默认值， 我会用这个值其初始化 `stateValue` 然后传出去。并且 `setStateValue` 方法能改变其值。
 
-核心分为三部分：
+`setStateValue` 其实在传入 `value` 的情况下，也没什么用，因为改变不了 `value` 的值。
 
-- 找到容器内所有可聚焦的元素
-  通过选择器筛选出 `a`、`button`、`input`、`select`、`textarea` 等常见可聚焦元素，以及显式设置了 `tabindex` 的元素，并将它们存入数组中，方便后续处理。
+## 如何将状态传递给子组件
 
-- 记录首尾焦点节点
-  取出第一个和最后一个可聚焦元素，分别用于判断焦点循环的“边界条件”。
+我们可以使用 `context` api，将最终的 `checked`, `disabled`, `readonly` 状态让子组件使用 `useContext` 来获取。
 
-- 拦截键盘事件，实现循环焦点
-  监听容器的 `keydown` 事件。当用户按下 `Tab` 键：
-  如果是 `Shift + Tab` 且当前焦点在第一个元素上，就阻止默认行为，让焦点跳到最后一个元素；
-  如果是普通 `Tab` 且当前焦点在最后一个元素上，就跳回第一个元素。
-  这样就实现了焦点在容器内部首尾循环，形成“焦点陷阱”。
+<CodeBlock
+  code={`<RadioContext.Provider value={{ checked, disabled, readonly }}>
+      <label {...rest} onClick={onLabelClick} aria-disabled={!!disabled} aria-readonly={!!readonly} aria-checked={!!checked}>
+        {/* 为什么没有 readonly 状态， 标准里本来也没有 */}
+        <input type="radio">
+        {children}
+      </label>
+</RadioContext.Provider>`}
+  language="javascript"
+/>
 
-## 难点：支持函数调用
+## 如何保持语义性
 
-很多弹窗类的组件，在实际业务中，很多都是点击事件触发，或者某个用户触发交互事件触发的，而这些交互事件往往是回调函数的形式存在。
-那么这些弹窗如果能是函数调用的方式弹出，就会非常方便。例如：
+我们只需要将 `input` 组件依然接受之前我们的状态，就能保持原生 `radio` 组件的语义性，所以我们完善一下 `input` 组件,也就是把之前的状态传递过去即可：
 
-- Modal.add 增加 `modal` 组件
-- Modal.remove 关闭 `modal` 组件
-- Modal.update 更新 `modal` 组件
-- Modal.removeAll 关闭所有 `modal` 组件
+<CodeBlock
+  code={`<RadioContext.Provider value={{ checked, disabled, readonly }}>
+      <label {...rest} onClick={onLabelClick} aria-disabled={!!disabled} aria-readonly={!!readonly} aria-checked={!!checked}>
+        {/* 为什么没有 readonly 状态， 标准里本来也没有 */}
+        <input
+          ref={inputRef}
+          disabled={!!disabled}
+          value={value}
+          type="radio"
+          checked={!!checked}
+          onChange={onChange}
+          onClick={(e) => {
+            // 阻止 input 的点击事件冒泡，避免重复处理
+            e.stopPropagation();
+          }}
+          aria-readonly={!!readonly}
+        />
+        {children}
+      </label>
+    </RadioContext.Provider>`}
+  language="javascript"
+/>
 
-也就是再也不用如下的调用方式了：
+## Radio Group 逻辑
 
-<CodeBlock code={`<Modal />`} language="jsx" />
+这里简单介绍一下如何使用 `Radio Group` 组件包裹上面我们完成的 `Radio` 组件。
+核心逻辑为, 使用同样是 `useContext` api，我们命名为 `RadioGroupContext` 来把当前选中的 `Radio` 标签的 `value` 传递即可 ：
 
-而是：
+<CodeBlock
+  code={` <div role="radiogroup" {...rest}>
+      <RadioGroupContext.Provider
+        value={{
+          onChangeValue,
+          type,
+          value,
+          disabled,
+          readonly,
+          group: true,
+          name,
+        }}
+      >
+        {children}
+      </RadioGroupContext.Provider>
+    </div>`}
+  language="javascript"
+/>
 
-<CodeBlock code={`Modal.add({ ...xxx参数 });`} language="jsx" />
+## 小结
 
-## 支持自定义 modal
+文章把主要的核心逻辑梳理了一下，并没有过多解释每行代码。如果你想讨论关于如何实现自己组件库的的内容，欢迎加群一起讨论，组件还在不断拓展中，最终会对标大厂组件库。
 
-我们最终支持通过 `content` 属性传入自定义的 `modal` 组件。例如：
+## 欢迎加入简历亮点交流群
 
-<CodeBlock code={`Modal.add({ content: xx传入自定义的 Modal 组件 });`} language="jsx" />
-
-这时候就有问题了，我们的 `Modal.add` 如何给这个自定义 `modal` 组件传入参数呢？然后 `Modal.update` 更新参数的时候，还能自动更新传入到 `content` 组件中？
-我采取了一个比较简单的方式，借助 `React.cloneElement` 方法。类似于：
-
-<CodeBlock code={`React.cloneElement(content, { contentProps });`} language="jsx" />
-
-也就是在 `Modal.add` 方法中传入了 `contentProps` 参数会自动透传给 `content` 组件。从而达到函数调用的方式传入参数的效果。
-
-## 其它技术难点
-
-其实还有很多细节，例如：
-
-- 如何设计第一次获得焦点的元素。（有些表单想打开的时候，某个元素获得焦点）
-- 嵌套 `modal` 设计，例如：一个 `modal` 组件中再嵌套一个 `modal` 组件，这个时候我们需要注意什么问题？
-- 如何处理 `modal` 组件的关闭事件。（例如：点击关闭按钮、点击蒙层、按下 `ESC` 键）
-- 等等
-
-所有关于 `modal` 组件的技术难点，欢迎加入到我们的组件库交流群中。有什么疑问都可以在群里讨论，并且会有视频直播每个组件的实现。
-
-更重要的是,我可以帮助你增加一些简历中的核心项目，例如我们这个组件库级别的。无论你是面试初级开发还是到前端技术专家，都会帮助你在面试中脱颖而出。
+<Promote />
 
 ## 附录
 
-### 安装 modal
+### 安装 radio
 
 <CodeBlock
   code={`npm i @t-headless-ui/react
@@ -249,50 +383,20 @@ pnpm i @t-headless-ui/react`}
   language="bash"
 />
 
-### 引入和使用 modal
-
-`modal` 组件跟别的组件不太一样，首先需要你调用创建一个 `store` 实例：
+### 引入和使用 radio
 
 <CodeBlock
-  code={`import { createModalStore } from '@t-headless-ui/react';
-const modalStore = createModalStore()
+  code={`import { Radio } from '@t-headless-ui/react';
+// use radio
+<Radio.Root>
+    Radio
+</Radio.Root>
+ 
+// use radio group
+<Radio.Group defaultValue="1">
+    <Radio.Root value="1">Option 1</Radio.Root>
+    <Radio.Root value="2">Option 2</Radio.Root>
+</Radio.Group>
 `}
   language="tsx"
 />
-
-目的是用这个 `store` 来管理 `modal` 组件的状态，例如添加、删除、更新 `modal` 组件的状态。
-
-然后引入 `ModalProvider` 组件，将 `store` 实例作为 `prop` 传递给 `ModalProvider` 组件。`ModalProvider` 组件一般放在你的项目的入口文件中，
-例如 `App.tsx` 或者 `App.jsx` 文件。目的是初始化 `Modal` 组件（其背后默认会在 `document.body` 创建一个可以出现 `modal` 信息框），当然我们也支持自定义插入
-到某个 `dom` 元素中，一般情况使用默认的即可。
-
-<CodeBlock
-  code={`import { ModalProvider } from '@t-headless-ui/react';
-<ModalProvider store={modalStore} />`}
-  language="tsx"
-/>
-
-`ModalProvider` 支持传入一些全局参数，包括：
-
-- `maskCls`：指定 `modal` 组件蒙层的类名。
-- `maskStyle`：指定 `modal` 组件蒙层的样式。
-- `focusLock`: 是否开启焦点锁定。默认是 `true`。
-
-以上参数也可以在使用 `Modal.add` 方法时单独传入，会覆盖 `ModalProvider` 组件的全局参数。
-
-最后，就可以引入 `modalStore` 开始调用了：
-
-<CodeBlock
-  code={`<button
-  onClick={() =>
-    modalStore.add({
-      content: xxx 自己封装的 Modal 组件,
-    })
-  }
->
-  open modal
-</button>`}
-  language="tsx"
-/>
-
-因为我们的 `modal` 组件是一个 `headless` 组件，所以弹出的内容完全是自定义的，在 `Alert` 组件中，我们提供了一个简单的样例，大家可以去参考一下。

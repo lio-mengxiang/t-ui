@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Radio, RadioProps } from '@t-headless-ui/react';
 import { cs } from '@/_utils';
 
-export const TRadio = ({ children, ...rest }: RadioProps) => {
+export const TRadio = ({ children, className, ...rest }: RadioProps) => {
   return (
     <Radio.Root
       className={cs(
@@ -10,6 +10,7 @@ export const TRadio = ({ children, ...rest }: RadioProps) => {
         '[&_>input[type="radio"]]:absolute [&_>input[type="radio"]]:left-0 [&_>input[type="radio"]]:top-0 [&_>input[type="radio"]]:opacity-0, [&_>input[type="radio"]]:w-0 [&_>input[type="radio"]]:h-0',
         '[&[aria-disabled="true"]]:cursor-not-allowed [&[aria-disabled="true"]]:text-color-400',
         '[&[aria-readonly="true"]]:cursor-default',
+        className,
       )}
       {...rest}
     >

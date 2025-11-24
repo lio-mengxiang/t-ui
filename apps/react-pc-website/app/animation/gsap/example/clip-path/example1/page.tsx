@@ -28,6 +28,7 @@ export default function Home() {
           end: '+=2000px',
           pin: true,
           pinSpacing: false,
+          markers: true,
           scrub: 1.2,
         },
       });

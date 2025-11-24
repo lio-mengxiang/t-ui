@@ -1,11 +1,12 @@
 'use client';
 
+import { AnimateNumber } from '@/_components/animateNumber';
 import { TUI } from '@/_components/layout/component-layout/t-ui';
 import { getImageUrl } from '@/_utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import React, { useRef } from 'react';
+import React, { type ReactNode, useRef, useState } from 'react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,6 +17,8 @@ export default function Home() {
   const headerRef = useRef(null);
   const heroImgRef = useRef(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animateTime = useRef(0);
+  const [loadProgress, setLoadProgress] = useState<ReactNode[] | string>('20');
 
   const setCanvasSize = () => {
     if (!canvasRef.current) return;
@@ -93,32 +96,29 @@ export default function Home() {
               gsap.set(navRef.current, { opacity: 0 });
             }
 
-            if (progress <= 0.25) {
-              const zProgress = progress / 0.25;
-              const translateZ = zProgress * -500;
+            if (progress <= 0.3) {
+              const zProgress = progress / 0.3;
+              const scale = 1 - zProgress * 0.2;
               let opacity = 1;
               if (progress >= 0.2) {
-                const fadeProgress = Math.min((progress - 0.2) / (0.25 - 0.2), 1);
+                const fadeProgress = (progress - 0.2) / (0.3 - 0.2);
                 opacity = 1 - fadeProgress;
               }
-              gsap.set(headerRef.current, { transform: `translate(-50%, -50%) translateZ(${translateZ}px)`, opacity });
+              gsap.set(headerRef.current, { transform: `translate(-50%, -50%) scale(${scale})`, opacity });
             } else {
               gsap.set(headerRef.current, { opacity: 0 });
             }
 
             if (progress < 0.6) {
               gsap.set(heroImgRef.current, { transform: `translateZ(1000px)`, opacity: 0 });
-            } else if (progress >= 0.6 && progress <= 0.9) {
-              const imgProgress = (progress - 0.6) / (0.9 - 0.6);
+            } else if (progress >= 0.6 && progress <= 0.8) {
+              const imgProgress = (progress - 0.6) / (0.8 - 0.6);
               const translateZ = 1000 - imgProgress * 1000;
               let opacity = 0;
-              if (progress <= 0.8) {
-                // opacity 从 0 到 1,到 0.8 就保持 1
-                const opacityProgress = (progress - 0.6) / (0.8 - 0.6);
-                opacity = opacityProgress;
-              } else {
-                opacity = 1;
-              }
+
+              // opacity 从 0 到 1,到 0.8 就保持 1
+              const opacityProgress = (progress - 0.6) / (0.7 - 0.6);
+              opacity = opacityProgress;
 
               gsap.set(heroImgRef.current, { transform: `translateZ(${translateZ}px)`, opacity });
             } else {
@@ -127,7 +127,47 @@ export default function Home() {
           },
         });
       };
+
+      let currentLoadProgress = 0;
+      let timer: any = null;
+      function updateLoadProgress() {
+        const progress = Math.round((currentLoadProgress / frameCount) * 100);
+        if (animateTime.current === 1) {
+          setLoadProgress(String(60));
+          return;
+        }
+
+        // if (animateTime.current === 2) {
+        //   setLoadProgress(String(60));
+        //   return;
+        // }
+        if (progress <= 60) {
+          return;
+        }
+        if (progress > 60 && progress <= 90) {
+          setLoadProgress(String(90));
+          return;
+        }
+
+        if (progress >= 99) {
+          setLoadProgress(String(100));
+          clearTimeout(timer);
+          setTimeout(() => {
+            gsap.to('.overlay', {
+              clipPath: 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)',
+              duration: 1.25,
+              ease: 'power4.inOut',
+            });
+          }, 1000);
+        }
+      }
+      timer = setInterval(() => {
+        animateTime.current++;
+        updateLoadProgress();
+      }, 700);
+
       const onLoad = () => {
+        currentLoadProgress++;
         imagesToLoad--;
         if (!imagesToLoad) {
           render();
@@ -165,6 +205,12 @@ export default function Home() {
       data-video="https://www.youtube.com/redirect?event=video_description&redir_token=QUFFLUhqbmRFcFNrYVZGcmlnUkxNaVEwVDlEMUFhY0lqQXxBQ3Jtc0ttdDhDN2EwSHF5dGhEMGZQeU0xODZkSlBoaDRiRDBTSzhXSG1tcWFhSjBXbU5KdTFmempkUlRzMENqZldyQ203cllHck9Mb3JycDZOckxvSEh5dDdLdldmWFdrcTNHa1QyNmlzZWNvQTBMbTZuTWRxOA&q=https%3A%2F%2Fwww.pexels.com%2Fvideo%2Fa-desert-with-sand-dunes-and-some-bushes-19376556%2F&v=DTTNSjyEtes"
       data-convert="https://imagestool.com/zh_CN/convert-images"
     >
+      <div
+        className="overlay fixed top-0 left-0 w-screen h-[calc(var(--dvh)_*_100)] flex place-items-end text-[10vw] z-[999] bg-[#f6f1eb]"
+        style={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' }}
+      >
+        <AnimateNumber value={loadProgress} stagger={0.03} className="mb-[4vh] ml-[8vh] opacity-80" />
+      </div>
       <nav ref={navRef} className="fixed w-screen px-[2rem] py-[1.5rem] grid grid-cols-3 gap-[2rem] z-[2]">
         <div className="flex gap-[3rem] items-center">
           <a className="no-underline text-sm font-medium text-[#49413a] tracking-wider [text-shadow:0_0_4px_rgba(255,255,255,1)]" href="#">
