@@ -9,7 +9,7 @@ function _Button(props: PropsWithChildren<ButtonProps>, ref: React.Ref<HTMLButto
 
   const handleClick: MouseEventHandler = (event): void => {
     if (loading || disabled) {
-      event?.preventDefault?.();
+      event.preventDefault(); // 阻止按钮默认行为，防止在 loading 或 disabled 状态下意外提交表单或触发其他默认事件
       return;
     }
     onClick?.(event);

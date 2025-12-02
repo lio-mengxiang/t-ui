@@ -2,7 +2,6 @@
 import React, { useContext, useRef } from 'react';
 import { RadioGroupContext } from '../radioContext';
 import { useMergeValue } from '../../hooks';
-import { isFunction } from '../../utils';
 import { getMergeProps } from '../utils';
 
 // types
@@ -48,16 +47,12 @@ export function Radio(props: RadioProps) {
       e.preventDefault();
       return;
     }
-    if (isFunction(mergeProps.children)) {
-      e.preventDefault();
-      inputRef.current?.click();
-    }
     rest?.onClick?.(e);
   };
 
   return (
     <RadioContext.Provider value={{ checked, disabled, readonly }}>
-      <label {...rest} onClick={onLabelClick} aria-disabled={!!disabled} aria-readonly={!!readonly}>
+      <label {...rest} onClick={onLabelClick} aria-disabled={!!disabled} aria-readonly={!!readonly} aria-checked={!!checked}>
         {/* 为什么没有 readonly 状态， 标准里本来也没有 */}
         <input
           ref={inputRef}
