@@ -23,6 +23,7 @@ export default {
         'color-400': 'var(--text-color-400)',
         'color-500': 'var(--text-color-500)',
         'color-600': 'var(--text-color-600)',
+        'color-reverse': 'var(--text-color-reverse)',
       }),
       backgroundColor: () => ({
         color: 'var(--bg-color)',
@@ -30,6 +31,7 @@ export default {
         'color-100': 'var(--bg-color-100)',
         'color-200': 'var(--bg-color-200)',
         'color-800': 'var(--bg-color-800)',
+        'color-reverse': 'var(--bg-color-reverse)',
       }),
       zIndex: {
         affix: 'var(--z-index-affix)',

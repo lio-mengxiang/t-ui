@@ -19,6 +19,8 @@ const menuLinks = [
       { path: '/popover', label: '弹出框 Popover' },
       { path: '/toast', label: '消息 Toast' },
       { path: '/alert', label: '警告 Alert' },
+      { path: '/radio', label: '单选框 Radio' },
+      { path: '/checkbox', label: '复选框 Checkbox' },
     ],
   },
 ];
@@ -68,19 +70,19 @@ export function NavOverlay() {
         <NavButton word="所有组件" stagger={0.02} />
       </div>
       <div
-        className="menu-overlay fixed top-0 left-0 w-screen h-screen px-6 py-5 bg-[#f6c646] z-[2] flex"
+        className="menu-overlay fixed top-0 left-0 w-screen h-[calc(var(--dvh,1vh)*100)] px-6 py-5 bg-[#f6c646] z-[2] flex"
         style={{ clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)' }}
       >
         {/* nav bar */}
         <div
-          className="absolute group bottom-20 left-1/2 g active:text-slate-400 px-4 py-2 rounded-md cursor-pointer w-7 h-7 flex justify-center items-center bg-[#0a0a0a] text-[#f5c747]"
+          className="absolute group bottom-10 left-1/2 g active:text-slate-400 px-4 py-2 rounded-md cursor-pointer w-7 h-7 flex justify-center items-center bg-[#0a0a0a] text-[#f5c747]"
           onClick={toggleMenu}
         >
           <div className="group-hover:rotate-180 duration-300">&#x2715;</div>
         </div>
 
         {/* menu content */}
-        <div className="mt-2 px-12 w-full font-geist-sans">
+        <div className="mt-2 px-12 w-full font-geist-sans h-[90%] overflow-auto">
           <div className="text-[#fff99f] mb-10">组件还在补充中，希望能够帮助你有一个亮点项目放入简历！</div>
           {menuLinks.map((item, index) => (
             <div key={index} className="md:w-1/4 w-full text-[#191919]">

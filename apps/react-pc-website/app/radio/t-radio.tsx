@@ -26,8 +26,8 @@ function Indicator() {
   return (
     <div
       className={cs(
-        'relative border border-color border-solid rounded-full w-4 h-4 transition-all duration-300 shadow-sm after:transition-all after:duration-300',
-        'after:content-[""] after:absolute after:top-1/2 after:left-1/2 after:transform after:-translate-x-1/2 after:-translate-y-1/2 after:w-[7px] after:h-[7px] after:rounded-full after:bg-none',
+        'relative border border-color border-solid rounded-full w-4 h-4 transition-all duration-300 shadow-sm after:transition-all after:duration-300 flex justify-center items-center',
+        'after:content-[""] after:w-[7px] after:h-[7px] after:rounded-full after:bg-none',
         {
           'after:bg-color-800': checked && !disabled,
           'after:bg-color-200': checked && disabled,

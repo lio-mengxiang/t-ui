@@ -2,6 +2,7 @@ import { createContext } from 'react';
 
 export interface CheckboxGroupContextProps {
   disabled?: boolean;
+  readonly?: boolean;
   isCheckboxGroup: boolean;
   onGroupChange: (_optionValue, _checked: boolean, e: Event) => void;
   checkboxGroupValue: (string | number)[];

@@ -1,25 +1,16 @@
-import React, { CSSProperties, ReactNode } from 'react';
+import React, { HTMLAttributes, ReactNode } from 'react';
 
 /**
  * @title Checkbox
  * @zh `T = string | number`
  * @en `T = string | number`
  */
-export interface CheckboxProps<T extends React.ReactText = any>
-  extends Omit<React.HTMLAttributes<HTMLLabelElement>, 'children' | 'className' | 'onChange'> {
-  style?: CSSProperties;
-  className?: string | string[];
-  themeStyle?: Record<string, any>;
+export interface CheckboxProps<T = any> extends Omit<React.HTMLAttributes<HTMLLabelElement>, 'children' | 'onChange'> {
   /**
    * @zh 是否禁用
    * @en Whether to disable
    */
   disabled?: boolean;
-  /**
-   * @zh 错误样式
-   * @en Whether to show in error style
-   */
-  error?: boolean;
   /**
    * @zh 是否选中
    * @en Whether the checkbox is checked
@@ -45,49 +36,43 @@ export interface CheckboxProps<T extends React.ReactText = any>
    * @en To set checkbox value
    */
   value?: T;
-  checkboxGroupValue?: T[];
   onGroupChange?: (value: T, checked: boolean) => void;
-  isCheckboxGroup?: boolean;
-  children?: ReactNode | ((value: { checked: boolean; indeterminate: boolean }) => ReactNode);
+  children?: ReactNode;
+  /**
+   * @zh 是否只读
+   * @en Whether the radio is readonly
+   */
+  readonly?: boolean;
 }
 
 /**
  * @title Checkbox.Group
  */
-export interface CheckboxGroupProps<T extends string | number> {
-  style?: CSSProperties;
-  className?: string | string[];
-  themeStyle?: Record<string, any>;
+export interface CheckboxGroupProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onChange'> {
   /**
    * @zh 整组失效
    * @en Whether to disable all checkboxes in the group
    */
   disabled?: boolean;
   /**
-   * @zh 方向
-   * @en Arrangement direction
-   * @defaultValue horizontal
-   */
-  direction?: 'horizontal' | 'vertical';
-  error?: boolean;
-  /**
    * @zh 默认选中的选项
    * @en Initial selected value
    */
-  defaultValue?: T[];
-  /**
-   * @zh 可选项
-   * @en Specifies options
-   */
-  options?: (T | { label: ReactNode; value: T; disabled?: boolean })[];
+  defaultValue?: any[];
   /**
    * @zh 选中的选项（受控模式）
    * @en To set value
    */
-  value?: T[];
+  value?: any[];
   /**
    * @zh 变化时的回调函数
    * @en Callback when the state changes
    */
-  onChange?: (value: T[], e: Event) => void;
+  onChange?: (value: any[], e: Event) => void;
+  /**
+   * @zh 是否只读
+   * @en Whether the radio group is readonly
+   */
+  readonly?: boolean;
+  children: ReactNode;
 }

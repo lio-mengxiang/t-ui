@@ -1,0 +1,352 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide } from '@/_components/typography';
+import { CodePreview } from '@/_components/code-preview';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { Promote } from '@/_components/promote';
+
+<H1 subheading="高拓展性 checkbox 实现思路">拓展性如此强大的 Checkbox，有必要了解一下！</H1>
+
+<ImageTypography src="/checkbox/checkbox.webp" fill alt="button" />
+
+## 前言
+
+为什么说我们的 Checkbox 组件拓展性高呢？
+
+从本质上讲，Checkbox 组件的核心就是多选逻辑。一旦实现了多选的核心机制，UI 表现形式就变得相对次要了。多选的本质无非就是：
+
+- 定义选中和未选中状态的 UI 表现
+
+- 确保同一时间可以有多个选项被选中
+
+这就是多选逻辑的简单精髓。
+
+在我们的 @t-headlessui/react 组件库中，`Checkbox` 组件（在库中命名为 `Checkbox.Root`）与 `Checkbox.Group` 已经完美实现了上述逻辑，两者配合使用即可轻松构建多选功能。
+
+本文不会逐行解析具体代码实现（对此感兴趣的同学欢迎进群交流，如果需要包装简历，我也可以手把手指导，甚至协助撰写简历内容），而是重点介绍如何实现 `UI` 自定义的核心逻辑。
+
+## 可自定义性的核心原理
+
+传统的 `Checkbox` 组件主要通过 `<input type="checkbox">` 标签实现，浏览器会为其渲染默认的样式：
+
+<ImageTypography src="/checkbox/default-checkbox.webp" fill alt="popover" imageClassName="object-contain" />
+
+### 核心洞察
+
+要实现真正的样式自定义，我们就必须突破原生 `Checkbox` 的样式限制。但问题来了：只要实现了 `Checkbox` 的内在逻辑，本质上就实现了 `Checkbox` 组件。
+
+那么，什么是 `Checkbox` 的内在逻辑呢？
+
+四大核心逻辑：
+
+- 选中状态逻辑，传入点击选项时切换选中状态（checked）
+
+- 禁用状态逻辑，传入 `disabled` 参数时，元素不可交互
+
+  - 视觉上表现为不可点击状态（如 cursor: not-allowed）
+
+- 只读状态逻辑：注意原生 `Checkbox` 不支持 `readonly` 状态，但业务场景中极为常见, 所以我们的组件增加了这个状态
+
+- 多选逻辑：多个 checkbox 组合时，可以同时选中多个选项
+
+### 更理想的解决方案
+
+能否在保持 checkbox 组件原有逻辑的基础上，同时支持完全自定义的 `UI`？
+
+也就是说：
+
+- 用户仍可选择使用原生 checkbox（保持语义完整性）
+
+- 也支持完全自定义的 `UI` 表现
+
+答案是肯定的！ 我们的组件正是基于这一理念设计的。
+
+在介绍核心逻辑之前，我们先说一个小技巧。
+
+## checkbox 组件基本结构
+
+<ImageTypography src="/checkbox/default-checkbox.webp" fill alt="popover" imageClassName="object-contain" />
+
+观察上图可以发现，标准的 checkbox 组件通常包含两个部分：
+
+- 左侧的方形图标（表示选中状态）
+- 右侧的描述文字
+
+在实际使用中，我们期望不仅点击方形图标可以选中，点击右侧文字也应该能触发选中。这个功能是如何实现的呢？关键在于 `<label>` 标签的巧妙运用。
+
+### 方法一：MDN 推荐方式
+
+<CodeBlock
+  code={`<div>
+  <input type="checkbox" id="huey" name="drone" value="huey" checked />
+  <label for="huey">Huey</label>
+</div>`}
+  language="html"
+/>
+
+实现要点：
+
+- 在 `input` 上定义唯一的 `id` 属性
+- 在 `label` 上设置对应的 `for` 属性
+- 两者值匹配时，点击 `label` 即可选中关联的 `checkbox`
+
+缺点： 需要维护 `input` 上的 `id` 属性与 `label` 上的 `for` 属性对应关系，较为繁琐。
+
+### 方法二：嵌套包裹方式
+
+<CodeBlock
+  code={`<label>
+  <input type="checkbox" value="huey" />
+  Huey
+</label>`}
+  language="html"
+/>
+
+优势：
+
+- 结构更简洁，无需维护 `id` 映射
+- `label` 自动与内部的 `input` 建立关联
+- 点击 `label` 内的任何区域（包括文字）都能触发 `checkbox` 选中
+
+了解完基本的结构后，我们开始先说一下触发 `checkbox` 选中的机制的完整流程。
+
+### 状态切换的完整流程
+
+基于上述结构，我们来梳理完整的状态切换逻辑，为后续实现提供清晰的蓝图：
+
+- 用户交互起点
+
+  - 用户点击 `label` 区域（包括图标或文字）
+  - 触发绑定在 `label` 上的 `onClick` 事件
+
+- 事件冒泡传递
+
+  - `label` 的点击事件会自动触发内部 `input` 的 `onClick` 事件
+  - 这是浏览器默认的事件冒泡机制
+
+- 状态变更核心
+  - `input` 的 `onClick` 最终触发自身的 `onChange` 事件
+  - 在 `onChange` 中将选中的值设置为当前 `input` 的 `value`
+
+补充说明：`input` 等表单元素的核心作用就是收集用户输入值，通过 `value` 属性传递给表单提交或状态管理。
+
+可视化流程：
+
+<CodeBlock
+  code={`用户点击 Label
+↓
+触发 label.onClick
+↓  
+冒泡至 input.onClick
+↓
+触发 input.onChange
+↓
+更新选中状态 (value)`}
+  language="bash"
+/>
+
+虽然整体逻辑看似清晰简单，但实际开发中隐藏着不少陷阱。我们将逐一剖析这些常见问题，一旦理解并规避了这些坑，您就能轻松实现一个健壮可靠的 `checkbox` 组件。
+
+## 三个核心技术点
+
+基于前述分析，我们构建三层事件处理机制来完善 Checkbox 组件的交互逻辑。
+
+第一个: `Label` 点击拦截
+
+<CodeBlock
+  code={`const onLabelClick = function (e) {
+  // 只读或禁用时，阻止点击产生任何行为
+  if (disabled || readonly) {
+    e.preventDefault();
+    return;
+  }
+  rest?.onClick?.(e);
+};`}
+  language="javascript"
+/>
+
+关键要点：
+
+- 状态拦截：当组件处于 `disabled` 或 `readonly` 状态时，直接返回
+- 事件阻止：调用 `e.preventDefault()` 阻止浏览器默认行为，防止触发 `input` 的选中状态变更
+
+因为 `label` 点击会触发 `<input type="checkbox">` 的点击事件，所以我们需要在 `label` 点击事件中判断是否是 `disabled` 或 `readonly` 状态，如果是，就阻止点击事件的冒泡。
+
+第二个: `Input` 点击隔离
+
+<CodeBlock
+  code={`onClick={(e) => {
+  // 阻止 input 的点击事件冒泡，避免重复处理
+  e.stopPropagation();
+}}`}
+  language="javascript"
+/>
+
+设计意图：
+
+有时候可能会只点击 `<input type="checkbox">` 而不点击 `<label>`，这时候我们需要在 `input` 点击事件中阻止事件冒泡，避免触发 `label` 的点击事件。
+
+第三个: `Change` 事件核心逻辑
+
+<CodeBlock
+  code={`const [checked, setChecked] = useMergeValue(false, {
+  value: propsChecked,
+  defaultValue: mergeProps.defaultChecked,
+});
+ 
+const onChange = (e) => {
+  e.persist();
+  e.stopPropagation();
+ 
+  // 禁用或只读都不改变状态，不触发外部 onChange
+  if (disabled || readonly) return;
+ 
+  if (context.isCheckboxGroup) {
+    onGroupChange?.(mergeProps.value, e.target.checked, e);
+  } else {
+    setChecked(e.target.checked);
+  }
+  propsOnChange?.(e.target.checked, e);
+ 
+};`}
+  language="javascript"
+/>
+
+以下是一些坑点介绍：
+
+<CodeBlock code={`e.persist(); // React 17+ 可安全移除`} language="javascript" />
+
+历史背景：`React 16` 及之前版本使用事件池机制，异步代码中无法访问事件对象。现代 `React` 已移除此机制。
+
+- 事件冒泡控制
+
+<CodeBlock code={`e.stopPropagation();`} language="javascript" />
+
+防止 `Checkbox` 嵌套时，内层事件冒泡影响外层 `Checkbox` 组件的 `onChange` 事件，确保事件处理的独立性。
+
+<CodeBlock code={`if (disabled || readonly) return;`} language="javascript" />
+
+检查是否是 `disabled` 或者 `readonly` 状态，这样的状态不能让它触发 `onChange` 事件
+
+<CodeBlock
+  code={`if (context.isCheckboxGroup) {
+  onGroupChange?.(mergeProps.value, e.target.checked, e);
+} else {
+  setChecked(e.target.checked); =
+}`}
+  language="javascript"
+/>
+
+写组件库经常会遇到受控和非受控组件的难题，以下是将受控和非受控逻辑合并的代码：
+
+以下是 `useMergeValue` 函数的逻辑：
+
+<CodeBlock
+  code={`export function useMergeValue<T>(
+  defaultStateValue: T,
+  props?: {
+    defaultValue?: T;
+    value?: T;
+  },
+) {
+  const { defaultValue, value } = props || {};
+  
+  const [stateValue, setStateValue] = useState<T>(
+    !isUndefined(value) ? value : !isUndefined(defaultValue) ? defaultValue : defaultStateValue,
+  );
+ 
+  // 处理受控转非受控的场景
+  useEffect(() => {
+    // 实现细节...
+  }, [value]);
+ 
+  const mergedValue = isUndefined(value) ? stateValue : value;
+  return [mergedValue, setStateValue, stateValue];
+}`}
+  language="javascript"
+/>
+
+这里简单解释一下，其实就是你传了 `value` 我就认为你是受控组件，然后 `value` 就透传出去， `defaultValue` 或者组件库想默认给个默认值， 我会用这个值其初始化 `stateValue` 然后传出去。并且 `setStateValue` 方法能改变其值。
+
+`setStateValue` 其实在传入 `value` 的情况下，也没什么用，因为改变不了 `value` 的值。
+
+## 如何将状态传递给子组件
+
+我们可以使用 `context` api，将最终的 `checked`, `disabled`, `readonly`, `indeterminate` 状态让子组件使用 `useContext` 来获取。
+
+<CodeBlock
+  code={`<CheckboxContext.Provider value={{ checked, disabled, readonly, indeterminate }}>
+      <label {...rest} onClick={onLabelClick} aria-disabled={!!disabled} aria-readonly={!!readonly} aria-checked={!!checked}>
+        {/* 为什么没有 readonly 状态， 标准里本来也没有 */}
+        <input type="checkbox">
+        {children}
+      </label>
+</CheckboxContext.Provider>`}
+  language="javascript"
+/>
+
+## 如何保持语义性
+
+我们只需要将 `input` 组件依然接受之前我们的状态，就能保持原生 `checkbox` 组件的语义性，所以我们完善一下 `input` 组件,也就是把之前的状态传递过去即可：
+
+<CodeBlock
+  code={`<CheckboxContext.Provider value={{ checked, disabled, readonly, indeterminate }}>
+      <label {...rest} onClick={onLabelClick} aria-disabled={!!disabled} aria-readonly={!!readonly} aria-checked={!!checked}>
+        {/* 为什么没有 readonly 状态， 标准里本来也没有 readonly 属性 */}
+        <input
+          ref={inputRef}
+          disabled={!!disabled}
+          value={value}
+          type="checkbox"
+          checked={!!checked}
+          onChange={onChange}
+          onClick={(e) => {
+            // 阻止 input 的点击事件冒泡，避免重复处理
+            e.stopPropagation();
+          }}
+          aria-readonly={!!readonly}
+        />
+        {children}
+      </label>
+    </CheckboxContext.Provider>`}
+  language="javascript"
+/>
+
+## Checkbox Group 逻辑
+
+这里涉及到一个很常用的组件设计技巧：发布订阅模式，这部分有兴趣的欢迎加入我们的组件库交流群一起讨论哦。
+
+## 小结
+
+文章把主要的核心逻辑梳理了一下，并没有过多解释每行代码。如果你想讨论关于如何实现自己组件库的的内容，欢迎加群一起讨论，组件还在不断拓展中，最终会对标大厂组件库。
+
+## 欢迎加入简历亮点交流群
+
+<Promote />
+
+## 附录
+
+### 安装 checkbox
+
+<CodeBlock
+  code={`npm i @t-headless-ui/react
+yarn i @t-headless-ui/react
+pnpm i @t-headless-ui/react`}
+  language="bash"
+/>
+
+### 引入和使用 checkbox
+
+<CodeBlock
+  code={`import { Checkbox } from '@t-headless-ui/react';
+// use checkbox
+<Checkbox.Root>
+    Checkbox
+</Checkbox.Root>
+ 
+// use checkbox group
+<Checkbox.Group defaultValue={['1']}>
+    <Checkbox.Root value="1">Option 1</Checkbox.Root>
+    <Checkbox.Root value="2">Option 2</Checkbox.Root>
+</Checkbox.Group>
+`}
+  language="tsx"
+/>

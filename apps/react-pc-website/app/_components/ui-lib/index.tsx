@@ -10,5 +10,20 @@ import { TModal } from '@/modal/t-modal';
 import { TRadio } from '@/radio/t-radio';
 import { TButtonRadio } from '@/radio/t-button-radio';
 import { PixelButton } from '@/button/tailwind-button/pixel-button';
+import { TCheckbox } from '@/checkbox/t-checkbox';
 
-export { TButton, TPopover, TAlert, TMessage, TInput, InputSearch, Password, TModalBox, TModal, TRadio, TButtonRadio, PixelButton };
+export {
+  TButton,
+  TPopover,
+  TAlert,
+  TMessage,
+  TInput,
+  InputSearch,
+  Password,
+  TModalBox,
+  TModal,
+  TRadio,
+  TButtonRadio,
+  PixelButton,
+  TCheckbox,
+};

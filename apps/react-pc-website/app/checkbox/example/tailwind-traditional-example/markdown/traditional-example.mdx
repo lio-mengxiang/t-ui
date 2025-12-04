@@ -1,0 +1,64 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { BasicExample, CheckedExample, GroupExample, IndeterminateExample } from './example';
+
+本质上 `checkbox` 组件的就是一个多选的逻辑，但很多组件库的多选按钮仅限于方形的 `checkbox` 按钮。
+
+而我们的 `checkbox` 组件，默认我封装为了 `TCheckbox` 组件是方形的 `checkbox` 按钮外，也支持用户自己用 `tailwindcss` 或者 `css` 来自定义样式。
+
+你会在创意案例中你后续会增加很多好玩的多选样式。
+
+{/* ### 基础多选框 */}
+
+<H3Sub
+  sub={
+    <>
+      <div className="mb-2">可以看到，我们的 <Code>checkbox</Code> 组件，主要有三种状态，分别是： <Code>default</Code>、 <Code>disabled</Code>、<Code>readonly</Code>。然后分别每种状态有选中和未选中的样式。 </div>
+      <div>需要注意，HTML 标准并不支持 <Code>readonly</Code> 属性，这是我们组件单独封装的。</div>
+    </>
+
+}
+
+> {'基础多选框'}</H3Sub>
+
+<BasicExample />
+
+{/* ### 受控按钮 */}
+
+<H3Sub
+  sub={
+    <>
+      通过 <Code>checked</Code> 属性控制是否选中
+    </>
+  }
+>
+  {'受控按钮'}
+</H3Sub>
+<CheckedExample />
+
+{/* ###  多选框 Group */}
+
+<H3Sub
+  sub={
+    <>
+      将多个 <Code>checkbox</Code> 组件放在一个 <Code>checkbox-group</Code> 组件中，注意一定要设置 <Code>defaultValue</Code> 或者
+      <Code>value</Code> 属性才能实现多选框组的功能。
+    </>
+  }
+>
+  {'多选框 Group'}
+</H3Sub>
+<GroupExample />
+
+{/* ###  半选 Group */}
+
+<H3Sub
+  sub={
+    <>
+      通过 <Code>indeterminate</Code> 属性可以实现半选效果
+    </>
+  }
+>
+  {'半选 Group'}
+</H3Sub>
+<IndeterminateExample />

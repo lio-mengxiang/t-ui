@@ -1,18 +1,13 @@
-import React, { useContext, PropsWithChildren, useState } from 'react';
-import { useMergeValue } from '@mx-design/hooks';
-import { isArray, isObject } from '@mx-design/web-utils';
-import { Checkbox } from './checkbox';
-import { ConfigContext } from '../../ConfigProvider';
-import { useGroupClassNames } from '../hooks';
+import React, { useState } from 'react';
+import { useMergeValue } from '../../hooks';
+
 import { CheckboxGroupContext } from '../checkboxGroupContext';
 // type
 import type { CheckboxGroupProps } from '../interface';
-import { useStyles } from '../../hooks';
 
-function Group<T extends string | number>(props: PropsWithChildren<CheckboxGroupProps<T>>) {
+export function Group(props: CheckboxGroupProps) {
   // props
-  const { getPrefixCls } = useContext(ConfigContext);
-  const { disabled, options, style, themeStyle, className, error, children, direction = 'horizontal' } = props;
+  const { disabled, children, readonly, onChange: propsOnchange, ...rest } = props;
 
   // state
   const [value, setValue] = useMergeValue([], {
@@ -21,13 +16,12 @@ function Group<T extends string | number>(props: PropsWithChildren<CheckboxGroup
   });
   const [allOptionValues, setAllOptionValues] = useState([]);
 
-  // classnames
-  const { wrapperCls } = useGroupClassNames({ error, direction, className, getPrefixCls });
-  // style
-  const { wrapperStyle } = useStyles<PropsWithChildren>({ style, themeStyle });
-
   // function
   const onChange = function (optionValue, checked: boolean, e: Event) {
+    if (!Array.isArray(value)) {
+      console.error('Checkbox.Group value must be an array');
+      return;
+    }
     const newVal = value?.slice() || [];
     if (checked) {
       newVal.push(optionValue);
@@ -35,20 +29,21 @@ function Group<T extends string | number>(props: PropsWithChildren<CheckboxGroup
       newVal.splice(value.indexOf(optionValue), 1);
     }
     setValue(newVal);
-    props?.onChange?.(
+    propsOnchange?.(
       newVal.filter((v) => allOptionValues.indexOf(v) > -1),
-      e
+      e,
     );
   };
 
   return (
-    <div className={wrapperCls} style={wrapperStyle}>
+    <div role="checkboxgroup" {...rest}>
       <CheckboxGroupContext.Provider
         value={{
           isCheckboxGroup: true,
           checkboxGroupValue: value,
           onGroupChange: onChange,
           disabled,
+          readonly,
           registerValue: (value) => {
             setAllOptionValues((allOptionValues) => Array.from(new Set([...allOptionValues, value])));
           },
@@ -57,28 +52,8 @@ function Group<T extends string | number>(props: PropsWithChildren<CheckboxGroup
           },
         }}
       >
-        {isArray(options)
-          ? options.map((option) => {
-              if (isObject(option)) {
-                return (
-                  <Checkbox disabled={disabled || option.disabled} key={option.value} value={option.value}>
-                    {option.label}
-                  </Checkbox>
-                );
-              }
-
-              return (
-                <Checkbox disabled={disabled} key={option} value={option}>
-                  {option}
-                </Checkbox>
-              );
-            })
-          : children}
+        {children}
       </CheckboxGroupContext.Provider>
     </div>
   );
 }
-
-Group.displayName = 'CheckboxGroup';
-
-export default Group;

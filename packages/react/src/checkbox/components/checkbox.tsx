@@ -1,37 +1,27 @@
 import React, { useContext, useRef, useEffect } from 'react';
-import { isFunction, omit } from '@mx-design/web-utils';
-import { useMergeProps, useMergeValue } from '@mx-design/hooks';
-import Group from './group';
-import { ConfigContext } from '../../ConfigProvider';
-import IconCheck from './icon-check';
 import { CheckboxGroupContext } from '../checkboxGroupContext';
 import { getMergeProps } from '../utils';
-import { useClassNames } from '../hooks';
-import { useStyles } from '../../hooks';
+
 // type
 import type { CheckboxProps } from '../interface';
 import type { CheckboxGroupContextProps } from '../checkboxGroupContext';
 import { CheckboxContext } from './context';
+import { useMergeValue } from '../../hooks';
 
-const defaultProps = {};
-
-function Checkbox<T extends string | number>(baseProps: CheckboxProps<T>, ref) {
+export function Checkbox<T extends string | number>(props: CheckboxProps<T>) {
   // CheckboxGroupContext
   const context = useContext<CheckboxGroupContextProps>(CheckboxGroupContext);
   const { onGroupChange } = context;
 
-  // props
-  const { getPrefixCls, componentConfig } = useContext(ConfigContext);
-  const props = useMergeProps<CheckboxProps>(baseProps, defaultProps, componentConfig?.Checkbox);
   const mergeProps = getMergeProps({ props, context });
-  const { disabled, children, className, value, style, themeStyle, indeterminate, error, ...rest } = mergeProps;
+  const { disabled, children, readonly, value, checked: propsChecked, onChange: propsOnChange, indeterminate, ...rest } = mergeProps;
 
   // ref
   const inputRef = useRef<HTMLInputElement>(null);
 
   // state
   const [checked, setChecked] = useMergeValue(false, {
-    value: mergeProps.checked,
+    value: propsChecked,
     defaultValue: mergeProps.defaultChecked,
   });
 
@@ -46,12 +36,16 @@ function Checkbox<T extends string | number>(baseProps: CheckboxProps<T>, ref) {
   const onChange = function (e) {
     e.persist();
     e.stopPropagation();
+
+    // 禁用或只读都不改变状态，不触发外部 onChange
+    if (disabled || readonly) return;
+
     if (context.isCheckboxGroup) {
       onGroupChange?.(mergeProps.value, e.target.checked, e);
     } else {
       setChecked(e.target.checked);
     }
-    mergeProps?.onChange?.(e.target.checked, e);
+    propsOnChange?.(e.target.checked, e);
   };
 
   const onLabelClick = function (e) {
@@ -64,7 +58,7 @@ function Checkbox<T extends string | number>(baseProps: CheckboxProps<T>, ref) {
   };
 
   return (
-    <CheckboxContext.Provider value={{ checked, disabled, readonly }}>
+    <CheckboxContext.Provider value={{ checked, disabled, indeterminate, readonly }}>
       <label {...rest} onClick={onLabelClick} aria-disabled={!!disabled} aria-readonly={!!readonly} aria-checked={!!checked}>
         <input
           value={value}
@@ -83,15 +77,3 @@ function Checkbox<T extends string | number>(baseProps: CheckboxProps<T>, ref) {
     </CheckboxContext.Provider>
   );
 }
-
-const ForwardRefCheckRef = React.forwardRef(Checkbox);
-
-const CheckboxComponent = ForwardRefCheckRef as typeof ForwardRefCheckRef & {
-  Group: typeof Group;
-};
-
-CheckboxComponent.displayName = 'Checkbox';
-
-CheckboxComponent.Group = Group;
-
-export { CheckboxComponent as Checkbox };

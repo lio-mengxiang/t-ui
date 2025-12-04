@@ -70,6 +70,7 @@
   --bg-color-100: var(--tw-color-zinc-100);
   --bg-color-200: var(--tw-color-zinc-200);
   --bg-color-800: var(--tw-color-zinc-800);
+  --bg-color-reverse: #000;
 
   /* text */
   --text-color: var(--tw-color-zinc-800);
@@ -77,6 +78,7 @@
   --text-color-400: var(--tw-color-zinc-400);
   --text-color-500: var(--tw-color-zinc-500);
   --text-color-600: var(--tw-color-zinc-600);
+  --text-color-reverse: #fff;
 
   /* border */
   --border-color: var(--tw-color-zinc-200);

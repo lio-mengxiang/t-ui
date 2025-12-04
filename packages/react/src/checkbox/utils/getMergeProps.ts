@@ -12,6 +12,7 @@ export function getMergeProps({ props, context }: IGetMergeProps) {
   if (context.isCheckboxGroup) {
     mergeProps.checked = context.checkboxGroupValue.indexOf(props.value) !== -1;
     mergeProps.disabled = !!(context.disabled || props.disabled);
+    mergeProps.readonly = !!(context.readonly || props.readonly);
   }
 
   return mergeProps;
