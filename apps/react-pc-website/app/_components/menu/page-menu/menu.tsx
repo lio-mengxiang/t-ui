@@ -38,7 +38,7 @@ export function Menu({ data, subMenuClassName }: BasicMenuProps) {
   }, [data, pathname]);
 
   return (
-    <VerticalMenu.Root defaultOpenedSubMenuValues={allOpenValues} selectedValuePath={currentSelectedValue}>
+    <VerticalMenu.Root defaultOpenedSubMenuValues={allOpenValues} selectedValuePath={currentSelectedValue} className="text-[15px]">
       {menu}
     </VerticalMenu.Root>
   );

@@ -1,0 +1,44 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { BasicExample, CloseableExample, CheckableExample, EditExample, AsyncCloseExample } from './example';
+
+{/* ### 基本用法 */}
+
+<H3Sub sub={<>基础标签为默认的为灰色样式。但由于这个组件过为简单，样式完全建议自定义即可。</>}>{'基本用法'}</H3Sub>
+<BasicExample />
+
+{/* ### 可关闭标签 */}
+
+<H3Sub
+  sub={
+    <>
+      可设置 <Code>closable</Code> 可以使标签可关闭。关闭时会触发 <Code>onClose</Code> 事件。
+    </>
+  }
+>
+  {'可关闭标签'}
+</H3Sub>
+<CloseableExample />
+
+{/* ### 可选中 */}
+
+<H3Sub
+  sub={
+    <>
+      <Code>Tag</Code> 组件本身不支持可选中功能，但是可以通过 <Code>Checkbox</Code> 组件实现。以下是一个简单的示例：
+    </>
+  }
+>
+  {'可选中'}
+</H3Sub>
+<CheckableExample />
+
+{/* ### 动态编辑标签 */}
+
+<H3Sub sub={<>可动态添加和删除标签。</>}>{'动态编辑标签'}</H3Sub>
+<EditExample />
+
+{/* ### 异步关闭 */}
+
+<H3Sub sub={<>自定义异步关闭功能。</>}>{'异步关闭'}</H3Sub>
+<AsyncCloseExample />

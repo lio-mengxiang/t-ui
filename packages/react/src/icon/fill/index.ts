@@ -5,3 +5,4 @@ export * from './sun-fill';
 export * from './star-fill';
 export * from './platte-fill';
 export * from './click-fill';
+export * from './happy-rabbit-fill';

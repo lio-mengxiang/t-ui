@@ -11,3 +11,4 @@ export * from './input';
 export * from './modal';
 export * from './radio';
 export * from './checkbox';
+export { useMergeValue } from './hooks/use-merge-value';

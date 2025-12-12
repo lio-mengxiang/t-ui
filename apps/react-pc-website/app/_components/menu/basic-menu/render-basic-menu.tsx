@@ -8,6 +8,7 @@ export interface BasicMenuProps {
     value?: string;
     content: React.ReactNode;
     onClick?: () => void;
+    defaultCollapsed?: boolean;
     items?: Array<{
       value?: string;
       content: React.ReactNode | BasicMenuProps['data'];
@@ -23,7 +24,9 @@ export function renderBasicMenu({ data = [], subMenuClassName }: BasicMenuProps)
       const i = `${level}-${subIndex}`;
       const isSubMenuExit = Array.isArray(item.items) && item.items.length > 0;
       if (isSubMenuExit) {
-        allOpenValues.push(item.value || i);
+        if (!item?.defaultCollapsed) {
+          allOpenValues.push(item.value || i);
+        }
       }
       return isSubMenuExit ? (
         <VerticalMenu.Submenu key={i} value={item.value || i}>

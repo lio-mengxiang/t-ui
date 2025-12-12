@@ -21,6 +21,7 @@ const menuLinks = [
       { path: '/alert', label: '警告 Alert' },
       { path: '/radio', label: '单选框 Radio' },
       { path: '/checkbox', label: '复选框 Checkbox' },
+      { path: '/tag', label: '标签 Tag' },
     ],
   },
 ];

@@ -23,33 +23,77 @@ export default function Home() {
           pin: true,
           pinSpacing: false,
         },
-        y: 250,
+        y: 50,
         scale: 0.75,
-        rotation: -15,
-        ease: 'power3.out',
+        rotation: -6,
+        ease: 'linear',
       });
 
-      // gsap.fromTo(
-      //   '.web-content',
-      //   {
-      //     x: -100,
-      //     scale: 0.3,
-      //     rotation: 15,
-      //   },
-      //   {
-      //     scrollTrigger: {
-      //       trigger: '.web-content',
-      //       start: 'top 0%',
-      //       end: 'top 50%',
-      //       markers: true,
-      //       scrub: 1,
-      //     },
-      //     x: 0,
-      //     scale: 1,
-      //     rotation: 0,
-      //     ease: 'power3.out',
-      //   },
-      // );
+      gsap.fromTo(
+        '.web-content',
+        {
+          scale: 0.5,
+          rotation: 15,
+        },
+        {
+          scrollTrigger: {
+            trigger: '.web-content',
+            start: '-20% bottom',
+            end: '+=100%',
+            scrub: 1,
+          },
+          scale: 1,
+          rotation: 0,
+          ease: 'linear',
+        },
+      );
+
+      const wrapper = document.querySelector('.tracker');
+      const emoji = document.querySelector('.emoji');
+      const emojiFace = document.querySelector('.emoji-face');
+
+      const moveEvent = (e: { clientX: number; clientY: number }) => {
+        const wrapperRect = wrapper?.getBoundingClientRect();
+        if (!wrapperRect) {
+          return;
+        }
+        const relX = e.clientX - (wrapperRect?.left + wrapperRect?.width / 2);
+        const relY = e.clientY - (wrapperRect?.top + wrapperRect?.height / 2);
+
+        const emojiMaxDisplacement = 50;
+        const emojiFaceMaxDisplacement = 75;
+
+        // 计算表情符号在 X 和 Y 方向上的位移量
+        // 位移量 = (鼠标相对于容器中心的偏移量 / 容器尺寸) * 最大允许位移
+        const emojiDisplacementX = (relX / wrapperRect.width) * emojiMaxDisplacement;
+        const emojiDisplacementY = (relY / wrapperRect?.height) * emojiMaxDisplacement;
+        const emojiFaceDisplacementX = (relX / wrapperRect?.width) * emojiFaceMaxDisplacement;
+        const emojiFaceDisplacementY = (relY / wrapperRect?.height) * emojiFaceMaxDisplacement;
+
+        gsap.to(emoji, {
+          x: emojiDisplacementX,
+          y: emojiDisplacementY,
+          ease: 'linear',
+          duration: 0.35,
+        });
+        gsap.to(emojiFace, {
+          x: emojiFaceDisplacementX,
+          y: emojiFaceDisplacementY,
+          ease: 'linear',
+          duration: 0.35,
+        });
+      };
+      const leaveEvent = () => {
+        gsap.to([emoji, emojiFace], {
+          x: 0,
+          y: 0,
+          ease: 'linear',
+          duration: 1,
+        });
+      };
+
+      wrapper?.addEventListener('mouseleave', leaveEvent);
+      (wrapper as any)?.addEventListener('mousemove', moveEvent);
     },
     { scope: containerRef },
   );

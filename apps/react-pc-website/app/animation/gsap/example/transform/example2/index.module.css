@@ -5,6 +5,10 @@
   animation: wonderFace 2s infinite cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
+body {
+  background-color: #000 !important;
+}
+
 @keyframes rotateEyes {
   0% {
     transform: rotate(0);
