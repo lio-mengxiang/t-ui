@@ -6,14 +6,18 @@ export const catalogList = [
   },
   {
     level: 3,
-    text: '子元素从上到下排列',
+    text: '可关闭标签',
   },
   {
     level: 3,
-    text: '对齐方式',
+    text: '可选中',
   },
   {
     level: 3,
-    text: '换行',
+    text: '动态编辑标签',
+  },
+  {
+    level: 3,
+    text: '异步关闭',
   },
 ];
