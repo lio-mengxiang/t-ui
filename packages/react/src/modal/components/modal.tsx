@@ -4,7 +4,6 @@ import React, { cloneElement, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { duration1, duration2, maskAnimation, modalAnimation } from '../constants';
 import { useOverflowHidden } from '../hooks';
-
 import { useFocusTrap } from '../../hooks/use-focus-tarp';
 // type
 import type { ModalProps } from '../interface';
@@ -31,6 +30,7 @@ export function Modal(props: IModalProps) {
     index,
     initialFocusEl,
     contentProps,
+    animation,
   } = props;
 
   const modalWrapperRef = useRef<HTMLDivElement>(null);
@@ -83,7 +83,7 @@ export function Modal(props: IModalProps) {
             }}
             tabIndex={-1}
             role="dialog"
-            variants={modalAnimation}
+            variants={animation || modalAnimation}
             animate="animate"
             transition={duration2}
             exit="exit"
@@ -96,8 +96,15 @@ export function Modal(props: IModalProps) {
                 afterClose?.();
               }
             }}
+            style={{ height: '100%' }}
           >
-            {focusLock ? <div ref={focusRef}>{cloneElement(content, contentProps)}</div> : cloneElement(content, contentProps)}
+            {focusLock ? (
+              <div ref={focusRef} style={{ height: '100%' }}>
+                {cloneElement(content, contentProps)}
+              </div>
+            ) : (
+              cloneElement(content, contentProps)
+            )}
           </motion.div>
         </div>
       </div>

@@ -7,7 +7,7 @@ export const TRadio = ({ children, className, ...rest }: RadioProps) => {
     <Radio.Root
       className={cs(
         'relative flex cursor-pointer items-center text-base group',
-        '[&_>input[type="radio"]]:absolute [&_>input[type="radio"]]:left-0 [&_>input[type="radio"]]:top-0 [&_>input[type="radio"]]:opacity-0, [&_>input[type="radio"]]:w-0 [&_>input[type="radio"]]:h-0',
+        '[&_>input[type="radio"]]:absolute [&_>input[type="radio"]]:left-0 [&_>input[type="radio"]]:top-0 [&_>input[type="radio"]]:opacity-0 [&_>input[type="radio"]]:w-0 [&_>input[type="radio"]]:h-0',
         '[&[aria-disabled="true"]]:cursor-not-allowed [&[aria-disabled="true"]]:text-color-400',
         '[&[aria-readonly="true"]]:cursor-default',
         className,
@@ -27,7 +27,7 @@ function Indicator() {
     <div
       className={cs(
         'relative border border-color border-solid rounded-full w-4 h-4 transition-all duration-300 shadow-sm after:transition-all after:duration-300 flex justify-center items-center',
-        'after:content-[""] after:w-[7px] after:h-[7px] after:rounded-full after:bg-none',
+        'after:content-[""] after:w-[8px] after:h-[8px] after:rounded-full after:bg-none',
         {
           'after:bg-color-800': checked && !disabled,
           'after:bg-color-200': checked && disabled,

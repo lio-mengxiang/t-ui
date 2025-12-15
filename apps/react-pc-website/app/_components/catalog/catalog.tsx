@@ -1,15 +1,14 @@
-import { Anchor, AnchorProps } from '@t-headless-ui/react';
 import React from 'react';
 import { createNestedLink, type NestedAnchorLinkProps } from './utils';
 
-interface CatalogProps extends AnchorProps {
+interface CatalogProps {
   items: NestedAnchorLinkProps[];
 }
 
 export function Catalog({ items, ...restProps }: CatalogProps) {
   return (
-    <Anchor.Root {...restProps} className="sticky top-[90px] overflow-y-auto h-[calc(100vh-100px)]">
-      {createNestedLink(items)}
-    </Anchor.Root>
+    <div {...restProps} className="sticky top-[64px] hidden z-10 xl:flex xl:w-48 pl-0 shrink-0 h-[calc(100vh-102px)] pt-6">
+      <div className="overflow-y-auto">{createNestedLink(items)}</div>
+    </div>
   );
 }

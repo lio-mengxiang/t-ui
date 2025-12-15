@@ -7,7 +7,7 @@ export const TCheckbox = ({ children, className, ...rest }: CheckboxProps) => {
     <Checkbox.Root
       className={cs(
         'relative flex cursor-pointer items-center text-base group',
-        '[&_>input[type="checkbox"]]:absolute [&_>input[type="checkbox"]]:left-0 [&_>input[type="checkbox"]]:top-0 [&_>input[type="checkbox"]]:opacity-0, [&_>input[type="checkbox"]]:w-0 [&_>input[type="checkbox"]]:h-0',
+        '[&_>input[type="checkbox"]]:absolute [&_>input[type="checkbox"]]:left-0 [&_>input[type="checkbox"]]:top-0 [&_>input[type="checkbox"]]:opacity-0 [&_>input[type="checkbox"]]:w-0 [&_>input[type="checkbox"]]:h-0',
         '[&[aria-disabled="true"]]:cursor-not-allowed [&[aria-disabled="true"]]:text-color-400',
         '[&[aria-readonly="true"]]:cursor-default',
         className,

@@ -7,7 +7,6 @@ const code = `function App() {
       status="primary"
       onClick={() => {
         TModal.add({
-          attach: 'attach-example',
           title: 'Modal Alert',
           content: 'This is a message!',
           containerClassName: 'absolute',

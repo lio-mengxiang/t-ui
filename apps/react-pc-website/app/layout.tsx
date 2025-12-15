@@ -13,6 +13,7 @@ import { cs } from './_utils';
 
 export const toastStore = createToastStore();
 export const modalStore = createModalStore();
+export const drawerStore = createModalStore();
 
 export const toastBottomStore = createToastStore({ maxCount: 6 });
 export const toastBottomStackStore = createToastStore({ maxCount: 3 });
@@ -70,6 +71,7 @@ export default function RootLayout({
             direction="bottom-to-top"
           />
           <ModalProvider store={modalStore} />
+          <ModalProvider store={drawerStore} />
         </NextLocalStorage>
       </body>
     </html>

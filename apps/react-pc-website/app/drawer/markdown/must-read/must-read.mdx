@@ -1,0 +1,77 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide } from '@/_components/typography';
+import { CodePreview } from '@/_components/code-preview';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+
+<H1>5 分钟完成 drawer 组件！</H1>
+
+<ImageTypography src="/drawer/drawer.webp" fill alt="button" />
+
+## 前言
+
+我使用了 5 分钟就把 `drawer` 组件做出来了, 为什么这快呢？秘密就是 `drawer` 组件本身的增删改查的逻辑是跟 `modal` 组件一模一样的。
+
+只是 `drawer` 组件的样式和动画跟 `modal` 有区别，又因为我们是 `headless` 组件库，所以本身 `modal` 组件的 `store` 在 `@t-headless-ui/react` 中实现，且与样式无关。
+所以我们直接拿来 `@t-headless-ui/react` 中的 `createModalStore` 方法 ，然后在 `drawer` 组件中使用即可。
+
+所以要看技术难点的同学，直接请访问 `modal` 组件页面查看。
+
+欢迎大家一起加入交流群！讨论组件库技术，前端全栈技术和 ai agent 开发！
+
+## 附录
+
+### 安装 drawer
+
+<CodeBlock
+  code={`npm i @t-headless-ui/react
+yarn i @t-headless-ui/react
+pnpm i @t-headless-ui/react`}
+  language="bash"
+/>
+
+### 引入和使用 drawer
+
+`drawer` 组件跟 `modal` 组件的使用方法是一模一样的，只是 `drawer` 组件的样式和动画有区别。
+
+<CodeBlock
+  code={`import { createModalStore } from '@t-headless-ui/react';
+const drawerStore = createModalStore()
+`}
+  language="tsx"
+/>
+
+目的是用这个 `store` 来管理 `drawer` 组件的状态，例如添加、删除、更新 `drawer` 组件的状态。
+
+然后引入 `ModalProvider` 组件，将 `store` 实例作为 `prop` 传递给 `ModalProvider` 组件。`ModalProvider` 组件一般放在你的项目的入口文件中，
+例如 `App.tsx` 或者 `App.jsx` 文件。目的是初始化 `Modal` 组件（其背后默认会在 `document.body` 创建一个可以出现 `modal` 信息框），当然我们也支持自定义插入
+到某个 `dom` 元素中，一般情况使用默认的即可。
+
+<CodeBlock
+  code={`import { ModalProvider } from '@t-headless-ui/react';
+<ModalProvider store={modalStore} />`}
+  language="tsx"
+/>
+
+`ModalProvider` 支持传入一些全局参数，包括：
+
+- `maskCls`：指定 `modal` 组件蒙层的类名。
+- `maskStyle`：指定 `modal` 组件蒙层的样式。
+- `focusLock`: 是否开启焦点锁定。默认是 `true`。
+
+以上参数也可以在使用 `Modal.add` 方法时单独传入，会覆盖 `ModalProvider` 组件的全局参数。
+
+最后，就可以引入 `modalStore` 开始调用了：
+
+<CodeBlock
+  code={`<button
+  onClick={() =>
+    drawerStore.add({
+      content: xxx 自己封装的 Drawer 组件,
+    })
+  }
+>
+  open drawer
+</button>`}
+  language="tsx"
+/>
+
+因为我们的 `drawer` 组件是一个 `headless` 组件，所以弹出的内容完全是自定义的，在 `Alert` 组件中，我们提供了一个简单的样例，大家可以去参考一下。

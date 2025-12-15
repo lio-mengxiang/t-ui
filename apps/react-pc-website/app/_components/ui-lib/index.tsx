@@ -12,6 +12,7 @@ import { TButtonRadio } from '@/radio/t-button-radio';
 import { PixelButton } from '@/button/tailwind-button/pixel-button';
 import { TCheckbox } from '@/checkbox/t-checkbox';
 import { TTag } from '@/tag/t-tag';
+import { TDrawer } from '@/drawer/t-drawer';
 
 export {
   TButton,
@@ -28,4 +29,5 @@ export {
   PixelButton,
   TCheckbox,
   TTag,
+  TDrawer,
 };

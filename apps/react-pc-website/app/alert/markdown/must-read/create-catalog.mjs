@@ -3,7 +3,7 @@ import { resolve } from 'path';
 
 // 提取标题的函数
 function extractHeadings(content) {
-  const headingRegex = /^(#{2,3}) (.+)$/gm;
+  const headingRegex = /^(?:\{\/\*\s*)?(#{2,3})\s+(.+?)(?:\s*\*\/\})?$/gm;
   const headings = [];
   let match;
 

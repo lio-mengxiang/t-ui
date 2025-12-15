@@ -7,7 +7,7 @@ export const TButtonRadio = ({ children, className, ...rest }: RadioProps) => {
     <Radio.Root
       className={cs(
         'relative flex cursor-pointer items-center text-base group',
-        '[&_>input[type="radio"]]:absolute [&_>input[type="radio"]]:left-0 [&_>input[type="radio"]]:top-0 [&_>input[type="radio"]]:opacity-0, [&_>input[type="radio"]]:w-0 [&_>input[type="radio"]]:h-0',
+        '[&_>input[type="radio"]]:absolute [&_>input[type="radio"]]:left-0 [&_>input[type="radio"]]:top-0 [&_>input[type="radio"]]:opacity-0 [&_>input[type="radio"]]:w-0 [&_>input[type="radio"]]:h-0',
         '[&[aria-disabled="true"]]:cursor-not-allowed [&[aria-disabled="true"]]:text-color-400',
         '[&[aria-readonly="true"]]:cursor-default',
         className,

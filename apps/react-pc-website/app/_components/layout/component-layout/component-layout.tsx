@@ -37,8 +37,8 @@ export function ComponentLayout({ menu, children }: any) {
       <main className="flex w-full">
         <div
           className={cs(
-            'sticky top-[60px] overflow-hidden pt-4 pl-3 border-r border-solid border-color',
-            'shrink-0 h-[calc(100vh_-_60px)]',
+            'sticky top-[64px] pt-4 pl-3 border-r border-solid border-color',
+            'shrink-0 h-[calc(100vh_-_64px)] overflow-y-auto overflow-x-hidden',
             'transition-all duration-300 ease-in-out',
           )}
           style={{
@@ -46,7 +46,7 @@ export function ComponentLayout({ menu, children }: any) {
           }}
         >
           <div
-            className="z-0 h-[calc(100vh-60px)] overflow-auto"
+            className="z-0"
             style={{
               visibility: open.status ? 'visible' : 'hidden',
             }}

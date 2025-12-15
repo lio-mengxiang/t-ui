@@ -14,6 +14,7 @@ export const ALERT_PATH = '/alert';
 export const RADIO_PATH = '/radio';
 export const CHECKBOX_PATH = '/checkbox';
 export const TAG_PATH = '/tag';
+export const DRAWER_PATH = '/drawer';
 
 export const menuLinks: { path: string; label: string }[] = [
   { path: SOLUTION_THEME_PATH, label: '全局方案' },
@@ -23,6 +24,7 @@ export const menuLinks: { path: string; label: string }[] = [
   { path: SPACE_PATH, label: '间距 Space' },
   { path: INPUT_PATH, label: '输入框 Input' },
   { path: MODAL_PATH, label: '弹窗 Modal' },
+  { path: DRAWER_PATH, label: '抽屉 Drawer' },
   { path: POPOVER_PATH, label: '弹出框 Popover' },
   { path: TOAST_PATH, label: '消息 Toast' },
   { path: ALERT_PATH, label: '警告 Alert' },

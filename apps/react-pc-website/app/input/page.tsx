@@ -21,9 +21,7 @@ export default function Home() {
           />
         </span> */}
       </div>
-      <div className="hidden z-10 xl:flex xl:w-48 mt-8 pl-0 shrink-0">
-        <Catalog items={catalogList} offset={-90} />
-      </div>
+      <Catalog items={catalogList} />
     </>
   );
 }

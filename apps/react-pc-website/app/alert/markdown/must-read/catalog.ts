@@ -14,6 +14,22 @@ export const catalogList = [
   },
   {
     level: 2,
+    text: 'CSS 版本 Modal-alert',
+  },
+  {
+    level: 2,
+    text: 'Tailwindcss 版本 Modal-alert',
+  },
+  {
+    level: 2,
+    text: 'CSS 版本 Drawer-alert',
+  },
+  {
+    level: 2,
+    text: 'Tailwindcss 版本 Drawer-alert',
+  },
+  {
+    level: 2,
     text: '附录',
   },
 ];

@@ -64,12 +64,12 @@ export function NavOverlay() {
 
   return (
     <div ref={container} className="mr-2">
-      <div
+      {/* <div
         className="hover:bg-slate-50 dark:hover:bg-gray-700 px-2 py-0.5 text-sm border border-color rounded-lg tracking-widest"
         onClick={toggleMenu}
       >
         <NavButton word="所有组件" stagger={0.02} />
-      </div>
+      </div> */}
       <div
         className="menu-overlay fixed top-0 left-0 w-screen h-[calc(var(--dvh,1vh)*100)] px-6 py-5 bg-[#f6c646] z-[2] flex"
         style={{ clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)' }}

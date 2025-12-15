@@ -1,3 +1,4 @@
+import { type Variants } from 'motion/react';
 import type { JSX } from 'react';
 
 export type ModalAlignType = 'left' | 'center' | 'right' | '';
@@ -17,4 +18,5 @@ export interface ModalProps {
   initialFocusEl?: () => void;
   contentProps?: Record<string, any>;
   attach?: string;
+  animation?: Variants;
 }
