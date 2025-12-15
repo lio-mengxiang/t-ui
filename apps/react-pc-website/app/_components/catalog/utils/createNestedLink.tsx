@@ -1,5 +1,6 @@
 import React from 'react';
 import { LinkItem } from './item';
+import { Anchor } from '@t-headless-ui/react';
 
 export interface NestedAnchorLinkProps {
   level: number;
@@ -10,10 +11,10 @@ export interface NestedAnchorLinkProps {
 export function createNestedLink(items?: NestedAnchorLinkProps[]) {
   return Array.isArray(items)
     ? items.map((item, index) => (
-        <div key={index}>
+        <Anchor.Link targetId={item.text} key={index}>
           <LinkItem item={item} />
           {createNestedLink(item.items)}
-        </div>
+        </Anchor.Link>
       ))
     : null;
 }

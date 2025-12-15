@@ -3,7 +3,7 @@ import React, { type MouseEvent, useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { useRouter } from 'next/navigation';
 import { useGSAP } from '@gsap/react';
-import { NavButton } from './nav-button';
+// import { NavButton } from './nav-button';
 
 const menuLinks = [
   {
