@@ -1,0 +1,21 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { BasicExample, CustomExample } from './example';
+
+{/* ### 基本用法 */}
+
+<H3Sub sub={<>Empty 空状态组件的基础用法。</>}>{'基本用法'}</H3Sub>
+<BasicExample />
+
+{/* ### 自定义样式 */}
+
+<H3Sub
+  sub={
+    <>
+      可以通过 <Code>iconClassName</Code> 参数传入自定义图标类名，<Code>description</Code> 修改显示文案。
+    </>
+  }
+>
+  {'自定义样式'}
+</H3Sub>
+<CustomExample />

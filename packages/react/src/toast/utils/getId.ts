@@ -5,7 +5,7 @@ export function getId(noticeProps: ToastProps) {
   if (noticeProps.id) {
     return noticeProps.id;
   }
-  // 循环计数器 0-100
+  // 循环计数器 0-1000
   counter = (counter + 1) % 1001;
   return Date.now().toString(36) + Math.random().toString(36).slice(2) + counter;
 }

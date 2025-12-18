@@ -1,0 +1,42 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide } from '@/_components/typography';
+import { CodePreview } from '@/_components/code-preview';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+
+<H1 subheading="">Empty 组件太简单了</H1>
+
+<ImageTypography src="/empty/empty.webp" fill alt="icon" />
+
+## 前言
+
+Empty 组件本身没有任何难度，主要就是一个 Icon + 文字说明（或者没有文字）。
+
+我们的代码仅仅只做参考，你可以完全定义自己想要的 Empty 组件。
+
+源码如下：
+
+<CodeBlock
+  code={`'use client';
+ 
+import React from 'react';
+import { type EmptyProps } from './interface';
+import { cs } from '@/_utils';
+ 
+export function TEmpty(props: EmptyProps) {
+  const { description, icon, className, iconClassName, ...rest } = props;
+ 
+  return (
+    <div className={cs('text-sm text-center box-border gap-4', className)} {...rest}>
+      <div className={cs('text-8xl leading-[1]', iconClassName)}>
+        <div className="inline-flex justify-center">{icon}</div>
+      </div>
+      <div className="text-color-500">{description}</div>
+    </div>
+  );
+}
+`}
+  language="jsx"
+/>
+
+最后，欢迎加入到我们的组件库交流群中。有什么疑问都可以在群里讨论，并且会有视频直播每个组件的实现。
+
+更重要的是,我可以帮助你增加一些简历中的核心项目，例如我们这个组件库级别的。无论你是面试初级开发还是到前端技术专家，都会帮助你在面试中脱颖而出。

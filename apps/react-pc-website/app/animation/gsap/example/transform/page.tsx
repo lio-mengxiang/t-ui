@@ -4,8 +4,8 @@ import { cs, getImageUrl } from '@/_utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import React, { useRef } from 'react';
-import './index.css';
+import React, { useEffect, useRef, useState } from 'react';
+// import './index.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -13,6 +13,15 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function GsapScrollDemo() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [cards, setCards] = useState<any[]>([]);
+
+  useEffect(() => {
+    const newCards = Array.from({ length: 7 }, (_, index) => ({
+      src: `/gsap/scroll/0${index + 1}.webp`,
+      id: index + 1,
+    }));
+    setCards(newCards);
+  }, []);
 
   useGSAP(
     () => {
@@ -46,27 +55,26 @@ export default function GsapScrollDemo() {
   );
 
   return (
-    <div className="container2 w-screen h-screen relative" ref={containerRef}>
-      <section className="wrapper-404 h-screen overflow-y-hidden flex items-center absolute">
-        <h1 className="text-white text-[80vh] font-medium whitespace-nowrap w-max">Page Not Found</h1>
-        {Array.from({ length: 4 }).map((_, index) => (
+    <div className="w-screen h-[800vh] overflow-hidden bg-black">
+      <div
+        className="slider fixed top-[50%] left-[50%] [transform-style:preserve-3d]"
+        style={{
+          transform: 'translateY(-50%) translateX(-50%)  rotateZ(-120deg)',
+        }}
+        ref={containerRef}
+      >
+        {cards.map((item) => (
           <div
-            className={cs('card absolute w-[40vh] h-[40vh] rounded-[20px] ', {
-              'top-[50%] left-[20%]': index === 0,
-              'top-[25%] left-[40%]': index === 1,
-              'top-[45%] left-[60%]': index === 2,
-              'top-[15%] left-[80%]': index === 3,
-            })}
-            key={index}
-            id={`card-${index + 1}`}
+            key={item.id}
+            className="card w-[400px] h-[400px]"
+            style={{
+              transform: 'rotateX(20deg) rotateY(-10deg) rotateZ(130deg)',
+            }}
           >
-            <img className="w-full h-full object-cover" src={getImageUrl(`/gsap/scroll/0${index + 1}.webp`)} alt="" />
+            <img src={item.src} alt="" className="w-full h-full object-cover" />
           </div>
         ))}
-      </section>
-      <section className="outro text-white w-screen h-screen text-6xl flex justify-center items-center absolute top-[150vh]">
-        <h1>Next</h1>
-      </section>
+      </div>
     </div>
   );
 }

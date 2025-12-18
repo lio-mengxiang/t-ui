@@ -13,6 +13,7 @@ import { PixelButton } from '@/button/tailwind-button/pixel-button';
 import { TCheckbox } from '@/checkbox/t-checkbox';
 import { TTag } from '@/tag/t-tag';
 import { TDrawer } from '@/drawer/t-drawer';
+import { TEmpty } from '@/empty/t-empty';
 
 export {
   TButton,
@@ -30,4 +31,5 @@ export {
   TCheckbox,
   TTag,
   TDrawer,
+  TEmpty,
 };

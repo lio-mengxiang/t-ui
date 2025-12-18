@@ -1,5 +1,8 @@
 import { type JSX } from 'react';
-export type Direction = 'top-to-bottom' | 'bottom-to-top';
+import { DIRECTION } from './constants';
+
+export type Direction = (typeof DIRECTION)[keyof typeof DIRECTION];
+
 /**
  * @title Toast
  */

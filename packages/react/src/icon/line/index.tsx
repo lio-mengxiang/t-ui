@@ -31,3 +31,6 @@ export * from './float-line';
 export * from './interface-line';
 export * from './hand-drag-line';
 export * from './left-line';
+export * from './open-file-line';
+export * from './search-file-line';
+export * from './info-file-line';
