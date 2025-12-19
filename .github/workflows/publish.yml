@@ -27,6 +27,9 @@ jobs:
       - name: Setup Pages ⚙️
         uses: actions/configure-pages@v4
 
+      - name: Build headless 🏗️
+        run: pnpm run build:headless
+
       - name: Build with Next.js 🏗️
         run: pnpm run build:github-page
 
