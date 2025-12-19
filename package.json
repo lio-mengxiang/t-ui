@@ -30,6 +30,7 @@
     "build": "pnpm --filter @t-headless-ui/react build && pnpm --filter react-pc-website build",
     "dev": "cd apps/react-pc-website && pnpm dev",
     "build:github-page": "cd apps/react-pc-website && pnpm build:github-page",
+    "build:headless": "pnpm --filter @t-headless-ui/react build",
     "eslintConfig": "config-eslint9 config"
   },
   "devDependencies": {
