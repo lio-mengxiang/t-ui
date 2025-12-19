@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, PropsWithChildren } from 'react';
+import React, { useState, useRef, type PropsWithChildren, useImperativeHandle, forwardRef } from 'react';
 import { usePopper } from '../use-popper';
 import { getRefDom } from './utils';
 import { useTrigger } from './hooks';
@@ -20,7 +20,7 @@ const defaultProps = {
 
 // 至少经历 3 次 update 才能显示 popupElement
 //  hover->setVisibleChange->setPopupElement->usePopper-> setStyle
-export const Popup = (baseProps: PropsWithChildren<PopoverProps>) => {
+export const Popup = forwardRef((baseProps: PropsWithChildren<PopoverProps>, ref) => {
   const props = {
     ...defaultProps,
     ...baseProps,
@@ -64,6 +64,10 @@ export const Popup = (baseProps: PropsWithChildren<PopoverProps>) => {
     offsetDistance,
   });
 
+  useImperativeHandle(ref, () => ({
+    update: popperRef.current?.update,
+  }));
+
   return (
     <PopupContext.Provider
       value={{ getTriggerNode, getPopupProps, triggerRef, popperRef, setPopupElement, visible, placement, popupElement, isAnimated }}
@@ -71,4 +75,4 @@ export const Popup = (baseProps: PropsWithChildren<PopoverProps>) => {
       {children}
     </PopupContext.Provider>
   );
-};
+});

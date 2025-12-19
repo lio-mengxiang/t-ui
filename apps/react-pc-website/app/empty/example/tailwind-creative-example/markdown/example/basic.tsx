@@ -36,7 +36,7 @@ export function EmptyState({ title, description, icons = [], action, className }
           </div>
         )}
       </div>
-      <h2 className="text-foreground font-medium mt-6">{title}</h2>
+      <h2 className="mt-6">{title}</h2>
       {description ? <p className="text-sm mt-2">{description}</p> : null}
       <TButton status="primary" onClick={action?.onClick} className="w-20 mt-3">
         {action?.label || 'Reload'}
