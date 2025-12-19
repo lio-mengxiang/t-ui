@@ -9,12 +9,12 @@ function App() {
       <TButton disabled status="warning">Warning</TButton>
       <TButton disabled status="error">Error</TButton>
       <TButton disabled status="success">Success</TButton>
-      <TButton disabled>Default</TButton>
+      <TButton disabled status="default">Default</TButton>
       <TButton disabled status="primary" type="outline">Primary</TButton>
       <TButton disabled status="warning" type="outline">Warning</TButton>
       <TButton disabled status="error" type="outline">Error</TButton>
       <TButton disabled status="success" type="outline">Success</TButton>
-      <TButton disabled type="outline">Default</TButton>
+      <TButton disabled status="default" type="outline">Default</TButton>
     </div>
   );
 }

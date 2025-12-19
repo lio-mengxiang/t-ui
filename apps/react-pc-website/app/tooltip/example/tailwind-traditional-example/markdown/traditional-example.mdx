@@ -1,0 +1,68 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { BasicExample, TriggerExample, PlacementExample, GetTriggerElementExample, CustomExample } from './example';
+
+{/* ### 基本用法 */}
+
+<H3Sub
+  sub={
+    <>
+      使用 <Code>popoverContent</Code>自定义浮层内容，<Code>TPopover</Code> 的子元素作为触发元素
+    </>
+  }
+>
+  {'基本用法'}
+</H3Sub>
+<BasicExample />
+
+{/* ### 不同触发方式 */}
+
+<H3Sub
+  sub={
+    <>
+      提供 <Code>悬浮时触发(默认)</Code>、<Code>点击时触发</Code>、<Code>获取焦点时触发</Code>、<Code>右击时触发</Code>等方式
+    </>
+  }
+>
+  {'不同触发方式'}
+</H3Sub>
+<TriggerExample />
+
+{/* ### 不同的位置 */}
+
+<H3Sub
+  sub={
+    <>
+      使用 <Code>placement</Code> 控制浮层方向，如果需要浮层箭头，设置 <Code>showArrow=true</Code> 即可
+    </>
+  }
+>
+  {'不同的位置'}
+</H3Sub>
+<PlacementExample />
+
+{/* ### 获取触发元素 */}
+
+<H3Sub
+  sub={
+    <>
+      使用 <Code>useContext(Popover.PopoverContext)</Code> 可以获取到触发元素的 <Code>dom 节点</Code>
+    </>
+  }
+>
+  {'获取触发元素'}
+</H3Sub>
+<GetTriggerElementExample />
+
+{/* ### 不同颜色 */}
+
+<H3Sub
+  sub={
+    <>
+      通过 <Code>contentClassName</Code> 属性设置不同背景色的 <Code>tooltip</Code>
+    </>
+  }
+>
+  {'不同颜色'}
+</H3Sub>
+<CustomExample />

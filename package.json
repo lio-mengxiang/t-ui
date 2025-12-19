@@ -27,7 +27,7 @@
   ],
   "scripts": {
     "clean": "pnpm -r clean && rimraf ./node_modules",
-    "build": "cd apps/react-pc-website && pnpm build",
+    "build": "pnpm --filter react-pc-website build",
     "dev": "cd apps/react-pc-website && pnpm dev",
     "build:github-page": "cd apps/react-pc-website && pnpm build:github-page",
     "eslintConfig": "config-eslint9 config"

@@ -12,7 +12,7 @@ function App() {
   });
 
   return (
-    <div className="flex gap-x-4 flex-wrap">
+    <div className="flex gap-4 flex-wrap">
       <TPopover popoverContent="Popover Content">
         <TButton status="primary">Hover me!</TButton>
       </TPopover>

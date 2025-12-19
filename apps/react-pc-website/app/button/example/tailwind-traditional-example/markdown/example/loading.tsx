@@ -25,10 +25,10 @@ function App() {
     <div className="flex flex-wrap gap-4 max-w-[360px]">
       <TButton loading disabled status="primary">Primary</TButton>
       <TButton loading status="warning">Warning</TButton>
-      <TButton loading={loading1} onClick={onClickBtn1}>Default</TButton>
+      <TButton loading={loading1} onClick={onClickBtn1} status="default">Default</TButton>
       <TButton loading disabled status="primary" type="outline">Primary</TButton>
       <TButton loading status="warning" type="outline">Warning</TButton>
-      <TButton loading={loading2} onClick={onClickBtn2} type="outline">Default</TButton>
+      <TButton loading={loading2} onClick={onClickBtn2} status="default" type="outline">Default</TButton>
     </div>
   );
 }

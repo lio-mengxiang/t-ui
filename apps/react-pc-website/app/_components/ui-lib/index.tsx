@@ -14,6 +14,7 @@ import { TCheckbox } from '@/checkbox/t-checkbox';
 import { TTag } from '@/tag/t-tag';
 import { TDrawer } from '@/drawer/t-drawer';
 import { TEmpty } from '@/empty/t-empty';
+import { Tooltip } from '@/tooltip/t-tooltip';
 
 export {
   TButton,
@@ -32,4 +33,5 @@ export {
   TTag,
   TDrawer,
   TEmpty,
+  Tooltip,
 };

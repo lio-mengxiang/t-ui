@@ -15,13 +15,13 @@ function App() {
     setContent(\`This is the popup content\${showMore ? '，There are many, many, many, many....' : ''}\`);
   };
   return (
-    <TPopover popoverContent="Popover Content" placement="right" visible={visible}>
-      <TButton status="primary" onClick={toggleContent}>Click to change content{spanVisible && <span>，click again</span>}</TButton>
+    <TPopover popoverContent="Popover Content" placement="top" visible={visible} attach="#adaptive-wrapper">
+      <TButton status="primary" onClick={toggleContent}>Click Me{spanVisible && <span>，click again</span>}</TButton>
     </TPopover>
   );
 }
 `;
 
 export function AdaptiveExample() {
-  return <CodePreview code={code} />;
+  return <CodePreview code={code} id="adaptive-wrapper" />;
 }

@@ -15,7 +15,7 @@ export interface TButtonProps extends ButtonProps {
 }
 
 export function TButton({
-  status = 'default',
+  status,
   type = 'fill',
   disabled,
   loading,
@@ -51,7 +51,7 @@ export function TButton({
           'bg-gray-200': status === 'default' && !disabled && type === 'fill',
           'border-gray-300': status === 'default' && !disabled && type === 'outline',
           'text-white': status !== 'default' && type !== 'outline',
-          'text-color-500': status === 'default' && !disabled && type === 'outline',
+          'text-color-600': status === 'default' && !disabled && type === 'outline',
           'text-gray-500': status === 'default' && !disabled && type !== 'outline',
 
           // hover
@@ -72,7 +72,7 @@ export function TButton({
           'hover:text-green-500': status === 'success' && !disabled && !loading && type === 'outline',
           // default
           'hover:bg-gray-100': status === 'default' && !disabled && !loading && type === 'fill',
-          'hover:border-gray-500': status === 'default' && !disabled && !loading && type === 'outline',
+          'hover:bg-gray-50': status === 'default' && !disabled && !loading && type === 'outline',
           'hover:text-gray-500': status === 'default' && !disabled && !loading && type === 'outline',
 
           // primary disabled
@@ -112,8 +112,7 @@ export function TButton({
           'active:text-green-700': status === 'success' && !disabled && !loading && type === 'outline',
           // default
           'active:bg-gray-300': status === 'default' && !disabled && !loading && type === 'fill',
-          'active:border-gray-600': status === 'default' && !disabled && !loading && type === 'outline',
-          'active:text-gray-600': status === 'default' && !disabled && !loading && type === 'outline',
+          'active:bg-gray-100': status === 'default' && !disabled && !loading && type === 'outline',
           // default
           'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-400': status === 'default' && !disabled,
           // focus

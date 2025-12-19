@@ -16,6 +16,7 @@ export const CHECKBOX_PATH = '/checkbox';
 export const TAG_PATH = '/tag';
 export const DRAWER_PATH = '/drawer';
 export const EMPTY_PATH = '/empty';
+export const TOOLTIP_PATH = '/tooltip';
 
 export const menuLinks: { path: string; label: string }[] = [
   { path: SOLUTION_THEME_PATH, label: '全局方案' },
@@ -33,4 +34,5 @@ export const menuLinks: { path: string; label: string }[] = [
   { path: CHECKBOX_PATH, label: '复选框 Checkbox' },
   { path: TAG_PATH, label: '标签 Tag' },
   { path: EMPTY_PATH, label: '空状态 Empty' },
+  { path: TOOLTIP_PATH, label: '文字提示 Tooltip' },
 ];
