@@ -36,7 +36,7 @@ jobs:
       - name: Upload artifact 📡
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./apps/react-pc-website/docs
+          path: ./docs
 
   deploy:
     environment:
