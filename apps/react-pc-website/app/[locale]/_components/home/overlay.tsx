@@ -40,7 +40,7 @@ export const SVG = ({ width, height, time }: { width: number; height: number; ti
   const newTime = time / 1000;
   const config = {
     duration: newTime,
-    ease: [0.76, 0, 0.24, 1],
+    ease: [0.76, 0, 0.24, 1] as const,
   };
   const curve = {
     initial: {
