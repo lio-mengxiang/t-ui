@@ -13,6 +13,7 @@ export const getOffsetTop = (element: HTMLElement, container: HTMLElement | Wind
       return rect.top - container.clientTop;
     }
 
+    // 计算相对于指定容器顶部的距离(不是 window 的话，需要减去容器的 top 值)
     return rect.top - (container as HTMLElement).getBoundingClientRect().top;
   }
 

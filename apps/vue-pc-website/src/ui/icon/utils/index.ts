@@ -1,1 +1,0 @@
-export { getSize } from './getSize';

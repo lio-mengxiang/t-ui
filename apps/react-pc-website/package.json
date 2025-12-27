@@ -42,7 +42,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-syntax-highlighter": "15.5.13",
-    "baseline-browser-mapping": "^2.9.11",
+    "baseline-browser-mapping": "2.9.11",
     "typescript": "^5"
   }
 }

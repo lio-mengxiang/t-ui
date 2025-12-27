@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useContext, useRef, useEffect } from 'react';
 import { CheckboxGroupContext } from '../checkboxGroupContext';
 import { getMergeProps } from '../utils';

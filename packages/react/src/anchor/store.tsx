@@ -61,7 +61,7 @@ export function useStore({ propScrollContainer, onChange, offset, queryKey, isCl
   }, [onScroll, propScrollContainer]);
 
   useEffect(() => {
-    if (!isCloseInitAnchor) {
+    if (isCloseInitAnchor) {
       onScroll();
       return;
     }

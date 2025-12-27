@@ -34,7 +34,7 @@ export interface AnchorProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onCha
   /**
    * @zh 是否关闭初始化 anchor 定位功能，如果关闭 queryKey 会失效
    * @en Whether to close the initialization of anchor positioning，if closed, queryKey will be invalid
-   * @default false
+   * @default true
    */
   isCloseInitAnchor?: boolean;
 }

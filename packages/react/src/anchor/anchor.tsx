@@ -14,7 +14,7 @@ export const Anchor = forwardRef((props: PropsWithChildren<AnchorProps>, ref) =>
     children,
     onChange,
     queryKey = 'anchor-id',
-    isCloseInitAnchor,
+    isCloseInitAnchor = true,
     ...restProps
   } = props;
 
