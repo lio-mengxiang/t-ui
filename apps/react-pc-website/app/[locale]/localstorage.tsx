@@ -2,7 +2,7 @@
 
 import { createContext, memo, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import type { LocalstorageContextProps, LocalstorageProviderProps } from './interface';
-import { THEME, THEME_COLORS, type ThemeTypeProps } from './_theme';
+import { DARK, LIGHT, THEME, THEME_COLORS, type ThemeTypeProps } from './_theme';
 
 export const LocalstorageContext = createContext<LocalstorageContextProps>({
   theme: undefined,
@@ -47,8 +47,9 @@ export const NextLocalStorage = ({ defaultTheme, children, nonce, scriptContent,
 
   useEffect(() => {
     if (!theme) return;
-    document.documentElement.classList = '';
-    document.documentElement.classList.add(theme as ThemeTypeProps);
+    const root = document.documentElement;
+    root.classList.remove(LIGHT, DARK);
+    root.classList.add(theme);
   }, [theme]);
 
   const providerValue = useMemo(
