@@ -1,5 +1,6 @@
 import type { NextConfig } from 'next';
 import createMDX from '@next/mdx';
+import { defaultLang } from './config';
 
 const GITHUB_PAGE = 'github-page';
 const isGithubPage = process.env.APP_ENV === GITHUB_PAGE;
@@ -14,9 +15,9 @@ export function getBasePath() {
 
 export function getHomePath() {
   if (isGithubPage) {
-    return githubPageBasePath;
+    return `${githubPageBasePath}/${defaultLang}`;
   }
-  return '/';
+  return `${defaultLang}`;
 }
 
 // 根据环境变量决定导出目录名
