@@ -29,6 +29,9 @@ const nextConfig: NextConfig = {
   basePath: getBasePath(),
   env: {
     isGithubPage: getBasePath(),
+    githubLink: 'https://github.com/lio-mengxiang/t-ui',
+    defaultTheme: 'light',
+    defaultLang: 'zh',
   },
   images: { unoptimized: true },
   /* config options here */

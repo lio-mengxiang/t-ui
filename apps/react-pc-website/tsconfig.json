@@ -2,11 +2,7 @@
   "compilerOptions": {
     // target 指定编译后的 JavaScript 语法版本（运行环境）
     "target": "ES2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -25,9 +21,7 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./app/*"
-      ]
+      "@/*": ["./app/[locale]/*"]
     }
   },
   "include": [
@@ -41,7 +35,5 @@
     "out/types/**/*.ts",
     "out/dev/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

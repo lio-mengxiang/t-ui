@@ -1,0 +1,33 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide } from '@/_components/typography';
+import { CodePreview } from '@/_components/code-preview';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { BasicExample, TailwindBasicExample, CssBasicExample } from './example';
+
+<H1>Tooltip 组件说明</H1>
+
+<ImageTypography src="/tooltip/tooltip.webp" fill alt="tooltip" />
+
+## 前言
+
+`Tooltip` 组件本质上是使用 `Popover` 组件封装而来，`Popover` 属于比较底层的我们称之为 `定位`(position) 组件。核心思想是
+如何将一个 dom 元素，定位到另一个 dom 元素旁边，或者你期望的位置（例如，你希望在 b 元素出现的 a 元素的正上方，且距离 10px）。
+
+`Popover` 就是做这个事的，`Tooltip` 是希望 hover（或者点击等其它方式触发） 文字的时候，弹出一个文字提示框。
+
+所以本质上 `Tooltip` 仅仅是 `Popover` 显示文字而已的一个封装。
+
+因此我们的底层 `headless` 组件库（`@t-headless-ui/react`）没有单独封装 `tooltip` 组件，而是在我们这一层单独增加样式。
+
+你如果希望了解 `Tooltip` 的核心技术难点，请前往 `Popover` 组件查看。`Popover` 底层逻辑是比较复杂的，我们封装了业内很知名的 `floating-ui`，我将
+其主要逻辑抽出，从 0 到 1 再次实现了一个 `mini-floating-ui`。所以也算能了解到业内最顶级的定位组件库的实现原理。
+
+## 总结
+
+最后，如果你想了解源码实现细节，欢迎加入到组件库交流群，里面会有直播解释源码和实现思路 。
+
+同时如果你想让自己的简历有一些与众不同高难度的项目，也欢迎咨询，例如对于前端组件库项目，在询问你的前端技术栈和意愿的情况下，
+可以帮助到初级前端到资深前端范围的求职者拥有一个亮眼的项目写在简历中，让你在面试时脱颖而出，给面试官一点惊喜😁。
+
+## 附录
+
+`tooltip` 组件仅仅是 `Popover` 组件更换样式而已，不属于 `headless`（无样式） 组件的范畴，所以我们底层 `@t-headless-ui/react` 没有提供 `tooltip`。

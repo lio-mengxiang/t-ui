@@ -22,6 +22,7 @@ export default [
   {
     rules: {
       '@typescript-eslint/ban-ts-comment': 'off',
+      'react/react-in-jsx-scope': 'off',
     },
   },
 ];

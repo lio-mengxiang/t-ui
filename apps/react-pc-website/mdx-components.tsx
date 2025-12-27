@@ -1,6 +1,6 @@
 import React from 'react';
 import type { MDXComponents } from 'mdx/types';
-import { H1, H2, H3, H4, H5, H6, Ol, Paragraph, Ul, Code, Link } from '@/_components/typography';
+import { H1, H2, H3, H4, H5, H6, Ol, Paragraph, Ul, Code, Link, Pre, CodeBlock } from '@/_components/typography';
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
@@ -13,8 +13,17 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     p: ({ children }) => <Paragraph>{children}</Paragraph>,
     ol: ({ children }) => <Ol>{children}</Ol>,
     ul: ({ children }) => <Ul>{children}</Ul>,
-    code: ({ children }) => <Code>{children}</Code>,
+    code: ({ children, className }) => {
+      // 代码块里的 code（```）
+      if (className?.startsWith('language-')) {
+        return <CodeBlock language={className} code={children} />;
+      }
+
+      // 行内 code（`xxx`）
+      return <Code>{children}</Code>;
+    },
     a: (props) => <Link {...props} />,
+    pre: ({ children }) => <Pre>{children}</Pre>,
     ...components,
   };
 }

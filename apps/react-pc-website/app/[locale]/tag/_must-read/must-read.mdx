@@ -1,0 +1,75 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide } from '@/_components/typography';
+import { CodePreview } from '@/_components/code-preview';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+
+<H1 subheading="">Tag 组件太简单了</H1>
+
+<ImageTypography src="/tag/tag.webp" fill alt="icon" />
+
+## 前言
+
+Tag 组件本身没有任何难度，就是一个简单的 `div` 加上一些样式。
+
+源码如下：
+
+<CodeBlock
+  code={`'use client';
+ 
+import { cs } from '@/_utils';
+import { IconCloseLine, IconLoadingLine, useMergeValue } from '@t-headless-ui/react';
+import  { useState } from 'react';
+ 
+function isPromiseInstance(value: any): value is Promise<any> {
+    return value && value instanceof Promise;
+}
+export function TTag(props: {
+    children: React.ReactNode;
+    className?: string;
+    onClose?: (e: React.MouseEvent) => Promise<void> | void;
+    closable?: boolean;
+    visible?: boolean;
+}) {
+    const { children, className, onClose, closable, visible: visibleProp, ...rest } = props;
+    const [loading, setLoading] = useState(false);
+    const [visible, setVisible] = useMergeValue(true, {
+      value: visibleProp,
+    });
+  
+    const handleOnClose = (e: React.MouseEvent) => {
+      const ret = onClose?.(e);
+      if (ret && isPromiseInstance(ret)) {
+        setLoading(true);
+        ret
+          .then(() => {
+            setLoading(false);
+            setVisible(false);
+          })
+          .catch(() => {
+            setLoading(false);
+          });
+      } else {
+        setVisible(false);
+      }
+    };
+  
+    return (
+      <div
+        className={cs('inline-flex box-border items-center nowrap h-6 px-2 rounded-sm bg-color-100 text-[12px]', className, {
+          hidden: !visible,
+        })}
+        {...rest}
+      >
+        {children}
+        {closable && visible && !loading && (
+          <IconCloseLine onClick={handleOnClose} className="ml-1 cursor-pointer hover:text-color-400 duration-200 transition-colors" />
+        )}
+        {loading && <IconLoadingLine className="ml-1 animate-spin" />}
+      </div>
+    );
+}`}
+  language="jsx"
+/>
+
+最后，欢迎加入到我们的组件库交流群中。有什么疑问都可以在群里讨论，并且会有视频直播每个组件的实现。
+
+更重要的是,我可以帮助你增加一些简历中的核心项目，例如我们这个组件库级别的。无论你是面试初级开发还是到前端技术专家，都会帮助你在面试中脱颖而出。
