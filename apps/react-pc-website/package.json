@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev -H 0.0.0.0",
     "build": "rm -rf ./out && next build",
-    "build:github-page": "rm -rf ../../docs && EXPORT_DIR=docs APP_ENV=github-page next build && touch ./docs/.nojekyll",
+    "build:github-page": "rm -rf ./docs && EXPORT_DIR=docs APP_ENV=github-page next build && touch ./docs/.nojekyll",
     "start": "next start",
     "lint": "next lint",
     "lint:test": "eslint ./app/page.tsx"
