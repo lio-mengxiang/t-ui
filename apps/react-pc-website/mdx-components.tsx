@@ -10,9 +10,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     h4: ({ children }) => <H4>{children}</H4>,
     h5: ({ children }) => <H5>{children}</H5>,
     h6: ({ children }) => <H6>{children}</H6>,
-    p: ({ children }) => <Paragraph>{children}</Paragraph>,
-    ol: ({ children }) => <Ol>{children}</Ol>,
-    ul: ({ children }) => <Ul>{children}</Ul>,
+    p: ({ children }) => <Paragraph className="text-[15px] break-words">{children}</Paragraph>,
+    ol: ({ children }) => <Ol className="text-[15px] break-words">{children}</Ol>,
+    ul: ({ children }) => <Ul className="text-[15px] break-words">{children}</Ul>,
     code: ({ children, className }) => {
       // 代码块里的 code（```）
       if (className?.startsWith('language-')) {
@@ -22,7 +22,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       // 行内 code（`xxx`）
       return <Code>{children}</Code>;
     },
-    a: (props) => <Link {...props} />,
+    a: (props) => <Link className="text-[15px]" {...props} />,
     pre: ({ children }) => <Pre>{children}</Pre>,
     ...components,
   };

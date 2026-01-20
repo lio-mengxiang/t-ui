@@ -33,6 +33,11 @@ export const NextLocalStorage = ({ defaultTheme, children, nonce, scriptContent,
     [themeKey],
   );
 
+  useEffect(() => {
+    const lsTheme = localStorage.getItem(themeKey) as ThemeTypeProps | null;
+    if (lsTheme) setTheme(lsTheme);
+  }, [themeKey]);
+
   // localStorage event handling
   useEffect(() => {
     const handleStorage = (e: StorageEvent) => {

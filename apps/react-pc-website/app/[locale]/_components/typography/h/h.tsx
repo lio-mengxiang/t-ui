@@ -11,10 +11,11 @@ export function H1({ children, subheading }: { children: React.ReactNode; subhea
   );
 }
 
-export function H2({ children }: { children: React.ReactNode }) {
+export function H2({ children, subheading, className, ...rest }: { children: React.ReactNode; className?: string; subheading?: string }) {
   return (
-    <h2 className="font-medium mb-8 mt-8 text-[28px]" id={getId(children)}>
+    <h2 className={cs('font-medium mb-8 mt-8 text-[28px]', className)} id={getId(children)} {...rest}>
       {children}
+      <div className="text-base font-normal text-color-400">{subheading}</div>
     </h2>
   );
 }
@@ -27,11 +28,13 @@ export function H3({ children, className }: { children: React.ReactNode; classNa
   );
 }
 
-export function H3Sub({ children, sub }: { children: React.ReactNode; sub: React.ReactNode }) {
+export function H3Sub({ children, sub, className }: { children: React.ReactNode; sub?: React.ReactNode; className?: string }) {
   return (
-    <div className="mb-8">
-      <H3 className="mb-2">{children}</H3>
-      <div className="text-[13px]">{sub}</div>
+    <div className={cs('font-medium mb-8 mt-8 text-xl', className)}>
+      <h3 className="mb-2" id={getId(children)}>
+        {children}
+      </h3>
+      <div className="text-xs font-normal text-color-400">{sub}</div>
     </div>
   );
 }

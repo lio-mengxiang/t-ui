@@ -40,7 +40,7 @@ export function Menu({ data, subMenuClassName }: BasicMenuProps) {
   }, [data, strippedPathname]);
 
   return (
-    <VerticalMenu.Root defaultOpenedSubMenuValues={allOpenValues} selectedValuePath={currentSelectedValue} className="text-[15px]">
+    <VerticalMenu.Root defaultOpenedSubMenuValues={allOpenValues} selectedValuePath={currentSelectedValue} className="text-sm">
       {menu}
     </VerticalMenu.Root>
   );

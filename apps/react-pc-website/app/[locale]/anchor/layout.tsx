@@ -1,7 +1,7 @@
 'use client';
 
 import { MenuItem, SubMenu } from '@/_components/menu/page-menu';
-import { IconClickFill, IconStarFill, IconHappyRabbitFill } from '@t-headless-ui/react';
+import { IconClickFill, IconStarFill, IconCarrotFill, IconCheeryFill } from '@t-headless-ui/react';
 import { ANCHOR_PATH, menuLinks } from '@/constants';
 import { CommonLayout } from '@/_components/layout/common-layout';
 import { type LocaleRouter } from '@/_hooks';
@@ -10,7 +10,7 @@ const data = (router: LocaleRouter, size: string) => [
   {
     content: (
       <SubMenu>
-        <IconHappyRabbitFill size="3rem" className="pr-1" />
+        <IconCarrotFill size={size} />
         其它组件
       </SubMenu>
     ),
@@ -31,8 +31,8 @@ const data = (router: LocaleRouter, size: string) => [
   {
     content: (
       <MenuItem>
-        <IconStarFill size={size} className="text-[#FBCD2C] mr-2" />
-        用法指南
+        <IconCheeryFill size={size} className="text-[#FBCD2C] mr-2" />
+        基础用法
       </MenuItem>
     ),
     onClick: () => {
@@ -44,31 +44,31 @@ const data = (router: LocaleRouter, size: string) => [
     content: (
       <MenuItem>
         <IconStarFill size={size} className="text-[#FBCD2C] mr-2" />
-        简历亮点
+        面试亮点
       </MenuItem>
     ),
     onClick: () => {
-      router.push(ANCHOR_PATH);
+      router.push(`${ANCHOR_PATH}/interview`);
     },
-    value: ANCHOR_PATH,
+    value: `${ANCHOR_PATH}/interview`,
   },
-  {
-    content: (
-      <SubMenu>
-        <IconClickFill size="1.6em" className="text-[#4cc3fa]" /> Anchor 完整案例
-      </SubMenu>
-    ),
-    value: `${ANCHOR_PATH}/example`,
-    items: [
-      {
-        content: <MenuItem className="text-sm font-light">传统案例</MenuItem>,
-        onClick: () => {
-          router.push(`${ANCHOR_PATH}/example/tailwind-traditional-example`);
-        },
-        value: `${ANCHOR_PATH}/example/tailwind-traditional-example`,
-      },
-    ],
-  },
+  // {
+  //   content: (
+  //     <SubMenu>
+  //       <IconChiliPepperFill size="1.6em" /> Anchor 技术文章
+  //     </SubMenu>
+  //   ),
+  //   value: `${ANCHOR_PATH}/example`,
+  //   items: [
+  //     {
+  //       content: <MenuItem className="text-sm font-light">传统案例</MenuItem>,
+  //       onClick: () => {
+  //         router.push(`${ANCHOR_PATH}/example/tailwind-traditional-example`);
+  //       },
+  //       value: `${ANCHOR_PATH}/example/tailwind-traditional-example`,
+  //     },
+  //   ],
+  // },
   {
     content: (
       <SubMenu>

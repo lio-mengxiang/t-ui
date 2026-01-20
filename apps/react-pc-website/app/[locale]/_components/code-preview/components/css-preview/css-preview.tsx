@@ -1,7 +1,6 @@
 import CodeMirror from '@uiw/react-codemirror';
 import { css } from '@codemirror/lang-css';
-import { materialDark } from '@uiw/codemirror-theme-material';
-
+import { vscodeDark } from '@uiw/codemirror-theme-vscode';
 import type { CssPreviewProps } from './interface';
 
 // import './js-preview.css';
@@ -10,7 +9,7 @@ export function CssPreview({ cssCode }: CssPreviewProps) {
   return (
     <CodeMirror
       value={cssCode.trim()}
-      theme={materialDark}
+      theme={vscodeDark}
       extensions={[css()]}
       className="max-h-125 overflow-auto text-sm"
       readOnly

@@ -1,3 +1,4 @@
+'use client';
 import { useRef } from 'react';
 import { cs } from '@/_utils';
 import { IconLoadingLine, IconSearchLine } from '@t-headless-ui/react';

@@ -6,3 +6,4 @@ export * from './omit';
 export * from './get-image-url';
 export * from './get-angle-dom';
 export * from './strip-first-segment';
+export * from './get-locale-pathname';

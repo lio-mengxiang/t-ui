@@ -30,7 +30,14 @@
     "checkJs": true
   },
   // 指定需要编译的文件路径：包含 packages 与 apps 下的 ts/tsx，以及一个 mdx 文件
-  "include": ["packages/**/*.ts", "packages/**/*.tsx", "apps/**/*.ts", "apps/**/*.tsx", "apps/react-pc-website/app/button/page.mdx"],
+  "include": [
+    "packages/**/*.ts",
+    "packages/**/*.tsx",
+    "apps/**/*.ts",
+    "apps/**/*.tsx",
+    "apps/react-pc-website/app/button/page.mdx",
+    "apps/react-pc-website/scripts/Interface-to-json.mjs"
+  ],
   // 排除目录：跳过 node_modules，避免编译第三方库
-  "exclude": ["node_modules"]
+  "exclude": ["**/node_modules/**", "**/scripts/**"]
 }

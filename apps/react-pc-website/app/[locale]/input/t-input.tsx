@@ -1,3 +1,5 @@
+'use client';
+
 import { useImperativeHandle, forwardRef, useState } from 'react';
 import { cs } from '@/_utils';
 import { useInputGroup, InputComponent, type InputProps, IconCloseLine } from '@t-headless-ui/react';

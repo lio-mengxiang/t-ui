@@ -1,5 +1,5 @@
 export const dynamicParams = false;
-import Metadata from '@/metadata';
+import Metadata from './metadata';
 import { RootLayoutContent } from './layout-content';
 
 import '@/globals.css';

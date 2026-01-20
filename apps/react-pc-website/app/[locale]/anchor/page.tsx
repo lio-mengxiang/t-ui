@@ -1,8 +1,9 @@
-import { catalogList, UsageMDX } from './usage';
-import { SharedPage } from '@/_components/common-page';
+import { UsageEnMDX, UsageMDX, zhCatalog, enCatalog } from './_component/usage';
+import { SharedPage2 } from '@/_components/common-page';
 
-export default SharedPage({
-  catalogList,
+export default SharedPage2({
+  EnCatalogList: enCatalog,
+  ZhCatalogList: zhCatalog,
   ZhMarkdown: <UsageMDX />,
-  EnMarkdown: <UsageMDX />,
+  EnMarkdown: <UsageEnMDX />,
 });

@@ -7,3 +7,7 @@ export * from './platte-fill';
 export * from './click-fill';
 export * from './happy-rabbit-fill';
 export * from './empty-fill';
+export * from './lightning-fill';
+export * from './carrot-fill';
+export * from './chili-pepper-fill';
+export * from './cheery-fill';

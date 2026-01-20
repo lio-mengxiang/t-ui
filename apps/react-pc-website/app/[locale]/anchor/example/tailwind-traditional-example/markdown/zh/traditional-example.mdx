@@ -1,0 +1,60 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { TAnchor } from '@/_components/ui-lib';
+import { CodePreview } from '@/_components/code-preview';
+import { BasicExample, NestedExample, ContainerExample, CustomCursorExample, Custom2CursorExample } from '../example';
+import { TLineAnchorCode, TBallAnchorCode } from '../../../../_t-anchor';
+
+{/* ### 基础锚点 */}
+
+<H3Sub sub={<>锚点间不存在层级关系。适用于锚点间为同级关系时的简单的场景。</>}>{'基础锚点'}</H3Sub>
+<BasicExample />
+
+{/* ### 嵌套锚点 */}
+
+<H3Sub sub={<>锚点内含有层级关系。适用锚点内含有父子级关系时的复杂的场景。</>}>{'嵌套锚点'}</H3Sub>
+<NestedExample />
+
+{/* ### 指定容器锚点 */}
+
+<H3Sub sub={<>指定响应滚动的容器进行锚点定位。</>}>{'指定容器锚点'}</H3Sub>
+<ContainerExample />
+
+{/* ### 自定义锚点1 */}
+
+<H3Sub sub={<>自定义游标样式，源码在下面。</>}>{'自定义锚点1'}</H3Sub>
+<CustomCursorExample />
+
+{/* ### 自定义锚点2 */}
+
+<H3Sub
+  sub={
+    <>
+      自定义游标样式：
+      <TAnchor
+        offset={-90}
+        className="inline-flex underline text-primary-color cursor-pointer"
+        items={[
+          {
+            text: '点击跳转源码',
+            id: '自定义锚点2源码',
+          },
+        ]}
+      />
+      。
+    </>
+  }
+>
+  {'自定义锚点2'}
+</H3Sub>
+<Custom2CursorExample />
+
+{/* ### 自定义锚点1源码 */}
+
+<H3Sub>{'自定义锚点1源码'}</H3Sub>
+<TLineAnchorCode />
+
+{/* ### 自定义锚点2源码 */}
+
+<H3Sub>{'自定义锚点2源码'}</H3Sub>
+<TBallAnchorCode />

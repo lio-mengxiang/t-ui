@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -H 0.0.0.0",
+    "dev": "next dev -H 0.0.0.0 -p 3222",
     "build": "rm -rf ./out && next build",
     "build:github-page": "rm -rf ../../docs && EXPORT_DIR=../../docs APP_ENV=github-page next build && touch ../../docs/.nojekyll",
     "start": "next start",
     "lint": "next lint",
-    "lint:test": "eslint ./app/page.tsx"
+    "lint:test": "eslint ./app/page.tsx",
+    "gen:docs": "node scripts/interface-to-json2.mjs",
+    "gen:catalog": "node scripts/create-catalog.mjs"
   },
   "dependencies": {
     "@babel/standalone": "^7.27.0",
@@ -20,22 +22,24 @@
     "@next/mdx": "16.0.1",
     "@t-headless-ui/react": "workspace:*",
     "@types/mdx": "2.0.13",
-    "@uiw/codemirror-theme-material": "^4.23.10",
+    "@uiw/codemirror-theme-vscode": "^4.23.10",
     "@uiw/react-codemirror": "^4.23.10",
     "autoprefixer": "^10.4.21",
-    "babel-plugin-transform-remove-imports": "^1.8.0",
+    "babel-plugin-transform-remove-imports": "1.8.1",
     "clsx": "2.1.1",
     "copy-to-clipboard": "3.3.3",
     "gsap": "3.13.0",
     "motion": "12.7.3",
-    "next": "16.0.1",
-    "postcss": "^8.5.3",
+    "next": "16.1.1",
+    "postcss": "8.5.6",
     "postcss-import": "16.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-syntax-highlighter": "15.6.1",
     "tailwind-merge": "3.2.0",
-    "tailwindcss": "3.4.17"
+    "tailwindcss": "3.4.17",
+    "postcss-selector-parser": "7.1.1",
+    "three": "0.182.0"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -43,6 +47,7 @@
     "@types/react-dom": "^19",
     "@types/react-syntax-highlighter": "15.5.13",
     "baseline-browser-mapping": "2.9.11",
-    "typescript": "^5"
+    "typescript": "^5",
+    "@types/three": "0.182.0"
   }
 }

@@ -1,0 +1,17 @@
+.wrapper {
+  --color-black: rgba(35, 35, 35, 1);
+  --color-black-70: rgba(35, 35, 35, 0.7);
+  --color-white: rgb(255, 255, 255);
+  --color-list-border: rgb(255, 255, 255, 0.2);
+  --color-border-grey: #797878;
+  --color-logo-border: #d2d2d2;
+  --color-logo-bg: #f3f5f6;
+
+  color: var(--color-white);
+  background: var(--color-black);
+  position: relative;
+  font-size: 13px;
+  width: 100vw;
+  height: 100vh;
+  min-height: 320px;
+}

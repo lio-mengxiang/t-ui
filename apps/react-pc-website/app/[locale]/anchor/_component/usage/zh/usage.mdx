@@ -1,0 +1,46 @@
+import { ImageTypography, AvatarM, CodeBlock, H2, H3Sub, Divide } from '@/_components/typography';
+import { CodePreview2 } from '@/_components/code-preview2';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { AnchorApiDoc } from '../api-doc';
+import { BasicExample, TailwindBasicExample, AdvancedExample } from './example';
+import { HowToUse } from '../how-to-use';
+import { TAnchorCode } from '../../../_t-anchor';
+
+{/* ## 锚点 Anchor */}
+
+<H2 className="mt-0" subheading={<>通过锚点可快速找到信息内容在当前页面的位置。</>}>
+  {'锚点 Anchor'}
+</H2>
+
+{/* ### 结合 Tailwind */}
+
+<H3Sub>{'结合 Tailwind'}</H3Sub>
+<TailwindBasicExample />
+
+{/* ### 结合 CSS */}
+
+<H3Sub>{'结合 CSS'}</H3Sub>
+<BasicExample />
+
+{/* ### 使用方法 */}
+
+<H3Sub>{'使用方法'}</H3Sub>
+
+<HowToUse />
+
+{/* ### 高级封装 */}
+
+<H3Sub sub="下一节会展示了封装的源码">{'高级封装'}</H3Sub>
+
+<AdvancedExample />
+
+{/* ### 源码展示 */}
+
+<H3Sub>{'源码展示'}</H3Sub>
+
+<TAnchorCode />
+
+{/* ### API */}
+
+<H3Sub>{'API'}</H3Sub>
+<AnchorApiDoc />

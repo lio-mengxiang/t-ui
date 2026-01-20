@@ -80,7 +80,6 @@ export function useStore({ propScrollContainer, onChange, offset, queryKey, isCl
     currentId,
     onLinkClick,
     wrapperRef,
-    scrollContainer,
     linkMap,
   };
 }

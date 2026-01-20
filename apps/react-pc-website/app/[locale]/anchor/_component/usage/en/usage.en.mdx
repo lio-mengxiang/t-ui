@@ -1,0 +1,46 @@
+import { ImageTypography, AvatarM, CodeBlock, H2, H3Sub, Divide } from '@/_components/typography';
+import { CodePreview2 } from '@/_components/code-preview2';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { AnchorApiDoc } from '../api-doc';
+import { BasicExample, TailwindBasicExample, AdvancedExample } from './example';
+import { HowToUse } from '../how-to-use';
+import { TAnchorCode } from '../../../_t-anchor';
+
+{/* ## Anchor */}
+
+<H2 className="mt-0" subheading={<>By the Anchor can quickly find the information content of the current page.</>}>
+  {'Anchor'}
+</H2>
+
+{/* ### TailwindCSS Integration */}
+
+<H3Sub>{'TailwindCSS Integration'}</H3Sub>
+<TailwindBasicExample />
+
+{/* ### CSS Integration */}
+
+<H3Sub>{'CSS Integration'}</H3Sub>
+<BasicExample />
+
+{/* ### Usage */}
+
+<H3Sub>{'Usage'}</H3Sub>
+
+<HowToUse />
+
+{/* ### Advanced Encapsulation */}
+
+<H3Sub sub="Next section will show the source code of the encapsulation.">{'Advanced Encapsulation'}</H3Sub>
+
+<AdvancedExample />
+
+{/* ### Source Code */}
+
+<H3Sub>{'Source Code'}</H3Sub>
+
+<TAnchorCode />
+
+{/* ### API */}
+
+<H3Sub>{'API'}</H3Sub>
+<AnchorApiDoc />

@@ -1,0 +1,1 @@
+export { useTransformLocale } from './useLocal';

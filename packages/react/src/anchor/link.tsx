@@ -6,6 +6,7 @@ import { AnchorContext } from './context';
 import { AnchorLinkProps } from './interface';
 import { addLink, removeLink } from './utils';
 import { useComposedRefs } from '../hooks';
+import { cs } from '../utils';
 
 export const AnchorLink = forwardRef<HTMLDivElement, AnchorLinkProps>((props: PropsWithChildren<AnchorLinkProps>, ref) => {
   // context
@@ -35,7 +36,7 @@ export const AnchorLink = forwardRef<HTMLDivElement, AnchorLinkProps>((props: Pr
         onLinkClick?.(e, targetId);
       }}
       data-target-id={targetId}
-      className={currentId === targetId ? activeClassName : className}
+      className={cs(className, { [activeClassName]: currentId === targetId })}
     >
       {children}
     </div>

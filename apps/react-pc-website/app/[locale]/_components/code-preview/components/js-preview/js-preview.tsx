@@ -1,7 +1,6 @@
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
-
-import { materialDark } from '@uiw/codemirror-theme-material';
+import { vscodeDark } from '@uiw/codemirror-theme-vscode';
 
 import type { JsPreviewProps } from './interface';
 
@@ -11,7 +10,7 @@ export function JsPreview({ code, onChange, readOnly = false }: JsPreviewProps) 
   return (
     <CodeMirror
       value={code.trim()}
-      theme={materialDark}
+      theme={vscodeDark}
       extensions={[javascript({ jsx: true })]}
       readOnly={readOnly}
       className="max-h-125 overflow-auto text-sm"

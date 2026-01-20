@@ -1,5 +1,7 @@
 'use client';
 
-export function Paragraph({ children }: { children: React.ReactNode }) {
-  return <p className="leading-8 break-all whitespace-normal mb-8 mt-8 text-[15px]">{children}</p>;
+import { cs } from '@/_utils';
+
+export function Paragraph({ children, className }: { children: React.ReactNode; className?: string }) {
+  return <p className={cs('leading-8 break-all whitespace-normal mb-8 mt-8', className)}>{children}</p>;
 }

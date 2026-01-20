@@ -1,4 +1,3 @@
-import type { AnimationProps } from 'motion/dist/react';
 import React, { HTMLAttributes, type LiHTMLAttributes } from 'react';
 
 /**
@@ -31,7 +30,7 @@ export interface VerticalSubMenuProps extends HTMLAttributes<HTMLDivElement> {
    * @zh 自定义 motion/react 或者 framer-motion 动画，作用在 motion.div 元素上
    * @en Customize the animation on the motion.div element of motion/react or framer-motion
    */
-  customizeDivAnimate?: AnimationProps;
+  customizeDivAnimate?: any;
   /**
    * @zh 菜单的唯一标识
    * @en The unique identifier of the menu
@@ -49,7 +48,7 @@ export interface SubMenuListProps extends HTMLAttributes<HTMLDivElement> {
    * @zh 自定义 motion/react 或者 framer-motion 动画，作用在 motion.div 元素上
    * @en Customize the animation on the motion.div element of motion/react or framer-motion
    */
-  customizeDivAnimate?: AnimationProps;
+  customizeDivAnimate?: any;
   ref?: React.RefObject<HTMLDivElement>;
 }
 

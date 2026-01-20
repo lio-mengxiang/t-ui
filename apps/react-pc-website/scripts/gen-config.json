@@ -1,0 +1,8 @@
+[
+  {
+    "module": "@t-headless-ui/react",
+    "path": "dist/types/anchor/interface.d.ts",
+    "out": "./app/[locale]/_schemas/anchor.schema.ts",
+    "varName": "anchorSchema"
+  }
+]

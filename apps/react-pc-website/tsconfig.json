@@ -33,7 +33,8 @@
     "app/button/page.tsx",
     ".next/dev/types/**/*.ts",
     "out/types/**/*.ts",
-    "out/dev/types/**/*.ts"
+    "out/dev/types/**/*.ts",
+    "scripts/interface-to-json.mjs"
   ],
   "exclude": ["node_modules"]
 }

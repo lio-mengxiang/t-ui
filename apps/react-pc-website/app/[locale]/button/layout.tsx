@@ -36,9 +36,9 @@ const data = (router: LocaleRouter, size: string) => [
       </MenuItem>
     ),
     onClick: () => {
-      router.push(`${BUTTON_PATH}/guide`);
+      router.push(`${BUTTON_PATH}`);
     },
-    value: `${BUTTON_PATH}/guide`,
+    value: `${BUTTON_PATH}`,
   },
   {
     content: (
