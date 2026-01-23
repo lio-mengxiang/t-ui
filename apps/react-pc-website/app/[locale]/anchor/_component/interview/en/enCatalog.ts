@@ -2,14 +2,18 @@
 export const enCatalog = [
   {
     level: 2,
-    text: 'What You Will Gain',
+    text: 'This is how I answered:',
   },
   {
     level: 2,
-    text: 'Technical Challenges',
+    text: 'Full-Stack: Following Closely Behind',
   },
   {
     level: 2,
-    text: 'Welcome to Join',
+    text: 'Break the Deadlock!',
+  },
+  {
+    level: 2,
+    text: 'The Core Principles of the Anchor Component',
   },
 ];

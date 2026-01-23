@@ -4,4 +4,5 @@ export const common = {
   description: '描述',
   default: '默认值',
   inherits: '继承',
+  interfaceName: '接口名',
 };

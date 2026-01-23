@@ -2,12 +2,17 @@ import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/
 import { IconMuiLogo, Button } from '@t-headless-ui/react';
 import { TAnchor } from '@/_components/ui-lib';
 import { CodePreview } from '@/_components/code-preview';
-import { BasicExample, NestedExample, ContainerExample, CustomCursorExample, Custom2CursorExample } from '../example';
+import { BasicExample, NestedExample, ContainerExample, CustomCursorExample, Custom2CursorExample } from './example';
 import { TLineAnchorCode, TBallAnchorCode } from '../../../../_t-anchor';
+
+以下代码是 "基础用法" 章节基于原始的 headless 组件（{ "import { Anchor } from '@t-headless-ui/react' "}） 封装的高级组件 TAnchor。
+源码在 "基础用法" 已经展示。
+
+如果你想封装自己的基于 headless 组件（{ "import { Anchor } from '@t-headless-ui/react' "}）的高级组件，你可以参考 TAnchor 的实现。
 
 {/* ### 基础锚点 */}
 
-<H3Sub sub={<>锚点间不存在层级关系。适用于锚点间为同级关系时的简单的场景。</>}>{'基础锚点'}</H3Sub>
+<H3Sub sub={<>点击锚点会跳转到指定位置。</>}>{'基础锚点'}</H3Sub>
 <BasicExample />
 
 {/* ### 嵌套锚点 */}
@@ -22,7 +27,26 @@ import { TLineAnchorCode, TBallAnchorCode } from '../../../../_t-anchor';
 
 {/* ### 自定义锚点1 */}
 
-<H3Sub sub={<>自定义游标样式，源码在下面。</>}>{'自定义锚点1'}</H3Sub>
+<H3Sub
+  sub={
+    <>
+      自定义游标样式：
+      <TAnchor
+        offset={-90}
+        className="inline-flex underline text-primary-color cursor-pointer"
+        items={[
+          {
+            text: '点击跳转源码',
+            id: '自定义锚点1源码',
+          },
+        ]}
+      />
+      。
+    </>
+  }
+>
+  {'自定义锚点1'}
+</H3Sub>
 <CustomCursorExample />
 
 {/* ### 自定义锚点2 */}

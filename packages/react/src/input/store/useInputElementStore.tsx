@@ -26,7 +26,6 @@ export function useInputElementStore(props: InputProps & { rest: Record<string, 
   // state
   const refInput = useRef<HTMLInputElement>(null);
   const refInputMirror = useRef<HTMLSpanElement>(null);
-  const refPrevInputWidth = useRef<number>(null);
 
   const maxLength = propMaxLength?.errorOnly ? undefined : propMaxLength?.length;
 
@@ -100,7 +99,6 @@ export function useInputElementStore(props: InputProps & { rest: Record<string, 
     inputProps,
     refInput,
     refInputMirror,
-    refPrevInputWidth,
     handleClear,
     mirrorValue,
     inputComputeStyle,

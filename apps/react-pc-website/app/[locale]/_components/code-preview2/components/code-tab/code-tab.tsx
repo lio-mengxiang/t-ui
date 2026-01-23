@@ -20,7 +20,7 @@ export function CodeTab({ code, cssCode, onChange, onCssChange, cssEditable }: J
         {cssCode && (
           <div
             className={cs(
-              'flex items-center text-xs text-color-400 hover:bg-color-100 px-2 py-1 rounded-md cursor-pointer border border-solid border-color mr-3',
+              'flex whitespace-nowrap items-center text-xs text-color-400 hover:bg-color-100 px-2 py-1 rounded-md cursor-pointer border border-solid border-color mr-3',
               {
                 'bg-color-100': type === CSS,
               },
@@ -88,7 +88,7 @@ export function CodeTab({ code, cssCode, onChange, onCssChange, cssEditable }: J
             setType(JS);
           }}
         >
-          <span className="mr-1">edit js</span>
+          <span className="mr-1 whitespace-nowrap">edit js</span>
           <IconCodeLine size="14px" />
         </div>
       </div>

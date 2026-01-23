@@ -1,0 +1,34 @@
+import { ImageTypography, AvatarM, CodeBlock, H2, H3Sub, Divide } from '@/_components/typography';
+import { CodePreview2 } from '@/_components/code-preview2';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { InputTagApiDoc } from '../api-doc';
+import { BasicExample, TailwindBasicExample, AdvancedExample } from '../example';
+import { HowToUse } from '../how-to-use';
+import { TAnchorCode } from '../../../_t-input-tag';
+
+{/* ## Anchor */}
+
+<H2 className="mt-0" subheading={<>An input box which will display your input as tags..</>}>
+  {'InputTag'}
+</H2>
+
+{/* ### TailwindCSS Integration */}
+
+<H3Sub>{'TailwindCSS Integration'}</H3Sub>
+<TailwindBasicExample />
+
+{/* ### CSS Integration */}
+
+<H3Sub>{'CSS Integration'}</H3Sub>
+<BasicExample />
+
+{/* ### Usage */}
+
+<H3Sub>{'Usage'}</H3Sub>
+
+<HowToUse />
+
+{/* ### API */}
+
+<H3Sub>{'API'}</H3Sub>
+<InputTagApiDoc />

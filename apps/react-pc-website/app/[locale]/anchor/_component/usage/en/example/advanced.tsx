@@ -34,11 +34,6 @@ function App() {
           activeClassName: activeClassName,
           className: className,
         },
-        {
-          text: 'Advanced Wrapper',
-          activeClassName: activeClassName,
-          className: className,
-        },
       ]}
     />
   );

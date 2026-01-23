@@ -16,6 +16,7 @@ import { TDrawer } from '@/drawer/t-drawer';
 import { TEmpty } from '@/empty/t-empty';
 import { Tooltip } from '@/tooltip/t-tooltip';
 import { TAnchor, TLineAnchor, TBallAnchor } from '@/anchor/_t-anchor';
+import { TInputTag } from '@/input-tag/_t-input-tag';
 
 export {
   TButton,
@@ -38,4 +39,5 @@ export {
   TAnchor,
   TLineAnchor,
   TBallAnchor,
+  TInputTag,
 };

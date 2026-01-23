@@ -11,6 +11,8 @@ import { LayoutGroup } from 'motion/react';
 import type { CodePreviewProps } from './interface';
 import { toastStore, toastBottomStore, toastBottomStackStore } from '@/layout-content';
 import { useSandboxStyle } from './hooks/use-sandbox-style';
+import { twMerge } from 'tailwind-merge';
+import { clsx } from 'clsx';
 
 const TUI = {
   ...T,
@@ -22,6 +24,8 @@ const TUI = {
   toastBottomStackStore,
   ...React,
   LayoutGroup,
+  twMerge,
+  clsx,
 };
 export function CodePreview2(props: CodePreviewProps) {
   const { code: _Code = '', dependencies = TUI, demoContainerStyle, css, id, cssEditable = false } = props;

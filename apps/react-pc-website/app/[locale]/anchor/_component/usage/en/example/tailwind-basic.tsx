@@ -8,7 +8,7 @@ function App() {
   const className = 'text-color-500 text-sm cursor-pointer hover:text-primary-color mb-3';
   const activeClassName = 'text-primary-color';
   return (
-    <Anchor.Root offset={-90} className="w-48">
+    <Anchor.Root offset={-90} className="inline-flex flex-col">
       <Anchor.Link targetId="Anchor" activeClassName={activeClassName} className={className}>
         Anchor
       </Anchor.Link>

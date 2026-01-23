@@ -1,7 +1,6 @@
 'use client';
 import { type BasicMenuProps, renderBasicMenu } from '@/_components/menu/basic-menu';
 import { useEffect, useState } from 'react';
-
 import { VerticalMenu } from '@t-headless-ui/react';
 import { usePathname } from 'next/navigation';
 import { stripFirstSegment } from '@/_utils';

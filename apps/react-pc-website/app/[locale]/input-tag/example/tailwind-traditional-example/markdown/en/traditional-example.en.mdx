@@ -1,0 +1,109 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { TAnchor } from '@/_components/ui-lib';
+import { CodePreview } from '@/_components/code-preview';
+import {
+  BasicExample,
+  SeparatorsExample,
+  ClearAllExample,
+  DisableExample,
+  PrefixExample,
+  MaxTagCountExample,
+  CustomTagExample,
+} from '../example';
+
+The following examples demonstrate an advanced component TInputTag, which is built on top of the original headless component
+({ "import { InputTag } from '@t-headless-ui/react' "}) in the Basic Usage section.
+
+The source code has already been shown in the Basic Usage section.
+
+If you want to build your own advanced component based on the headless component
+({ "import { InputTag } from '@t-headless-ui/react' "}), you can refer to the implementation of TInputTag.
+
+{/* ### Basic */}
+
+<H3Sub
+  sub={
+    <>
+      After pressing the Enter key, the input value will be converted into a tag. Empty strings or whitespace-only values will be filtered
+      out, and duplicate values are also ignored.
+    </>
+  }
+>
+  {'Basic'}
+</H3Sub>
+<BasicExample />
+
+{/* ### Batch Input */}
+
+<H3Sub
+  sub={
+    <>
+      You can use <Code>tokenSeparators</Code> to define separators for batch input. Multiple separators are supported by passing a
+      <Code>{'string[]'}</Code>. The following demo is supported to use <Code>{'-'}</Code> as a separator.
+    </>
+  }
+>
+  {'Batch Input'}
+</H3Sub>
+<SeparatorsExample />
+
+{/* ### Clear All */}
+
+<H3Sub
+  sub={
+    <>
+      Use <Code>allowClear</Code> to enable one-click removal of all tags and the input value. This feature is implemented as a custom
+      extension.
+    </>
+  }
+>
+  {'Clear All'}
+</H3Sub>
+<ClearAllExample />
+
+{/* ### Disabled/ReadOnly */}
+
+<H3Sub>{'Disabled/ReadOnly'}</H3Sub>
+<DisableExample />
+
+{/* ### Prefix/Suffix */}
+
+<H3Sub
+  sub={
+    <>
+      You can pass a prefix to the input using <Code>prefix</Code>, and a suffix using <Code>suffix</Code>. Both text and{' '}
+      <Code>ReactNode</Code> are supported.
+    </>
+  }
+>
+  {'Prefix/Suffix'}
+</H3Sub>
+<PrefixExample />
+
+{/* ### Max Tag Count */}
+
+<H3Sub
+  sub={
+    <>
+      Use <Code>maxTagCount</Code> to limit the maximum number of visible tags.
+      <Code>maxTagCount.render</Code> allows you to customize the <Code>+x</Code> indicator.
+    </>
+  }
+>
+  {'Max Tag Count'}
+</H3Sub>
+<MaxTagCountExample />
+
+{/* ### Custom Tag */}
+
+<H3Sub
+  sub={
+    <>
+      Customize the tag node by providing <Code>renderTag</Code>.
+    </>
+  }
+>
+  {'Custom Tag'}
+</H3Sub>
+<CustomTagExample />

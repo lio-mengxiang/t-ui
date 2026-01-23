@@ -34,7 +34,7 @@ export function H3Sub({ children, sub, className }: { children: React.ReactNode;
       <h3 className="mb-2" id={getId(children)}>
         {children}
       </h3>
-      <div className="text-xs font-normal text-color-400">{sub}</div>
+      <div className="text-[12px] font-normal text-color-400">{sub}</div>
     </div>
   );
 }

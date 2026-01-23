@@ -1,10 +1,9 @@
-import { TraditionalExampleEnMDX, TraditionalExampleMDX } from './markdown';
-import { catalogList } from './catalog';
+import { enCatalog, TraditionalExampleEnMDX, TraditionalExampleMDX, zhCatalog } from './markdown';
 import { SharedPage2 } from '@/_components/common-page';
 
 export default SharedPage2({
-  EnCatalogList: catalogList,
-  ZhCatalogList: catalogList,
+  EnCatalogList: enCatalog,
+  ZhCatalogList: zhCatalog,
   ZhMarkdown: <TraditionalExampleMDX />,
   EnMarkdown: <TraditionalExampleEnMDX />,
 });

@@ -7,33 +7,27 @@ function App() {
   const className = 'text-color-500 text-sm cursor-pointer hover:text-primary-color mb-3';
   const activeClassName = 'text-primary-color';
   return (
-    <TAnchor
+    <TBallAnchor
       offset={-90}
+      className="inline-flex"
       items={[
         {
           text: 'Basic',
           activeClassName: activeClassName,
           className: className,
-          items: [
-            {
-              text: 'Basic',
-              activeClassName: activeClassName,
-              className: className,
-            },
-            {
-              text: 'Nested anchor',
-              activeClassName: activeClassName,
-              className: className,
-            },
-          ],
         },
         {
-          text: '使用方法',
+          text: 'Nested',
           activeClassName: activeClassName,
           className: className,
         },
         {
-          text: '高级封装',
+          text: 'Container',
+          activeClassName: activeClassName,
+          className: className,
+        },
+        {
+          text: 'Custom1',
           activeClassName: activeClassName,
           className: className,
         },
@@ -43,6 +37,6 @@ function App() {
 }
 `;
 
-export function NestedExample() {
+export function Custom2CursorExample() {
   return <CodePreview2 code={code} />;
 }

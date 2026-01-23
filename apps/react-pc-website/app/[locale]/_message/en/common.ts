@@ -4,4 +4,5 @@ export const common = {
   description: 'Description',
   default: 'Default',
   inherits: 'inherits',
+  interfaceName: 'Interface Name',
 };

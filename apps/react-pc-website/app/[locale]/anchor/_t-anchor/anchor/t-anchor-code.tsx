@@ -6,11 +6,19 @@ export function TAnchorCode() {
       <div className="mb-3 text-color-500">↓ TAnchor.tsx:</div>
       <CodeBlock
         code={`
-import { createNestedLink, type NestedAnchorLinkProps } from './createNestedLink';
-import { Anchor, type AnchorProps } from '@t-headless-ui/react';
+import { Anchor, type AnchorProps, type AnchorLinkProps } from '@t-headless-ui/react';
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 interface TAnchorProps extends AnchorProps {
   items: NestedAnchorLinkProps[];
+}
+
+interface NestedAnchorLinkProps {
+  text: string;
+  activeClassName?: AnchorLinkProps['activeClassName'];
+  className?: AnchorLinkProps['className'];
+  items?: NestedAnchorLinkProps[];
 }
 
 export function TAnchor({ items, offset, ...restProps }: TAnchorProps) {
@@ -19,21 +27,6 @@ export function TAnchor({ items, offset, ...restProps }: TAnchorProps) {
       <div className="overflow-y-auto">{createNestedLink(items, 0)}</div>
     </Anchor.Root>
   );
-}
-`}
-        language="jsx"
-      />
-      <div className="mb-3 text-color-500 mt-4">↓ createNestedLink.tsx</div>
-      <CodeBlock
-        code={`
-import { cs } from '@/_utils';
-import { Anchor, type AnchorLinkProps } from '@t-headless-ui/react';
-
-export interface NestedAnchorLinkProps {
-  text: string;
-  activeClassName?: AnchorLinkProps['activeClassName'];
-  className?: AnchorLinkProps['className'];
-  items?: NestedAnchorLinkProps[];
 }
 
 export function createNestedLink(items?: NestedAnchorLinkProps[], level: number = 0) {
@@ -52,17 +45,9 @@ export function createNestedLink(items?: NestedAnchorLinkProps[], level: number 
       ))
     : null;
 }
-`}
-        language="jsx"
-      />
-      <div className="mb-3 text-color-500 mt-4">↓ cs.tsx:</div>
-      <CodeBlock
-        code={`
-import classNames from 'classnames';
-import { twMerge } from 'tailwind-merge';
 
-export function cs(...args: classNames.ArgumentArray): string {
-  return twMerge(classNames(...args));
+export function cs(...args: ClassValue[]) {
+  return twMerge(clsx(...args));
 }
 `}
         language="jsx"

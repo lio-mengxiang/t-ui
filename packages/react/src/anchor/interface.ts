@@ -1,7 +1,7 @@
 import { type CSSProperties, type HTMLAttributes } from 'react';
 
 /**
- * @title Anchor
+ * @title Anchor.Root Props
  */
 export interface AnchorProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
   /**
@@ -50,7 +50,7 @@ export interface AnchorProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onCha
 }
 
 /**
- * @title Anchor.Link
+ * @title Anchor.Link Props
  */
 export interface AnchorLinkProps extends HTMLAttributes<HTMLDivElement> {
   /**

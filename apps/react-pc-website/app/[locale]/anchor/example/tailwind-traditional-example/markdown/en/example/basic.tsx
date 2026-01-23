@@ -16,17 +16,17 @@ function App() {
           className: className,
         },
         {
-          text: 'Nested anchor',
+          text: 'Nested',
           activeClassName: activeClassName,
           className: className,
         },
         {
-          text: '使用方法',
+          text: 'Container',
           activeClassName: activeClassName,
           className: className,
         },
         {
-          text: '高级封装',
+          text: 'Custom1',
           activeClassName: activeClassName,
           className: className,
         },

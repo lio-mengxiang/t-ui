@@ -1,6 +1,5 @@
-import React from 'react';
 import type { MDXComponents } from 'mdx/types';
-import { H1, H2, H3, H4, H5, H6, Ol, Paragraph, Ul, Code, Link, Pre, CodeBlock } from '@/_components/typography';
+import { H1, H2, H3, H4, H5, H6, Ol, Paragraph, Ul, Code, Link, Pre, CodeBlock, Block } from '@/_components/typography';
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
@@ -10,9 +9,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     h4: ({ children }) => <H4>{children}</H4>,
     h5: ({ children }) => <H5>{children}</H5>,
     h6: ({ children }) => <H6>{children}</H6>,
-    p: ({ children }) => <Paragraph className="text-[15px] break-words">{children}</Paragraph>,
-    ol: ({ children }) => <Ol className="text-[15px] break-words">{children}</Ol>,
-    ul: ({ children }) => <Ul className="text-[15px] break-words">{children}</Ul>,
+    p: ({ children }) => <Paragraph className="break-words">{children}</Paragraph>,
+    ol: ({ children }) => <Ol className="break-words">{children}</Ol>,
+    ul: ({ children }) => <Ul className="break-words">{children}</Ul>,
+    block: ({ children }) => <Block>{children}</Block>,
     code: ({ children, className }) => {
       // 代码块里的 code（```）
       if (className?.startsWith('language-')) {

@@ -1,0 +1,86 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { TAnchor } from '@/_components/ui-lib';
+import { CodePreview } from '@/_components/code-preview';
+import {
+  BasicExample,
+  SeparatorsExample,
+  ClearAllExample,
+  DisableExample,
+  PrefixExample,
+  MaxTagCountExample,
+  CustomTagExample,
+} from '../example';
+
+以下代码是 "基础用法" 章节基于原始的 headless 组件（{ "import { InputTag } from '@t-headless-ui/react' "}） 封装的高级组件 TInputTag。
+源码在 "基础用法" 已经展示。
+
+如果你想封装自己的基于 headless 组件（{ "import { InputTag } from '@t-headless-ui/react' "}）的高级组件，你可以参考 TInputTag 的实现。
+
+{/* ### 基本演示 */}
+
+<H3Sub sub={<>敲击回车键后，输入内容将成为标签。标签内容如果为空串或者纯空格时，则会被过滤, 相同的内容也会被过滤。</>}>{'基本演示'}</H3Sub>
+<BasicExample />
+
+{/* ### 批量添加 */}
+
+<H3Sub
+  sub={
+    <>
+      可以使用 tokenSeparators 设置分隔符，来实现批量输入。支持多个分隔符以 string[] 格式传入。以下演示支持使用 <Code>{'-'}</Code>{' '}
+      作为分隔符。
+    </>
+  }
+>
+  {'批量添加'}
+</H3Sub>
+<SeparatorsExample />
+
+{/* ### 批量清除 */}
+
+<H3Sub sub={<>可使用 allowClear 设置是否支持一键删除所有标签和输入框内容。这个功能是我们自定义实现的。</>}>{'批量清除'}</H3Sub>
+<ClearAllExample />
+
+{/* ### 禁用和只读 */}
+
+<H3Sub>{'禁用和只读'}</H3Sub>
+<DisableExample />
+
+{/* ### 前后缀 */}
+
+<H3Sub
+  sub={
+    <>
+      可通过 <Code>prefix</Code> 传入输入框前缀，通过 <Code>suffix</Code> 传入输入框后缀，可以为文本或者 <Code>ReactNode</Code>。
+    </>
+  }
+>
+  {'前后缀'}
+</H3Sub>
+<PrefixExample />
+
+{/* ### 最大标签数量 */}
+
+<H3Sub
+  sub={
+    <>
+      可通过 <Code>maxTagCount</Code> 设置最多展示的标签数，<Code>maxTagCount.render</Code> 自定义 <Code>+x</Code> 部分的节点内容。
+    </>
+  }
+>
+  {'最大标签数量'}
+</H3Sub>
+<MaxTagCountExample />
+
+{/* ### 自定义标签渲染 */}
+
+<H3Sub
+  sub={
+    <>
+      指定 <Code>renderTag</Code> 来自定义标签节点。
+    </>
+  }
+>
+  {'自定义标签渲染'}
+</H3Sub>
+<CustomTagExample />

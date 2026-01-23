@@ -1,24 +1,88 @@
 import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
 import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { TAnchor } from '@/_components/ui-lib';
 import { CodePreview } from '@/_components/code-preview';
-import { BasicExample, NestedExample, CustomCursorExample } from '../example';
+import { BasicExample, NestedExample, ContainerExample, CustomCursorExample, Custom2CursorExample } from './example';
+import { TLineAnchorCode, TBallAnchorCode } from '../../../../_t-anchor';
 
-{/* ### 基础锚点 */}
+The code below is the advanced component TAnchor, wrapped around the original headless component (`import { Anchor } from '@t-headless-ui/react'`) in the "Basic Usage" section.  
+The source code is already shown in "Basic Usage".
 
-<H3Sub sub={<>锚点间不存在层级关系。适用于锚点间为同级关系时的简单的场景。</>}>{'基础锚点'}</H3Sub>
+If you want to wrap your own higher-level component based on the headless component ({"import { Anchor } from '@t-headless-ui/react'"}), you can refer to the implementation of TAnchor.
+
+{/* ### Basic */}
+
+<H3Sub sub={<>Clicking on an anchor will jump to the specified position.</>}>{'Basic'}</H3Sub>
 <BasicExample />
 
-{/* ### 嵌套锚点 */}
+{/* ### Nested Anchor */}
 
-<H3Sub sub={<>锚点内含有层级关系。适用锚点内含有父子级关系时的复杂的场景。</>}>{'嵌套锚点'}</H3Sub>
+<H3Sub sub={<>Anchors with nested relationship. Suitable for complex scenarios where anchors have parent-child relationships.</>}>
+  {'Nested Anchor'}
+</H3Sub>
 <NestedExample />
 
-{/* ### 指定容器锚点 */}
+{/* ### Specify Container */}
 
-<H3Sub sub={<>指定响应滚动的容器进行锚点定位。</>}>{'指定容器锚点 '}</H3Sub>
-<BasicExample />
+<H3Sub sub={<>Specify the container to scroll when clicking on an anchor. Useful when anchors are inside a scrollable container.</>}>
+  {'Specify Container'}
+</H3Sub>
+<ContainerExample />
 
-{/* ### 自定义游标锚点 */}
+{/* ### Custom1 */}
 
-<H3Sub sub={<>支持根据自己的需求，设置游标的样式。</>}>{'自定义游标锚点'}</H3Sub>
+<H3Sub
+  sub={
+    <>
+      Custom cursor style:
+      <TAnchor
+        offset={-90}
+        className="inline-flex underline text-primary-color cursor-pointer"
+        items={[
+          {
+            text: 'Click to jump to source code',
+            id: 'Custom1',
+          },
+        ]}
+      />
+      。
+    </>
+  }
+>
+  {'Custom1'}
+</H3Sub>
 <CustomCursorExample />
+
+{/* ### Custom2 */}
+
+<H3Sub
+  sub={
+    <>
+      Custom cursor style:
+      <TAnchor
+        offset={-90}
+        className="inline-flex underline text-primary-color cursor-pointer"
+        items={[
+          {
+            text: 'Click to jump to source code',
+            id: 'Custom2',
+          },
+        ]}
+      />
+      。
+    </>
+  }
+>
+  {'Custom2'}
+</H3Sub>
+<Custom2CursorExample />
+
+{/* ### Custom1 Code */}
+
+<H3Sub>{'Custom1 Code'}</H3Sub>
+<TLineAnchorCode />
+
+{/* ### Custom2 Code */}
+
+<H3Sub>{'Custom2 Code'}</H3Sub>
+<TBallAnchorCode />

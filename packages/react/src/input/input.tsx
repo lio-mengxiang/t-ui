@@ -51,23 +51,22 @@ export const InputComponent = forwardRef<RefInputType, InputProps>((props, ref) 
   };
 
   // store
-  const { inputProps, refInput, refInputMirror, refPrevInputWidth, handleClear, mirrorValue, inputComputeStyle, updateInputWidth } =
-    useInputElementStore({
-      rest,
-      placeholder,
-      disabled,
-      value,
-      autoFitWidth,
-      readOnly,
-      onChange: propsOnChange || onChange,
-      onKeyDown,
-      onPressEnter,
-      onClear,
-      maxLength: propMaxLength,
-      normalizeTrigger,
-      normalize,
-      defaultValue,
-    });
+  const { inputProps, refInput, refInputMirror, handleClear, mirrorValue, inputComputeStyle, updateInputWidth } = useInputElementStore({
+    rest,
+    placeholder,
+    disabled,
+    value,
+    autoFitWidth,
+    readOnly,
+    onChange: propsOnChange || onChange,
+    onKeyDown,
+    onPressEnter,
+    onClear,
+    maxLength: propMaxLength,
+    normalizeTrigger,
+    normalize,
+    defaultValue,
+  });
 
   useImperativeHandle(ref, () => {
     return {
@@ -83,10 +82,8 @@ export const InputComponent = forwardRef<RefInputType, InputProps>((props, ref) 
   }, []);
 
   //监听 popupRef 节点或内容变化动
-  useResizeObserver(refInputMirror?.current, (target) => {
-    const inputWidth = target.offsetWidth;
+  useResizeObserver(refInputMirror?.current, () => {
     updateInputWidth();
-    refPrevInputWidth.current = inputWidth;
   });
 
   return (
@@ -105,7 +102,6 @@ export const InputComponent = forwardRef<RefInputType, InputProps>((props, ref) 
           </span>
         ) : null
       ) : null}
-
       {autoFitWidth && (
         <span style={inputComputeStyle} ref={refInputMirror}>
           {fillNBSP(mirrorValue)}

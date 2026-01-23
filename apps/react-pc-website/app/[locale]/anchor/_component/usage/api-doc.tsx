@@ -25,8 +25,9 @@ export function AnchorApiDoc() {
           key={item.interfaceName}
           columns={columns}
           data={item.properties}
-          name={item.interfaceName}
+          name={item.name}
           extends={item.extends}
+          interfaceName={item.interfaceName}
           t={t}
         />
       ))}

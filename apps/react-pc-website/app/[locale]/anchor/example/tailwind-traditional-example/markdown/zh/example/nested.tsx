@@ -7,27 +7,28 @@ function App() {
   const className = 'text-color-500 text-sm cursor-pointer hover:text-primary-color mb-3';
   const activeClassName = 'text-primary-color';
   return (
-    <TBallAnchor
+    <TAnchor
       offset={-90}
-      className="inline-flex"
       items={[
         {
           text: '基础锚点',
           activeClassName: activeClassName,
           className: className,
+          items: [
+            {
+              text: '嵌套锚点',
+              activeClassName: activeClassName,
+              className: className,
+            },
+            {
+              text: '指定容器锚点',
+              activeClassName: activeClassName,
+              className: className,
+            },
+          ],
         },
         {
-          text: '嵌套锚点',
-          activeClassName: activeClassName,
-          className: className,
-        },
-        {
-          text: '自定义游标锚点',
-          activeClassName: activeClassName,
-          className: className,
-        },
-        {
-          text: '指定容器锚点',
+          text: '自定义锚点1',
           activeClassName: activeClassName,
           className: className,
         },
@@ -37,6 +38,6 @@ function App() {
 }
 `;
 
-export function Custom2CursorExample() {
+export function NestedExample() {
   return <CodePreview2 code={code} />;
 }

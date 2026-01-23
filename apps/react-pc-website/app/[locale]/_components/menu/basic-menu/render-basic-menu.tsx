@@ -31,10 +31,10 @@ export function renderBasicMenu({ data = [], subMenuClassName }: BasicMenuProps)
         <VerticalMenu.Submenu key={i} value={item.value || i}>
           <VerticalMenu.SubMenuContent
             className={cs(
-              'hover:bg-color-50 pt-3 pb-3 pl-4 pr-4 cursor-pointer flex justify-between items-center mb-0.5 rounded w-full',
+              'hover:bg-color-100 pt-3 pb-3 pl-4 pr-4 cursor-pointer flex justify-between items-center mb-0.5 rounded w-full',
               subMenuClassName,
             )}
-            selectedClassName="text-primary-color"
+            selectedClassName="text-color"
             onClick={item?.onClick}
           >
             {item.content}
@@ -48,8 +48,8 @@ export function renderBasicMenu({ data = [], subMenuClassName }: BasicMenuProps)
                 <VerticalMenu.MenuItem
                   key={i}
                   value={item.value || i}
-                  className="pt-3 pb-3 pl-4 pr-4 hover:bg-color-50  cursor-pointer rounded mb-1 w-full"
-                  selectedClassName="text-primary-color bg-color-50"
+                  className="pt-3 pb-3 pl-4 pr-4 hover:bg-color-100  cursor-pointer rounded mb-1 w-full"
+                  selectedClassName="text-primary-color bg-color-100"
                   onClick={item?.onClick}
                 >
                   {item.content}
@@ -62,8 +62,8 @@ export function renderBasicMenu({ data = [], subMenuClassName }: BasicMenuProps)
         <VerticalMenu.MenuItem
           key={i}
           value={item.value || i}
-          className="pt-3 pb-3 pl-4 pr-4 hover:bg-color-50  cursor-pointer rounded mb-1 w-60"
-          selectedClassName="text-primary-color bg-color-50"
+          className="pt-3 pb-3 pl-4 pr-4 hover:bg-color-100  cursor-pointer rounded mb-1 w-60"
+          selectedClassName="text-color bg-color-100"
           onClick={item?.onClick}
         >
           {item.content}

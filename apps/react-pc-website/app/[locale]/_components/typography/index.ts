@@ -8,3 +8,4 @@ export * from './divide';
 export * from './code';
 export * from './link';
 export * from './pre';
+export * from './block';

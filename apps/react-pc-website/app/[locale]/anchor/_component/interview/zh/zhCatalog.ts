@@ -2,14 +2,18 @@
 export const zhCatalog = [
   {
     level: 2,
-    text: '你的收获',
+    text: '我是这样回答的：',
   },
   {
     level: 2,
-    text: '技术难点',
+    text: '全栈：紧随其后',
   },
   {
     level: 2,
-    text: '期待加入',
+    text: '破局！',
+  },
+  {
+    level: 2,
+    text: '为什么要学 Anchor 组件',
   },
 ];
