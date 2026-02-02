@@ -2,8 +2,8 @@ import type { InputHTMLAttributes, ReactNode, ClipboardEvent } from 'react';
 
 /**
  * @title Input
- * @zh **Input 接受所有原生的属性值**
- * @en **Input Accept all native attribute values**
+ * @zh Input 接受所有原生的属性值
+ * @en Input Accept all native attribute values
  */
 export interface InputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'prefix' | 'size' | 'height' | 'maxLength' | 'ref'> {

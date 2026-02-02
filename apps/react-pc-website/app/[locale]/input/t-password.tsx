@@ -30,7 +30,7 @@ interface InputPasswordProps extends TInputProps {
 export const Password = forwardRef<RefInputType, InputPasswordProps>((props: InputPasswordProps, ref) => {
   const { visibilityToggle = true, ...rest } = props;
 
-  const { visibility, IconProps } = usePasswordStore(props);
+  const { visibility, IconProps } = usePasswordStore(props as any);
 
   let icon = props.suffixElement;
 

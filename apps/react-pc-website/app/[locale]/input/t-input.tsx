@@ -15,7 +15,7 @@ export type RefInputType = {
   dom?: HTMLDivElement;
 };
 
-export interface TInputProps extends InputProps {
+export interface TInputProps extends Omit<InputProps, 'onFocus' | 'onBlur'> {
   prefixElement?: React.ReactNode;
   suffixElement?: React.ReactNode;
   className?: string;
@@ -24,6 +24,8 @@ export interface TInputProps extends InputProps {
   inputStyle?: React.CSSProperties;
   showWordLimit?: boolean;
   onWrapperMouseDown?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  onFocus?: (value: string, e: any) => void;
+  onBlur?: (value: string, e: any) => void;
 }
 
 function SuffixElement(props: { trueMaxLength: number; valueLength: number; hasLengthError: boolean }) {
@@ -55,7 +57,7 @@ export const TInput = forwardRef<RefInputType, TInputProps>((props, ref) => {
     onWrapperMouseDown,
     ...rest
   } = props;
-  const { status, inputRef, inputWrapperRef, hasLengthError, value, onChange, onMouseDown, onClick } = useInputGroup(props);
+  const { status, inputRef, inputWrapperRef, hasLengthError, value, onChange, onMouseDown, onClick } = useInputGroup(props as any);
   const [isFocused, setIsFocused] = useState(false);
 
   const valueLength = value?.length;

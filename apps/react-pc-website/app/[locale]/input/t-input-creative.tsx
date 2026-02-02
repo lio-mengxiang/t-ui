@@ -14,12 +14,14 @@ export type RefInputType = {
   dom?: HTMLDivElement;
 };
 
-export interface TInputProps extends InputProps {
+export interface TInputProps extends Omit<InputProps, 'onFocus' | 'onBlur'> {
   className?: string;
   style?: React.CSSProperties;
   inputClassName?: string;
   inputStyle?: React.CSSProperties;
   onWrapperMouseDown?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  onFocus?: (value: string, e: React.FocusEvent<HTMLInputElement>) => void;
+  onBlur?: (value: string, e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 export const TMotionInput = forwardRef<RefInputType, TInputProps>((props, ref) => {
@@ -35,7 +37,7 @@ export const TMotionInput = forwardRef<RefInputType, TInputProps>((props, ref) =
     onWrapperMouseDown,
     ...rest
   } = props;
-  const { status, inputRef, inputWrapperRef, value, onChange, onMouseDown, onClick } = useInputGroup(props);
+  const { status, inputRef, inputWrapperRef, value, onChange, onMouseDown, onClick } = useInputGroup(props as any);
   const [isFocused, setIsFocused] = useState(false);
   useImperativeHandle(ref, () => {
     return {
