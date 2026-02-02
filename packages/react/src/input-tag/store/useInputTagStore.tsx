@@ -1,8 +1,7 @@
 'use client';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { formatValue, tagCloseHandler, valueChangeHandler } from '../utils';
 import { useMergeValue } from '../../hooks';
-import { RefInputType } from '../../input/input';
 import { isUndefined } from '../../utils';
 import { CLEAR } from '../constants';
 import { getHotkeyHandler } from '../../utils/getHotkeyHandler';
@@ -10,6 +9,7 @@ import { Backspace } from '../../utils/keycode';
 
 // types
 import type { InputTagRootProps, ObjectValueType } from '../interface';
+import type { RefInputType } from '../../input/interface';
 
 interface useInputTagStoreProps {
   defaultValue: InputTagRootProps['defaultValue'];
@@ -20,15 +20,19 @@ interface useInputTagStoreProps {
   onRemove: InputTagRootProps['onRemove'];
   onChange: InputTagRootProps['onChange'];
   labelInValue: InputTagRootProps['labelInValue'];
+  propsFocused: InputTagRootProps['focused'];
 }
 
 export function useInputTagStore(props: useInputTagStoreProps) {
-  const { defaultValue, propsValue, propsInputValue, readOnly, disabled, onRemove, onChange, labelInValue } = props;
+  const { defaultValue, propsValue, propsInputValue, readOnly, disabled, onRemove, onChange, labelInValue, propsFocused } = props;
 
   const refInput = useRef<RefInputType>(null);
+
   const refTSLastSeparateTriggered = useRef<number>(null);
 
-  const [focused, setFocused] = useState(false);
+  const [focused, setFocused] = useMergeValue(false, {
+    value: propsFocused,
+  });
 
   const [value, setValue] = useMergeValue<ObjectValueType[]>([], {
     defaultValue: !isUndefined(defaultValue) ? formatValue(defaultValue) : undefined,
@@ -56,7 +60,7 @@ export function useInputTagStore(props: useInputTagStoreProps) {
           if (!(event.target as HTMLInputElement).value && value.length) {
             for (let index = value.length - 1; index >= 0; index--) {
               const itemValue = value[index];
-              if (itemValue.closable !== false) {
+              if (itemValue.disabled !== false) {
                 tagCloseHandler({
                   item: itemValue,
                   index,

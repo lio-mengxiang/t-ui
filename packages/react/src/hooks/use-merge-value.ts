@@ -32,5 +32,6 @@ export function useMergeValue<T>(
 
   const mergedValue = isUndefined(value) ? stateValue : value;
 
+  // stateValue ：“是不是内部 setState 造成的更新” 的探测器
   return [mergedValue, setStateValue, stateValue];
 }

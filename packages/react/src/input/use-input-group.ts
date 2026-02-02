@@ -3,9 +3,8 @@
 import React, { useRef, useState } from 'react';
 import { useMergeValue } from '../hooks';
 import { contains } from '../mini-floating-ui/utils';
-import { RefInputType } from './input';
-import type { InputProps } from './interface';
 import { formatValue, isLengthExceeds } from './utils';
+import type { InputProps, RefInputType } from './interface';
 
 export function useInputGroup(props: InputProps) {
   const { maxLength } = props;

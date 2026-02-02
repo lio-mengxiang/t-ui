@@ -1,22 +1,38 @@
 import React, { type ReactNode, useContext } from 'react';
-import { InputTag as InputTagHeadless, type InputTagRootProps, type InputTagProps, IconCloseLine } from '@t-headless-ui/react';
+import {
+  InputTag as InputTagHeadless,
+  type InputTagRootProps,
+  type InputTagProps,
+  IconCloseLine,
+  type InputTagHandle,
+} from '@t-headless-ui/react';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-interface TInputTagExtendedProps {
-  globalProps: InputTagRootProps;
-  inputProps: InputTagProps;
+export interface TInputTagExtendedProps extends Omit<InputTagRootProps, 'prefix' | 'suffix'> {
+  inputProps?: InputTagProps;
   allowClear?: boolean;
   prefix?: ReactNode;
   suffix?: ReactNode;
+  inputRef?: React.Ref<InputTagHandle>;
 }
 
 export function TInputTag({
-  globalProps: { defaultValue, value, inputValue, disabled, readOnly, onRemove, onChange, labelInValue, maxTagCount, ...rest },
-  inputProps,
+  inputProps = {},
   allowClear,
   prefix,
   suffix,
+  inputRef,
+  defaultValue,
+  value,
+  inputValue,
+  disabled,
+  readOnly,
+  onRemove,
+  onChange,
+  labelInValue,
+  maxTagCount,
+  ...rest
 }: TInputTagExtendedProps) {
   return (
     <InputTagHeadless.Root
@@ -33,11 +49,14 @@ export function TInputTag({
     >
       <CustomInputWrapper prefix={prefix} suffix={suffix} allowClear={allowClear}>
         <InputTagHeadless.Input
+          ref={inputRef}
           renderTag={({ label, closable, onClose, disabled }, index) => (
             <div
               key={index}
               className={cn(
-                'flex items-center h-[24px] overflow-hidden rounded-[2px] border border-[var(--border-color)] bg-[var(--bg-color-100)] pl-2 pr-1 text-[12px] leading-[22px]',
+                'flex items-center h-[24px] overflow-hidden rounded-[2px] border border-[var(--border-color)] bg-[var(--bg-color-100)] pl-2 pr-1 text-[12px]',
+                '[&[aria-disabled="true"]]:cursor-not-allowed',
+                '[&[aria-readonly="true"]]:cursor-default',
                 {
                   'opacity-50 cursor-not-allowed pr-2': disabled,
                   'pr-2': disabled || readOnly,
@@ -115,6 +134,31 @@ function CustomInputWrapper({
     </div>
   );
 }
+
+//  const mergedArrowIcon =
+//    'arrowIcon' in props ? (
+//      arrowIcon === null ? null : (
+//        <div className={`${prefixCls}-arrow-icon`}>{arrowIcon}</div>
+//      )
+//    ) : (
+//      <div className={`${prefixCls}-arrow-icon`}>
+//        <IconDown />
+//      </div>
+//    );
+
+//  const mergedSuffixIcon = loading ? (
+//    <span className={`${prefixCls}-loading-icon`}>
+//      <IconLoading />
+//    </span>
+//  ) : suffixIcon ? (
+//    <span className={`${prefixCls}-suffix-icon`}>{suffixIcon}</span>
+//  ) : props.showSearch && popupVisible ? (
+//    <div className={`${prefixCls}-search-icon`}>
+//      <IconSearch />
+//    </div>
+//  ) : (
+//    mergedArrowIcon
+//  );
 
 function ClearButton() {
   const { value, disabled, readOnly, handleClearClick } = useContext(InputTagHeadless.Context);

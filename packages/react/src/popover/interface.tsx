@@ -2,9 +2,18 @@ import { MouseEvent, KeyboardEvent, FocusEvent } from 'react';
 
 export interface PopoverProps {
   /**
+   * 是否在关闭时销毁浮层 DOM 节点
+   * @default true
+   */
+  destroyOnClose?: boolean;
+  /**
    * 是否禁用组件
    */
   disabled?: boolean;
+  /**
+   * 是否只读
+   */
+  readOnly?: boolean;
   /**
    * 浮层出现位置
    * @default top
@@ -45,11 +54,6 @@ export interface PopoverProps {
    * 当浮层隐藏或显示时触发，`trigger=document` 表示点击非浮层元素触发；`trigger=context-menu` 表示右击触发
    */
   onVisibleChange?: (visible: boolean, context: PopupVisibleChangeContext) => void;
-
-  /**
-   * update popper
-   */
-  update?: () => void;
 }
 
 export interface PopupVisibleChangeContext {

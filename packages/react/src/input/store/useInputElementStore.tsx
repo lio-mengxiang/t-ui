@@ -6,7 +6,7 @@ import { getStyleFromInput } from '../utils';
 // types
 import type { InputProps } from '../interface';
 
-export function useInputElementStore(props: InputProps & { rest: Record<string, any> }) {
+export function useInputElementStore(props: InputProps) {
   const {
     placeholder,
     disabled,
@@ -19,7 +19,7 @@ export function useInputElementStore(props: InputProps & { rest: Record<string, 
     autoFitWidth,
     value,
     onChange,
-    rest,
+    ...rest
   } = props;
 
   const { onBlur } = rest;

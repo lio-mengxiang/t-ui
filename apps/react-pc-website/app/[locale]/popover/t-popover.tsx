@@ -29,6 +29,7 @@ export function TPopover({
   contentClassName,
   popoverContent,
   animateFn,
+  destroyOnClose = true,
 }: TPopoverProps) {
   return (
     <Popover.Root
@@ -41,6 +42,7 @@ export function TPopover({
       visible={visible}
       defaultVisible={defaultVisible}
       onVisibleChange={onVisibleChange}
+      destroyOnClose={destroyOnClose}
     >
       <Popover.Trigger>{children}</Popover.Trigger>
       <Popover.Content

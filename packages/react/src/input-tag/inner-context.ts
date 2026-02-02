@@ -1,11 +1,11 @@
 // input-tag-context.ts
 'use client';
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, type KeyboardEvent } from 'react';
 import type { ObjectValueType, InputTagRootProps } from './interface';
-import type { RefInputType } from '../input/input';
+import type { RefInputType } from '../input/interface';
 
-export interface InputTagContextValue {
-  refInput: React.RefObject<RefInputType | null>;
+export interface InputTagInnerContextProps {
+  refInput: React.RefObject<RefInputType>;
   refTSLastSeparateTriggered: React.RefObject<number | null>;
   focused: boolean;
   setFocused: (focused: boolean) => void;
@@ -21,12 +21,14 @@ export interface InputTagContextValue {
   maxTagCount: InputTagRootProps['maxTagCount'];
   handleClearClick: (e: React.MouseEvent) => void;
   onChange?: InputTagRootProps['onChange'];
+  validate?: InputTagRootProps['validate'];
+  tokenSeparators?: InputTagRootProps['tokenSeparators'];
 }
 
-export const InputTagContext = createContext<InputTagContextValue | null>(null);
+export const InputTagInnerContext = createContext<InputTagInnerContextProps | null>(null);
 
-export const useInputTagContext = (): InputTagContextValue => {
-  const context = useContext(InputTagContext);
+export const useInputInnerTagContext = (): InputTagInnerContextProps => {
+  const context = useContext(InputTagInnerContext);
   if (!context) {
     throw new Error('InputTag components must be used within <InputTag.Root>');
   }

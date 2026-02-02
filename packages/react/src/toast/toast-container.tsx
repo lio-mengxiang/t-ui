@@ -83,7 +83,7 @@ export const ToastContainer = (
       };
       exitAnimation();
     }
-  }, [isPresent, scope, stack, stackExpanded, stackIndex]);
+  }, [isPresent, scope.current, stack, stackExpanded, stackIndex]);
 
   useEffect(() => {
     if (stack) return;
@@ -115,7 +115,7 @@ export const ToastContainer = (
       };
       promiseRef.current = promiseRef.current.then(() => exitAnimation());
     }
-  }, [isPresent, scope, stack, stackExpanded, stackIndex]);
+  }, [isPresent, scope.current, stack, stackExpanded, stackIndex]);
 
   if (!shouldShow && !stackExpanded) {
     return null;

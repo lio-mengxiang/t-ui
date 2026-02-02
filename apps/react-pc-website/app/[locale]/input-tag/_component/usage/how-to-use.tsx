@@ -4,12 +4,14 @@ export function HowToUse() {
   return (
     <CodeBlock
       code={`
-import { InputTag } from '@t-headless-ui/react';
+import { InputTag, IconCloseLine } from '@t-headless-ui/react';
 
 <InputTag.Root>
-  {/* <CustomInputWrapper> It is suggested to customize the input wrapper */}
-  <InputTag.Input/>
-  {/* <CustomInputWrapper> */}
+  <InputTag.Tag />
+  <InputTag.Input />
+  <InputTag.Clear>
+      <IconCloseLine />
+  </InputTag.Clear>
 </InputTag.Root>
 `}
       language="jsx"

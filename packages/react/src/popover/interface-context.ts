@@ -12,4 +12,5 @@ export interface PopupContextProps {
   placement: Placement;
   popupElement: HTMLElement;
   isAnimated: RefObject<boolean>;
+  destroyOnClose: boolean;
 }

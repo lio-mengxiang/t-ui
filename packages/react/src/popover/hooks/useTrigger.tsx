@@ -3,13 +3,13 @@ import { DELAY, ESC_KEY, NO_DELAY } from '../constants';
 import { mergeRefs } from '../../hooks';
 import { getRefDom, callFuncWithDelay } from '../utils';
 
-export function useTrigger({ disabled, trigger, visible, setVisibleChange }) {
+export function useTrigger({ disabled, readOnly, trigger, visible, setVisibleChange }) {
   const hasPopupMouseDown = useRef(false);
   const mouseDownTimer = useRef(0);
   const visibleTimer = useRef(null);
   const triggerRef = useRef<HTMLElement>(null);
   // 禁用和无内容时不展示
-  const shouldToggle = !disabled;
+  const shouldToggle = !disabled && !readOnly;
 
   // 点击 trigger overlay 以外的元素关闭
   useEffect(() => {
@@ -179,7 +179,7 @@ export function useTrigger({ disabled, trigger, visible, setVisibleChange }) {
       child = <span>{child}</span>;
     }
 
-    return cloneElement(child, getTriggerProps(child, child?.ref, visible));
+    return cloneElement(child, getTriggerProps(child, child?.props?.ref || child?.ref, visible));
   }
 
   return {

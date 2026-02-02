@@ -1,2 +1,4 @@
 export { InputTagRoot } from './input-tag-root';
-export { InputTagComponent } from './input-tag';
+export { InputTagClear } from './input-tag-clear';
+export { InputTag } from './input-tag';
+export { InputTagInput } from './input';

@@ -1,9 +1,14 @@
 'use client';
-import React from 'react';
+
+import React, { useImperativeHandle } from 'react';
 import { keepFocus } from '../utils';
-import { InputTagRootProps } from '../interface';
+import type { InputTagHandle, InputTagRootProps } from '../interface';
 import { useInputTagStore } from '../store';
-import { InputTagContext } from '../context';
+import { InputTagInnerContext } from '../inner-context';
+
+const defaultProps: InputTagRootProps = {
+  validate: (inputValue, values) => inputValue && values.every((item) => item.value !== inputValue),
+};
 
 export function InputTagRoot(props: InputTagRootProps) {
   const {
@@ -18,6 +23,11 @@ export function InputTagRoot(props: InputTagRootProps) {
     onClick,
     children,
     maxTagCount,
+    focused: propsFocused,
+    disableInput,
+    ref,
+    validate = defaultProps.validate,
+    tokenSeparators,
     ...rest
   } = props;
 
@@ -41,10 +51,20 @@ export function InputTagRoot(props: InputTagRootProps) {
     onRemove,
     onChange,
     labelInValue,
+    propsFocused,
   });
 
+  useImperativeHandle<any, InputTagHandle>(ref, () => {
+    return {
+      blur: () => refInput.current?.blur(),
+      focus: () => refInput.current?.focus(),
+      dom: refInput.current?.dom,
+      inputDom: refInput.current?.inputDom,
+    };
+  }, []);
+
   return (
-    <InputTagContext.Provider
+    <InputTagInnerContext.Provider
       value={{
         refInput,
         refTSLastSeparateTriggered,
@@ -56,12 +76,14 @@ export function InputTagRoot(props: InputTagRootProps) {
         setInputValue,
         hotkeyHandler,
         readOnly,
-        disabled,
+        disabled: disabled || disableInput,
         onRemove,
         labelInValue,
         maxTagCount,
         handleClearClick,
         onChange,
+        validate,
+        tokenSeparators,
       }}
     >
       <div
@@ -77,9 +99,12 @@ export function InputTagRoot(props: InputTagRootProps) {
           }
           onClick?.(e);
         }}
+        aria-disabled={!!disabled}
+        aria-readonly={!!readOnly}
+        data-focused={!!focused}
       >
         {children}
       </div>
-    </InputTagContext.Provider>
+    </InputTagInnerContext.Provider>
   );
 }

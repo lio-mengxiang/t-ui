@@ -11,7 +11,7 @@ export function formatValue(value: (ObjectValueType | string)[]) {
           ...item,
           label: 'label' in item ? item.label : item.value,
           value: item.value,
-          closable: item.closable,
+          closable: item.disabled,
         }
       : {
           label: item,

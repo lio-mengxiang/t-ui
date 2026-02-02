@@ -1,20 +1,22 @@
 import type { Variants } from 'motion/react';
 import { PopoverProps } from '../interface';
 
+const transition = {
+  duration: 0.2,
+};
 export function applyPopupSlide(placement: PopoverProps['placement']): Variants {
   if (placement === 'top' || placement === 'top-end' || placement === 'top-start') {
     return {
       initial: {
         opacity: 0,
-        y: 10,
       },
       animate: {
         opacity: 1,
-        y: 0,
+        transition,
       },
       exit: {
         opacity: 0,
-        y: -10,
+        transition,
       },
     };
   }
@@ -22,15 +24,14 @@ export function applyPopupSlide(placement: PopoverProps['placement']): Variants 
     return {
       initial: {
         opacity: 0,
-        y: -10,
       },
       animate: {
         opacity: 1,
-        y: 0,
+        transition,
       },
       exit: {
         opacity: 0,
-        y: 10,
+        transition,
       },
     };
   }
@@ -38,15 +39,14 @@ export function applyPopupSlide(placement: PopoverProps['placement']): Variants 
     return {
       initial: {
         opacity: 0,
-        x: 10,
       },
       animate: {
         opacity: 1,
-        x: 0,
+        transition,
       },
       exit: {
         opacity: 0,
-        x: -10,
+        transition,
       },
     };
   }
@@ -54,15 +54,14 @@ export function applyPopupSlide(placement: PopoverProps['placement']): Variants 
     return {
       initial: {
         opacity: 0,
-        x: -10,
       },
       animate: {
         opacity: 1,
-        x: 0,
+        transition,
       },
       exit: {
         opacity: 0,
-        x: 10,
+        transition,
       },
     };
   }

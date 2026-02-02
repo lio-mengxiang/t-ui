@@ -6,7 +6,7 @@ import type { InputHTMLAttributes, ReactNode, ClipboardEvent } from 'react';
  * @en **Input Accept all native attribute values**
  */
 export interface InputProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'prefix' | 'size' | 'height' | 'maxLength' | 'onFocus' | 'onBlur'> {
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'prefix' | 'size' | 'height' | 'maxLength' | 'ref'> {
   /**
    * @zh 允许清空输入框
    * @en Whether allow clear value
@@ -48,8 +48,6 @@ export interface InputProps
    * @en Callback when click clear button
    */
   onClear?: (e) => void;
-  onFocus?: (value: any, e) => void;
-  onBlur?: (value: any, e) => void;
   /**
    * 粘贴事件
    */
@@ -101,4 +99,20 @@ export interface InputProps
    * @en Custom set the input value
    */
   setValue?: (value: string) => void;
+  /**
+   * @zh 输入框的 ref 对象（RefInputType 类型）
+   * @en The ref object of the input box(RefInputType type)
+   */
+  ref?: React.Ref<RefInputType>;
 }
+
+export type RefInputType = {
+  /** 使输入框失去焦点 */
+  blur?: () => void;
+  /** 使输入框获取焦点 */
+  focus?: () => void;
+  /** input dom元素 */
+  inputDom?: HTMLInputElement;
+  /** 输入框 dom元素 */
+  dom?: HTMLInputElement;
+};

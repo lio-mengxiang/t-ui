@@ -3,14 +3,14 @@ import React from 'react';
 import { valueChangeHandler } from './valueChangeHandler';
 import { ADD } from '../constants';
 // type
-import type { InputTagProps, InputTagRootProps, ObjectValueType } from '../interface';
+import type { InputTagRootProps, ObjectValueType } from '../interface';
 import { isArray, isFunction } from '../../utils';
 
 interface HandleTokenSeparatorsProps {
   str: string;
   refTSLastSeparateTriggered: React.RefObject<number>;
-  tokenSeparators: InputTagProps['tokenSeparators'];
-  validate: InputTagProps['validate'];
+  tokenSeparators: InputTagRootProps['tokenSeparators'];
+  validate: InputTagRootProps['validate'];
   value: ObjectValueType[];
   disabled: InputTagRootProps['disabled'];
   readOnly: InputTagRootProps['readOnly'];

@@ -10,3 +10,4 @@ export * from './use-merge-refs';
 export * from './use-mutation-observer';
 export * from './use-composition';
 export * from './debounce-by-raf';
+export * from './use-persist-callback';

@@ -1,22 +1,13 @@
 'use client';
 
-import React, { useImperativeHandle, forwardRef } from 'react';
+import React, { useImperativeHandle } from 'react';
 import { useMergeValue, useResizeObserver } from '../hooks';
 import { useInputElementStore } from './store';
 import { fillNBSP } from '../utils';
 import type { InputProps } from './interface';
 import { formatValue } from './utils';
 
-export type RefInputType = {
-  /** 使输入框失去焦点 */
-  blur?: () => void;
-  /** 使输入框获取焦点 */
-  focus?: () => void;
-  /** input dom元素 */
-  inputDom?: HTMLInputElement;
-};
-
-export const InputComponent = forwardRef<RefInputType, InputProps>((props, ref) => {
+export const InputComponent = (props: InputProps) => {
   const {
     allowClear,
     disabled,
@@ -32,6 +23,7 @@ export const InputComponent = forwardRef<RefInputType, InputProps>((props, ref) 
     normalizeTrigger = ['onBlur'],
     defaultValue,
     onChange: propsOnChange,
+    ref: externRef,
     ...rest
   } = props;
 
@@ -52,7 +44,6 @@ export const InputComponent = forwardRef<RefInputType, InputProps>((props, ref) 
 
   // store
   const { inputProps, refInput, refInputMirror, handleClear, mirrorValue, inputComputeStyle, updateInputWidth } = useInputElementStore({
-    rest,
     placeholder,
     disabled,
     value,
@@ -66,9 +57,10 @@ export const InputComponent = forwardRef<RefInputType, InputProps>((props, ref) 
     normalizeTrigger,
     normalize,
     defaultValue,
+    ...rest,
   });
 
-  useImperativeHandle(ref, () => {
+  useImperativeHandle(externRef, () => {
     return {
       dom: refInput.current,
       inputDom: refInput.current,
@@ -79,7 +71,7 @@ export const InputComponent = forwardRef<RefInputType, InputProps>((props, ref) 
         refInput.current?.blur?.();
       },
     };
-  }, []);
+  }, [refInput]);
 
   //监听 popupRef 节点或内容变化动
   useResizeObserver(refInputMirror?.current, () => {
@@ -88,7 +80,7 @@ export const InputComponent = forwardRef<RefInputType, InputProps>((props, ref) 
 
   return (
     <>
-      <input ref={refInput} {...inputProps} />
+      <input aria-disabled={disabled} aria-readonly={readOnly} {...inputProps} ref={refInput} />
       {!readOnly && !disabled && allowClear && value ? (
         clearIcon !== undefined ? (
           <span
@@ -109,4 +101,4 @@ export const InputComponent = forwardRef<RefInputType, InputProps>((props, ref) 
       )}
     </>
   );
-});
+};

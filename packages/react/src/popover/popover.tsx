@@ -25,7 +25,7 @@ export const Popup = forwardRef((baseProps: PropsWithChildren<PopoverProps>, ref
     ...defaultProps,
     ...baseProps,
   };
-  const { trigger, placement, disabled, offsetSkidding, offsetDistance, strategy, children } = props;
+  const { trigger, placement, disabled, readOnly, offsetSkidding, offsetDistance, strategy, children, destroyOnClose = true } = props;
 
   const [visible, onVisibleChange] = useMergeValue(false, {
     value: props.visible,
@@ -52,6 +52,7 @@ export const Popup = forwardRef((baseProps: PropsWithChildren<PopoverProps>, ref
 
   const { getTriggerNode, getPopupProps, triggerRef } = useTrigger({
     disabled,
+    readOnly,
     trigger,
     visible,
     setVisibleChange,
@@ -70,7 +71,18 @@ export const Popup = forwardRef((baseProps: PropsWithChildren<PopoverProps>, ref
 
   return (
     <PopupContext.Provider
-      value={{ getTriggerNode, getPopupProps, triggerRef, popperRef, setPopupElement, visible, placement, popupElement, isAnimated }}
+      value={{
+        getTriggerNode,
+        getPopupProps,
+        triggerRef,
+        popperRef,
+        setPopupElement,
+        visible,
+        placement,
+        popupElement,
+        isAnimated,
+        destroyOnClose,
+      }}
     >
       {children}
     </PopupContext.Provider>

@@ -1,29 +1,26 @@
 import { CodePreview2 } from '@/_components/code-preview2';
 
 export const code = `
-import React, { useContext } from 'react';
+import React from 'react';
 import { InputTag, IconCloseLine } from '@t-headless-ui/react';
-import { clsx} from 'clsx';
+import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 function App() {
   return (
-    <InputTag.Root>
-      <CustomInputWrapper>
-        <InputTag.Input
-          className="input-inner"
-          placeholder="Enter tags..."
+    <InputTag.Root className="input-tag-root">
+      <div className="input-tag-wrapper">
+        <InputTag.Tag
           renderTag={({ label, closable, onClose, disabled }, index) => (
-            <div key={index} className={cs('tag-item', { 'is-disabled': disabled })}>
-              <span className="tag-item-label">{label}</span>
+            <div key={index} className={\`input-tag-item \${disabled ? 'is-disabled' : ''}\`}>
+              <span className="input-tag-item-label">{label}</span>
               {closable && !disabled && (
-                <button
-                  type="button"
-                  className="tag-close-btn"
+                <button type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     onClose(e);
                   }}
+                  className="input-tag-item-close"
                 >
                   <IconCloseLine />
                 </button>
@@ -31,109 +28,163 @@ function App() {
             </div>
           )}
         />
-        <ClearButton />
-      </CustomInputWrapper>
+        <InputTag.Input
+          placeholder="Enter tags..."
+          className="input-tag-input"
+        />
+      </div>
+      <div className="input-tag-clear-container">
+        <InputTag.Clear>
+          <IconCloseLine className="input-tag-clear-icon" />
+        </InputTag.Clear>
+      </div>
     </InputTag.Root>
   );
-}
-
-function CustomInputWrapper({ children }) {
-  const { focused, disabled, readOnly } = useContext(InputTag.Context);
-
-  return (
-    <div
-      className={cs('input-tag-container', {
-        'is-focused': focused,
-        'is-disabled': disabled,
-        'is-readonly': readOnly,
-      })}
-    >
-      {children}
-    </div>
-  );
-}
-
-function ClearButton() {
-  const { value, disabled, readOnly, handleClearClick } = useContext(InputTag.Context);
-  if (disabled || readOnly || !value?.length) return null;
-
-  return (
-    <div
-      className="clear-icon-wrapper"
-      onClick={(e) => {
-        e.stopPropagation();
-        handleClearClick(e);
-      }}
-    >
-      <IconCloseLine style={{ cursor: 'pointer', fontSize: '14px', opacity: 0.6 }} />
-    </div>
-  );
-}
-
-function cn(...inputs) {
-  return twMerge(clsx(inputs));
 }
 `;
 
 const css = `
-.input-tag-container {
+/* Container root node */
+.input-tag-root {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 4px;
-  padding: 4px 12px;
-  min-height: 32px;
+  min-height: 34px;
+  overflow: hidden;
+  border-radius: 4px; /* rounded */
   border: 1px solid var(--border-color);
-  border-radius: 4px;
+  padding-left: 12px;
+  padding-right: 12px;
   transition: all 0.2s;
   cursor: text;
-  overflow: hidden;
+  background-color: transparent;
 }
 
-.input-tag-container:hover { border-color: var(--border-color-200); }
-.input-tag-container.is-focused { border-color: var(--border-color-200)); }
+/* Hover state */
+.input-tag-root:hover {
+  border-color: var(--border-color-200);
+}
 
+/* Focus state (based on data-focused attribute) */
+.input-tag-root[data-focused="true"] {
+  border-color: var(--border-color-200);
+}
 
-.tag-item {
+/* Disabled state */
+.input-tag-root[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.6;
+  border-color: var(--border-color);
+}
+
+/* Read-only state */
+.input-tag-root[aria-readonly="true"] {
+  cursor: default;
+  border-color: var(--border-color);
+}
+
+/* Inner wrapper layer */
+.input-tag-wrapper {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px; /* gap-1 */
+  padding-top: 4px;
+  padding-bottom: 4px;
+  min-width: 0;
+}
+
+/* Individual tag style */
+.input-tag-item {
   display: flex;
   align-items: center;
-  background: var(--bg-color-100);
-  border: 1px solid var(--border-color);
-  border-radius: 2px;
-  padding: 0 4px 0 8px;
   height: 24px;
+  overflow: hidden;
+  border-radius: 2px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-color-100);
+  padding-left: 8px; /* pl-2 */
+  padding-right: 4px; /* px-1 */
   font-size: 12px;
   line-height: 22px;
-  overflow: hidden;
 }
 
-.tag-item-label {
+.input-tag-item.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Tag label */
+.input-tag-item-label {
   flex: 1;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  padding-right: 4px;
 }
 
-.tag-close-btn {
+/* Tag close button */
+.input-tag-item-close {
   display: flex;
   align-items: center;
+  padding-left: 2px;
+  padding-right: 2px;
   border: none;
-  background: transparent;
+  background: none;
   cursor: pointer;
-  padding: 0 2px;
-  margin-left: 4px;
   color: var(--text-color-400);
+  transition: color 0.2s;
 }
 
-.tag-close-btn:hover { color: var(--border-color-200); }
+.input-tag-item-close:hover {
+  color: var(--border-color-200);
+}
 
-.input-inner {
+/* Input field style */
+.input-tag-input {
   flex: 1;
   min-width: 40px;
   border: none;
   outline: none;
-  font-size: 14px;
   background: transparent;
+  font-size: 14px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.input-tag-input[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+.input-tag-input[aria-readonly="true"] {
+  cursor: default;
+}
+
+/* Right clear button container */
+.input-tag-clear-container {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  padding-left: 4px;
+  visibility: hidden; /* hidden by default */
+  transition: all 0.2s;
+}
+
+/* Show clear button on parent hover */
+.input-tag-root:hover .input-tag-clear-container {
+  visibility: visible;
+}
+
+/* Clear icon */
+.input-tag-clear-icon {
+  cursor: pointer;
+  font-size: 14px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.input-tag-clear-icon:hover {
+  opacity: 1;
 }
 `;
 

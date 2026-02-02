@@ -26,7 +26,7 @@ export function mergedRenderTag({
   renderTag: InputTagProps['renderTag'];
 }) {
   const { value: itemValue, label } = item;
-  const closable = !readOnly && !disabled && item.closable !== false;
+  const closable = !readOnly && !disabled && item.disabled !== false;
   const onClose = (event) => {
     tagCloseHandler({ item, index, event, onRemove, value, disabled, readOnly, setValue, onChange, labelInValue });
   };

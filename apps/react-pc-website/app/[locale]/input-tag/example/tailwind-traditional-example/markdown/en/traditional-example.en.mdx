@@ -12,21 +12,12 @@ import {
   CustomTagExample,
 } from '../example';
 
-The following examples demonstrate an advanced component TInputTag, which is built on top of the original headless component
-({ "import { InputTag } from '@t-headless-ui/react' "}) in the Basic Usage section.
-
-The source code has already been shown in the Basic Usage section.
-
-If you want to build your own advanced component based on the headless component
-({ "import { InputTag } from '@t-headless-ui/react' "}), you can refer to the implementation of TInputTag.
-
 {/* ### Basic */}
 
 <H3Sub
   sub={
     <>
-      After pressing the Enter key, the input value will be converted into a tag. Empty strings or whitespace-only values will be filtered
-      out, and duplicate values are also ignored.
+      After pressing Enter, the entered text becomes a tag. Tags that are empty, contain only spaces, or already exist will be filtered out.
     </>
   }
 >
@@ -40,7 +31,8 @@ If you want to build your own advanced component based on the headless component
   sub={
     <>
       You can use <Code>tokenSeparators</Code> to define separators for batch input. Multiple separators are supported by passing a
-      <Code>{'string[]'}</Code>. The following demo is supported to use <Code>{'-'}</Code> as a separator.
+      <Code>{'string[]'}</Code>. The following demo is supported to use <Code>{','}</Code> as a separator. Please try copying the text below
+      into the input box.
     </>
   }
 >

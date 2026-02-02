@@ -9,7 +9,6 @@ export function useTransformLocale() {
     console.error('There is an error in the passed language property');
   }
   const getLocalConfig = localeMessage[lang];
-  console.log('getLocalConfig: ', getLocalConfig);
 
   return [getLocalConfig, transformLocale] as [
     typeof getLocalConfig,

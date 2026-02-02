@@ -1,3 +1,4 @@
+import { type KeyboardEvent } from 'react';
 export interface Key {
   /** Keyboard key code */
   code: number;

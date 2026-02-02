@@ -12,14 +12,9 @@ import {
   CustomTagExample,
 } from '../example';
 
-以下代码是 "基础用法" 章节基于原始的 headless 组件（{ "import { InputTag } from '@t-headless-ui/react' "}） 封装的高级组件 TInputTag。
-源码在 "基础用法" 已经展示。
-
-如果你想封装自己的基于 headless 组件（{ "import { InputTag } from '@t-headless-ui/react' "}）的高级组件，你可以参考 TInputTag 的实现。
-
 {/* ### 基本演示 */}
 
-<H3Sub sub={<>敲击回车键后，输入内容将成为标签。标签内容如果为空串或者纯空格时，则会被过滤, 相同的内容也会被过滤。</>}>{'基本演示'}</H3Sub>
+<H3Sub sub={<>敲击回车键后，输入内容将成为标签。标签内容如果为空串、纯空格或者已存在相同的标签时，则会被过滤。</>}>{'基本演示'}</H3Sub>
 <BasicExample />
 
 {/* ### 批量添加 */}
@@ -27,8 +22,9 @@ import {
 <H3Sub
   sub={
     <>
-      可以使用 tokenSeparators 设置分隔符，来实现批量输入。支持多个分隔符以 string[] 格式传入。以下演示支持使用 <Code>{'-'}</Code>{' '}
-      作为分隔符。
+      可以使用 <Code>tokenSeparators</Code> 设置分隔符，来实现批量输入。支持多个分隔符以 string[] 格式传入。以下演示支持使用{' '}
+      <Code>{','}</Code>
+      作为分隔符。尝试复制下方文本到输入框里。
     </>
   }
 >
@@ -38,7 +34,15 @@ import {
 
 {/* ### 批量清除 */}
 
-<H3Sub sub={<>可使用 allowClear 设置是否支持一键删除所有标签和输入框内容。这个功能是我们自定义实现的。</>}>{'批量清除'}</H3Sub>
+<H3Sub
+  sub={
+    <>
+      可使用 <Code>InputTag.Clear</Code> 组件设置是否支持一键删除所有标签。
+    </>
+  }
+>
+  {'批量清除'}
+</H3Sub>
 <ClearAllExample />
 
 {/* ### 禁用和只读 */}

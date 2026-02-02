@@ -7,24 +7,40 @@ export function TInputCode() {
       <CodeBlock
         code={`
 import React, { type ReactNode, useContext } from 'react';
-import { InputTag as InputTagHeadless, type InputTagRootProps, type InputTagProps, IconCloseLine } from '@t-headless-ui/react';
+import {
+  InputTag as InputTagHeadless,
+  type InputTagRootProps,
+  type InputTagProps,
+  IconCloseLine,
+  type InputTagHandle,
+} from '@t-headless-ui/react';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-interface TInputTagExtendedProps {
-  globalProps: InputTagRootProps;
-  inputProps: InputTagProps;
+interface TInputTagExtendedProps extends Omit<InputTagRootProps, 'prefix' | 'suffix'> {
+  inputProps?: InputTagProps;
   allowClear?: boolean;
   prefix?: ReactNode;
   suffix?: ReactNode;
+  inputRef?: React.Ref<InputTagHandle>;
 }
 
 export function TInputTag({
-  globalProps: { defaultValue, value, inputValue, disabled, readOnly, onRemove, onChange, labelInValue, maxTagCount, ...rest },
-  inputProps,
+  inputProps = {},
   allowClear,
   prefix,
   suffix,
+  inputRef,
+  defaultValue,
+  value,
+  inputValue,
+  disabled,
+  readOnly,
+  onRemove,
+  onChange,
+  labelInValue,
+  maxTagCount,
+  ...rest
 }: TInputTagExtendedProps) {
   return (
     <InputTagHeadless.Root
@@ -41,11 +57,12 @@ export function TInputTag({
     >
       <CustomInputWrapper prefix={prefix} suffix={suffix} allowClear={allowClear}>
         <InputTagHeadless.Input
+          ref={inputRef}
           renderTag={({ label, closable, onClose, disabled }, index) => (
             <div
               key={index}
               className={cn(
-                'flex items-center h-[24px] overflow-hidden rounded-[2px] border border-[var(--border-color)] bg-[var(--bg-color-100)] pl-2 pr-1 text-[12px] leading-[22px]',
+                'flex items-center h-[24px] overflow-hidden rounded-[2px] border border-[var(--border-color)] bg-[var(--bg-color-100)] pl-2 pr-1 text-[12px]',
                 {
                   'opacity-50 cursor-not-allowed pr-2': disabled,
                   'pr-2': disabled || readOnly,
@@ -99,6 +116,7 @@ function CustomInputWrapper({
   return (
     <div
       className={cn(
+        // 外层容器：flex 不换行，始终垂直居中
         'group flex min-h-[34px] items-center gap-2 overflow-hidden rounded border border-[var(--border-color)] px-3 transition cursor-text',
         {
           'border-[var(--border-color-200)]': focused,
@@ -108,10 +126,13 @@ function CustomInputWrapper({
         },
       )}
     >
+      {/* 1. 前缀区：始终居中 */}
       {prefix && <div className="flex shrink-0 items-center justify-center text-[var(--text-color-400)]">{prefix}</div>}
 
+      {/* 2. 内容区：允许换行，占据剩余空间 */}
       <div className="flex flex-1 flex-wrap items-center gap-1 py-1">{children}</div>
 
+      {/* 3. 后置操作区（清除 + 后缀）：始终居中 */}
       <div className="flex shrink-0 items-center gap-2">
         {allowClear && <ClearButton />}
         {suffix && <div className="flex items-center justify-center text-[var(--text-color-400)]">{suffix}</div>}
@@ -123,6 +144,7 @@ function CustomInputWrapper({
 function ClearButton() {
   const { value, disabled, readOnly, handleClearClick } = useContext(InputTagHeadless.Context);
 
+  // 如果禁用、只读或没有值，不渲染
   if (disabled || readOnly || !value?.length) return null;
 
   return (

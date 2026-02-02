@@ -2,10 +2,10 @@ import React from 'react';
 import { isFunction } from '../../utils';
 import { ADD } from '../constants';
 import { valueChangeHandler } from './valueChangeHandler';
-import type { InputTagRootProps, InputTagProps, ObjectValueType } from '../interface';
+import type { InputTagRootProps, ObjectValueType } from '../interface';
 
 interface TryAddInputValueToTagProps {
-  validate: InputTagProps['validate'];
+  validate: InputTagRootProps['validate'];
   inputValue: string;
   value: ObjectValueType[];
   setInputValue: React.Dispatch<React.SetStateAction<string>>;
