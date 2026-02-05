@@ -1,0 +1,89 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { TAnchor } from '@/_components/ui-lib';
+import { CodePreview } from '@/_components/code-preview';
+import {
+  BasicExample,
+  RemoteSearchExample,
+  MultiExample,
+  GroupExample,
+  CustomRenderExample,
+  DropdownExample,
+  CoordinateExample,
+  MaxTagCountExample,
+} from '../example';
+
+{/* ### 基本演示 */}
+
+<H3Sub sub={<>敲击回车键后，输入内容将成为标签。标签内容如果为空串、纯空格或者已存在相同的标签时，则会被过滤。</>}>{'基本演示'}</H3Sub>
+<BasicExample />
+
+{/* ### 多选模式 */}
+
+<H3Sub
+  sub={
+    <>
+      指定 <Code>isMultiple</Code> 为 <Code>true</Code>, 并配合 <Code>Select.MultiInputRoot</Code> 标签来实现多选。
+    </>
+  }
+>
+  {'多选模式'}
+</H3Sub>
+<MultiExample />
+
+{/* ### 远程搜索 */}
+
+<H3Sub
+  sub={
+    <>
+      指定 <Code>filterOption</Code> 和 <Code>onSearch</Code> 可以使用远程搜索功能。
+    </>
+  }
+>
+  {'远程搜索'}
+</H3Sub>
+<RemoteSearchExample />
+
+{/* ### 分组 */}
+
+<H3Sub>{'分组'}</H3Sub>
+<GroupExample />
+
+{/* ### 定制回显内容 */}
+
+<H3Sub
+  sub={
+    <>
+使用 <Code>renderFormat</Code> 可以定制回显内容。
+注意：在如远程加载选项数据的场景下，<Code>value</Code> 中对应的选项可能在某些时刻并不存在，需要判断若 <Code>option</Code> 不存在则返回 <Code>value</Code> 作为显示的内容。
+
+</>
+}
+
+> {'定制回显内容'}
+
+</H3Sub>
+<CustomRenderExample />
+
+{/* ### 拓展下拉框 */}
+
+<H3Sub sub={<>自由定义下拉框的内容。</>}>{'拓展下拉框'}</H3Sub>
+<DropdownExample />
+
+{/* ### 联动 */}
+
+<H3Sub sub={<>选择框内的值的变化, 联动更新其他选择框随之变化。</>}>{'联动'}</H3Sub>
+<CoordinateExample />
+
+{/* ### 最大标签数 */}
+
+<H3Sub
+  sub={
+    <>
+      指定 <Code>maxTagCount</Code> 可以设置最大标签数。<Code>maxTagCount.render</Code> 自定义 +x 部分的节点内容。
+    </>
+  }
+>
+  {'最大标签数'}
+</H3Sub>
+<MaxTagCountExample />

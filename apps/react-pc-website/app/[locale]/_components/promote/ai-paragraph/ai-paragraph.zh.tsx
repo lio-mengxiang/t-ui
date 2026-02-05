@@ -3,62 +3,99 @@ import { H2, Paragraph, Code, Ul, Block } from '@/_components/typography';
 export function AiParagraphZH() {
   return (
     <div>
-      <Paragraph>在 AI 自动生成代码的时代，你是否也曾感到一丝迷茫？</Paragraph>
+      <H2>AI 时代，正在淘汰的不是前端，而是「只会写代码的前端」</H2>
+
       <Paragraph>
-        如今面试中，越来越常听到这样一个问题： <strong>“既然 AI 都能写代码了，你的独特价值在哪里？”</strong>
+        如果你还把前端的核心竞争力理解为「写 JSX / 写 CSS / 调 API」，那必须很残酷地告诉你： 这个能力正在被 AI 以数量级的速度碾压。
       </Paragraph>
-      <Paragraph> 我想用这个项目，给出我的答案——也是一个能让面试官记住的回答。 </Paragraph>
-      <H2>我是这样回答的：</H2>
+
+      <Paragraph>
+        未来的 Web 开发，不再区分前端、后端、全栈， 真正存在的岗位只剩下一种：<strong>AI Agent 工程师</strong>。
+      </Paragraph>
+
+      <Paragraph>
+        这并不是危言耸听。某 top3 级别大厂的技术负责人已经在内部明确提出： 公司未来所有技术岗统一调整为 Agent Engineer，
+        核心能力不是「写代码」，而是<strong>设计系统、约束 AI、兜底 AI</strong>。
+      </Paragraph>
+      <Paragraph>
+        从 2025 年开始，从新闻和周围很多以前大厂的同事交谈中才了解到，公司已经开始明确表示必须要将自己的工作 AI 化，实现业务的快速稳定迭代！
+      </Paragraph>
+
+      <Paragraph>
+        类似的趋势也正在发生在越来越多的团队中： 前后端边界被打破，80% 以上的业务代码由 AI 生成， 工程师的主要工作变成了——给 AI
+        足够好的上下文，并对结果负责。
+      </Paragraph>
+
+      <Paragraph>
+        如果你是初级或中级前端开发者，我必须说一句实话：
+        <strong>留给你转型为 Agent 开发工程师的时间，已经不多了。</strong>
+      </Paragraph>
+
+      <H2>前端真正的「兜底能力」是什么？</H2>
+
+      <Paragraph>放眼所有 Web 项目，超过 90% 的业务场景，本质上都是在「使用组件」。 区别只是：是用现成的，还是组合出来的。</Paragraph>
+
+      <Paragraph>AI 非常擅长完成这 90% 的工作，但在真实项目中，我们遇到了一个致命问题：</Paragraph>
+
       <Block>
-        <Paragraph>“我和其他前端开发者最大的不同在于：</Paragraph>
-        <Paragraph>AI 可以搭建一个复杂组件的初步框架，但真正落地时，仍需要大量精细调整。</Paragraph>
         <Paragraph>
-          尤其当项目规模扩大、功能迭代频繁时，AI 会不断出现各种细小问题—— 即使反复调试提示，也很难彻底解决。即便是 Claude
-          这样的顶级模型，也依然如此。”
+          <strong>市面上的组件库，天然分裂成两种极端：</strong>
         </Paragraph>
+
         <Paragraph>
-          <strong>
-            而我能在极短时间内定位问题、实施修改， 因为我曾从 0 到 1 完整开发过一个组件库，参考了业界多个主流组件库的设计与实现。
-          </strong>
+          一类是高度聚合的传统组件库，例如 <Code>Ant Design</Code>、<Code>Material UI</Code>。 功能强、场景全，但对 AI 极不友好——
+          组件是黑盒，AI 无法理解内部语义，更谈不上可靠地改造和组合。
         </Paragraph>
+
         <Paragraph>
-          前端大多数情况都是在用组件库完成工作, 因为组件库几乎涵盖了 90% 常见的前端业务和技术核心，这是其它面试者不具备的系统性经验。
+          另一类是 Headless / 无样式组件库，例如 <Code>Shadcn UI</Code>、<Code>Base UI</Code>。 它们对 AI 极其友好，代码语义清晰、结构可控，
+          但问题同样明显：<strong>只能解决简单场景，无法承载复杂业务。</strong>
         </Paragraph>
       </Block>
+
       <Paragraph>
-        尤其是在面试 <Code>大厂</Code> 和 <Code>remote</Code> 全栈开发时，面试官对我产生了极大的兴趣！
+        问题就出在这里：<strong>为什么没有一种组件体系，能同时满足「AI 友好」和「复杂业务能力」？</strong>
       </Paragraph>
+
+      <H2>AI Native UI：为 AI Agent 而生的组件体系</H2>
+
+      <Paragraph className="text-orange-600">
+        我们做的这套组件库，目标非常明确： 它不是给「人」用的组件库，而是给 <strong>AI Agent + 人</strong> 协作使用的 UI 系统。
+      </Paragraph>
+
+      <Paragraph className="text-orange-600">
+        它既拥有 Headless 组件的原子性、可组合性、强语义， 又可以像 <Code>Ant Design</Code> 一样，通过组合直接构建复杂、完整的业务组件。
+      </Paragraph>
+
       <Paragraph>
-        因为大厂定制化开发场景非常非常多，普通的组件库已经完全
-        不能满足他们的定制化需求了，国外则是没见过这样的面试者，直接一个人能对标他们常用的，例如 <Code>Shadcn UI</Code>，
-        <Code>Base UI</Code>，<Code>Hero UI</Code> 组件库，而且能轻易实现远比这些组件库复杂的功能。
+        更重要的是：<strong>所有组件源码都是教学内容的一部分。</strong>
+        你不是在「使用一个 npm 包」，而是在真正掌握一整套 AI Native UI 的设计方法。
       </Paragraph>
-      <H2>全栈：紧随其后</H2>
+
       <Paragraph>
-        <Code>AI</Code> 的进化与企业的需求，正在倒逼前端工程师快速向后端延伸。 <Code>全栈化</Code> 已成为不可逆的趋势。
+        这意味着什么？ 意味着这些组件可以直接放进你的项目源码中， 不需要黑盒依赖，AI 可以获得完整上下文，
+        你可以随时重组、裁剪、改造，适配任何真实业务。
       </Paragraph>
-      <Paragraph>你的竞争对手，早已不只是前端开发者， 而是那些能独立交付完整业务逻辑的全栈工程师。</Paragraph>
-      <Paragraph>然而，大多数人的时间与精力，被两个黑洞吞噬：</Paragraph>
+
+      <Paragraph>在课程和网站中，你会看到每一个组件都包含两类示例：</Paragraph>
+
       <Ul>
-        <li>不断在零散的“玩具项目”中循环， 每个项目只触及皮毛，无法形成深度、可复用的能力体系。</li>
-        <li>试图通过广度覆盖“补全”前端知识， 学了无数碎片化的库和技巧，却依然缺乏一套应对复杂业务的核心方法论。</li>
+        <li>
+          <strong>[基础用法]</strong> —— 类似 <Code>Shadcn UI</Code> / <Code>Base UI</Code>， 展示最小原子能力，完全 AI 友好。
+        </li>
+        <li>
+          <strong>[传统案例]</strong> —— 使用这些原子组件，逐步组合出
+          <Code>Ant Design</Code>、<Code>Material UI</Code> 同等级复杂度的完整功能。
+        </li>
       </Ul>
-      <Paragraph>结果往往是：</Paragraph>
-      <Ul>
-        <li>既未在前端建立起真正的技术壁垒，</li>
-        <li>也没有足够精力攻克后端，</li>
-        <li>陷入“既不全，也不专”的尴尬境地。</li>
-      </Ul>
+
       <Paragraph>
-        注：也欢迎你加入我们的 <Code>Node.js 全栈交流圈</Code>，一起突破瓶颈，哈哈。
+        这不是在教你「用组件库」， 而是在教你：<strong>如何在 AI 时代，构建一个能长期进化的 UI 系统。</strong>
       </Paragraph>
-      <H2>破局！</H2>
       <Paragraph>
-        用一个“顶级项目”，贯通前端核心能力。与其在碎片知识中疲于奔命，
-        不如深度攻克一个能覆盖前端核心的“集大成”项目。让我们的企业级的前端组件库项目让你在前端技术提高路上速成！
+        最后，我想说一句，未来大部分组件你不会依赖 <Code>Ant Design</Code>、<Code>Material UI</Code>, 也不会依赖 <Code>Shadcn UI</Code>、
+        <Code>Base UI</Code>。而是以来 AI 和你自己。欢迎加入！开始你的 web 前端 AI 转型之旅！
       </Paragraph>
-      <Paragraph> 节约你宝贵的时间去学习其它的全栈和 ai 知识。</Paragraph>
-      <Paragraph>这样的项目，不仅能成为你技术的证明，更能为你打开通往全栈的大门。我邀请你，一起踏上这条深度突破之路！</Paragraph>
     </div>
   );
 }

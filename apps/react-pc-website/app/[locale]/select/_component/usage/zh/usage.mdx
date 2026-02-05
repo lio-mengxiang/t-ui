@@ -1,0 +1,43 @@
+import { ImageTypography, AvatarM, CodeBlock, H2, H3Sub, Divide } from '@/_components/typography';
+import { CodePreview2 } from '@/_components/code-preview2';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { InputTagApiDoc } from '../api-doc';
+import { CssSingleExample, CssMultiExample, TailwindBasicSingleExample, TailwindBasicMultiExample } from '../example';
+import { HowToUse } from '../how-to-use';
+
+{/* ## 选择器 Select */}
+
+<H2 className="mt-0" subheading={<>当用户需要从一组同类数据中选择一个或多个时，可以使用下拉选择器，点击后选择对应项。</>}>
+  {'选择器 Select'}
+</H2>
+
+{/* ### 单选 Tailwind 版本 */}
+
+<H3Sub>{'单选 Tailwind 版本'}</H3Sub>
+<TailwindBasicSingleExample />
+
+{/* ### 多选 Tailwind 版本 */}
+
+<H3Sub>{'多选 Tailwind 版本'}</H3Sub>
+<TailwindBasicMultiExample />
+
+{/* ### 单选 CSS 版本 */}
+
+<H3Sub>{'单选 CSS 版本'}</H3Sub>
+<CssSingleExample />
+
+{/* ### 多选 CSS 版本 */}
+
+<H3Sub>{'多选 CSS 版本'}</H3Sub>
+<CssMultiExample />
+
+{/* ### 使用方法 */}
+
+<H3Sub>{'使用方法'}</H3Sub>
+
+<HowToUse />
+
+{/* ### API */}
+
+<H3Sub>{'API'}</H3Sub>
+<InputTagApiDoc />

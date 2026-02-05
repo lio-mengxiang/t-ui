@@ -1,6 +1,7 @@
 import { CodePreview2 } from '@/_components/code-preview2';
 
 const code = `
+'use client';
 import React from 'react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -19,8 +20,8 @@ function App() {
         '[&[data-focused="true"]]:border-[var(--border-color-200)]',
       )}
     >
+      <div className="flex shrink-0 items-center justify-center text-[var(--text-color-400)] pr-2"><IconArrowRightLine /></div>
       <div className="flex flex-1 flex-wrap items-center gap-1 py-1 min-w-0">
-        <div className="flex shrink-0 items-center justify-center text-[var(--text-color-400)] pr-1"><IconArrowRightLine /></div>
         <InputTag.Tag
           renderTag={({ label, closable, onClose, disabled }, index) => (
             <div
@@ -51,7 +52,7 @@ function App() {
         <InputTag.Input
           placeholder="input..."
           className={cn(
-            'flex-1 min-w-[40px] border-none outline-none bg-transparent text-[14px] py-1',
+            'bg-transparent text-[14px] py-1',
             '[&[aria-disabled="true"]]:cursor-not-allowed',
             '[&[aria-readonly="true"]]:cursor-default',
           )}
@@ -62,7 +63,7 @@ function App() {
           <IconCloseLine className="cursor-pointer text-[14px] opacity-60 hover:opacity-100" />
         </InputTag.Clear>
       </div>
-      <div className="flex pl-1 shrink-0 items-center justify-center text-[var(--text-color-400)]">MB</div>
+      <div className="flex pl-1 shrink-0 items-center justify-center text-[var(--text-color-400)]">Kg</div>
     </InputTag.Root>
   );
 }

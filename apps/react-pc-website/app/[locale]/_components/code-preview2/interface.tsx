@@ -13,4 +13,5 @@ export interface CodePreviewProps {
   demoContainerStyle?: CSSProperties;
   id?: string;
   cssEditable?: boolean;
+  isCenter?: boolean;
 }

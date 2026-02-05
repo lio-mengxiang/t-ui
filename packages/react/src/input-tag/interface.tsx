@@ -215,10 +215,5 @@ export type InputTagHandle = {
    * @zh 输入框 dom元素
    * @en Input box dom element
    */
-  inputDom?: HTMLInputElement;
-  /**
-   * @zh 输入框 dom元素
-   * @en Input box dom element
-   */
-  dom?: HTMLInputElement;
+  dom?: HTMLDivElement;
 };

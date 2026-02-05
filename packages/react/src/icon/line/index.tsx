@@ -35,3 +35,5 @@ export * from './open-file-line';
 export * from './search-file-line';
 export * from './info-file-line';
 export * from './copy-line';
+export * from './check-line';
+export * from './plus-line';

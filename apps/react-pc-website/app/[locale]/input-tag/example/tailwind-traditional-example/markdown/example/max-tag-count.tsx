@@ -1,12 +1,13 @@
 import { CodePreview2 } from '@/_components/code-preview2';
 
 const code = `
+'use client';
 import React from 'react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { InputTag, IconCloseLine } from '@t-headless/react';
 
-const tags = ['JavaScript', 'TypeScript', 'React', 'Vue', 'Next.js', 'Node.js'];
+const tags = ['React', 'Vue', 'Next.js', 'Node.js'];
 
 function App() {
   return (
@@ -69,7 +70,7 @@ function App() {
         <InputTag.Input
           placeholder="input..."
           className={cn(
-            'flex-1 min-w-[40px] border-none outline-none bg-transparent text-[14px] py-1',
+            'bg-transparent text-[14px] py-1',
             '[&[aria-disabled="true"]]:cursor-not-allowed',
             '[&[aria-readonly="true"]]:cursor-default',
           )}

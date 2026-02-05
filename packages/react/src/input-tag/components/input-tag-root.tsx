@@ -32,6 +32,7 @@ export function InputTagRoot(props: InputTagRootProps) {
   } = props;
 
   const {
+    refWrapper,
     refInput,
     refTSLastSeparateTriggered,
     focused,
@@ -58,10 +59,9 @@ export function InputTagRoot(props: InputTagRootProps) {
     return {
       blur: () => refInput.current?.blur(),
       focus: () => refInput.current?.focus(),
-      dom: refInput.current?.dom,
-      inputDom: refInput.current?.inputDom,
+      dom: refWrapper.current,
     };
-  }, []);
+  }, [refInput, refWrapper]);
 
   return (
     <InputTagInnerContext.Provider
@@ -76,7 +76,8 @@ export function InputTagRoot(props: InputTagRootProps) {
         setInputValue,
         hotkeyHandler,
         readOnly,
-        disabled: disabled || disableInput,
+        disabled,
+        disableInput,
         onRemove,
         labelInValue,
         maxTagCount,
@@ -88,6 +89,7 @@ export function InputTagRoot(props: InputTagRootProps) {
     >
       <div
         {...rest}
+        ref={refWrapper}
         onMouseDown={(event) => {
           // prevent losing input focus
           if (focused) keepFocus(event);

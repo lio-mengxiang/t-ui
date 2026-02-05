@@ -27,7 +27,7 @@ export function useInputTagStore(props: useInputTagStoreProps) {
   const { defaultValue, propsValue, propsInputValue, readOnly, disabled, onRemove, onChange, labelInValue, propsFocused } = props;
 
   const refInput = useRef<RefInputType>(null);
-
+  const refWrapper = useRef<HTMLDivElement>(null);
   const refTSLastSeparateTriggered = useRef<number>(null);
 
   const [focused, setFocused] = useMergeValue(false, {
@@ -84,6 +84,7 @@ export function useInputTagStore(props: useInputTagStoreProps) {
 
   return {
     refInput,
+    refWrapper,
     refTSLastSeparateTriggered,
     focused,
     setFocused,

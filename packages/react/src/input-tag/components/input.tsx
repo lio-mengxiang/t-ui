@@ -22,16 +22,22 @@ export function InputTagInput(props: InputTagInputProps) {
     onChange,
     validate,
     tokenSeparators,
+    disableInput,
   } = useInputInnerTagContext();
 
   const { placeholder, saveOnBlur, onInputChange, onKeyDown, onPaste, onFocus, onBlur, onPressEnter, className, style, ref } = props;
+  const mergedDisabled = disabled || disableInput;
 
   return (
     <InputComponent
       className={className}
-      style={style}
+      style={{
+        outline: 'none',
+        backgroundColor: 'transparent',
+        ...style,
+      }}
       autoComplete="off"
-      disabled={disabled}
+      disabled={mergedDisabled}
       readOnly={readOnly}
       ref={mergeRefs(refInput, ref)}
       placeholder={!value.length ? placeholder : ''}
@@ -41,10 +47,20 @@ export function InputTagInput(props: InputTagInputProps) {
           e.preventDefault();
         }
         onPressEnter?.(e as React.KeyboardEvent<HTMLInputElement>);
-        await tryAddInputValueToTag({ validate, inputValue, value, setInputValue, disabled, readOnly, setValue, onChange, labelInValue });
+        await tryAddInputValueToTag({
+          validate,
+          inputValue,
+          value,
+          setInputValue,
+          disabled: mergedDisabled,
+          readOnly,
+          setValue,
+          onChange,
+          labelInValue,
+        });
       }}
       onFocus={(e: React.FocusEvent<HTMLInputElement>) => {
-        if (!disabled && !readOnly) {
+        if (!mergedDisabled && !readOnly) {
           setFocused(true);
           onFocus?.(e);
         }
@@ -58,7 +74,7 @@ export function InputTagInput(props: InputTagInputProps) {
             inputValue,
             value,
             setInputValue,
-            disabled,
+            disabled: mergedDisabled,
             readOnly,
             setValue,
             onChange,
@@ -79,7 +95,7 @@ export function InputTagInput(props: InputTagInputProps) {
             tokenSeparators,
             validate,
             value,
-            disabled,
+            disabled: mergedDisabled,
             readOnly,
             setValue,
             onChange,
@@ -106,7 +122,7 @@ export function InputTagInput(props: InputTagInputProps) {
           tokenSeparators,
           validate,
           value,
-          disabled,
+          disabled: mergedDisabled,
           readOnly,
           setValue,
           onChange,
@@ -116,28 +132,3 @@ export function InputTagInput(props: InputTagInputProps) {
     />
   );
 }
-
-// const mergedArrowIcon =
-//   'arrowIcon' in props ? (
-//     arrowIcon === null ? null : (
-//       <div className={`${prefixCls}-arrow-icon`}>{arrowIcon}</div>
-//     )
-//   ) : (
-//     <div className={`${prefixCls}-arrow-icon`}>
-//       <IconDown />
-//     </div>
-//   );
-
-// const mergedSuffixIcon = loading ? (
-//   <span className={`${prefixCls}-loading-icon`}>
-//     <IconLoading />
-//   </span>
-// ) : suffixIcon ? (
-//   <span className={`${prefixCls}-suffix-icon`}>{suffixIcon}</span>
-// ) : props.showSearch && popupVisible ? (
-//   <div className={`${prefixCls}-search-icon`}>
-//     <IconSearch />
-//   </div>
-// ) : (
-//   mergedArrowIcon
-// );

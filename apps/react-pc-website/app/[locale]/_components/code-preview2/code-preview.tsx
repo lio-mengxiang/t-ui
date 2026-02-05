@@ -28,7 +28,7 @@ const TUI = {
   clsx,
 };
 export function CodePreview2(props: CodePreviewProps) {
-  const { code: _Code = '', dependencies = TUI, demoContainerStyle, css, id, cssEditable = false } = props;
+  const { code: _Code = '', dependencies = TUI, demoContainerStyle, css, id, cssEditable = false, isCenter = false } = props;
 
   const { state, onChange } = useCodePreview({ code: _Code, dependencies, ...props });
 
@@ -42,7 +42,8 @@ export function CodePreview2(props: CodePreviewProps) {
     <>
       <div
         className={cs('relative p-12  overflow-hidden min-w-25 border border-solid border-color rounded-md', {
-          [`z-2 mb-0 text-red-600`]: !!state.error || !!cssState.error,
+          'z-2 mb-0 text-red-600': !!state.error || !!cssState.error,
+          'flex justify-center': isCenter,
         })}
         style={demoContainerStyle}
         id={id}

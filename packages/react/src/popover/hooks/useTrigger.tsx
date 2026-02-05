@@ -68,7 +68,7 @@ export function useTrigger({ disabled, readOnly, trigger, visible, setVisibleCha
   }
 
   // 整理 trigger props
-  function getTriggerProps(triggerNode: React.ReactElement<any>, _ref, contentVisible: boolean) {
+  function getTriggerProps(triggerNode: React.ReactElement<any>, _ref) {
     if (!shouldToggle) return {};
 
     const triggerProps: any = {
@@ -166,20 +166,19 @@ export function useTrigger({ disabled, readOnly, trigger, visible, setVisibleCha
         }
         triggerNode.props.onKeyDown?.(e);
       },
-      ['data-visible']: contentVisible,
     };
 
     return triggerProps;
   }
 
   // 整理 trigger 元素
-  function getTriggerNode(children: React.ReactNode, visible: boolean): React.ReactNode {
+  function getTriggerNode(children: React.ReactNode): React.ReactNode {
     let child: any = Array.isArray(children) ? children[0] : children;
     if (!isValidElement(child)) {
       child = <span>{child}</span>;
     }
 
-    return cloneElement(child, getTriggerProps(child, child?.props?.ref || child?.ref, visible));
+    return cloneElement(child, getTriggerProps(child, child?.props?.ref || child?.ref));
   }
 
   return {

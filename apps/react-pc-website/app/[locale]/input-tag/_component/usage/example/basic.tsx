@@ -1,6 +1,7 @@
 import { CodePreview2 } from '@/_components/code-preview2';
 
 export const code = `
+'use client';
 import React from 'react';
 import { InputTag, IconCloseLine } from '@t-headless-ui/react';
 import { clsx } from 'clsx';

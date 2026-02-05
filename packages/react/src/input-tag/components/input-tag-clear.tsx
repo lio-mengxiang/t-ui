@@ -15,6 +15,7 @@ export function InputTagClear({ children, onClick, ...rest }: InputClearProps) {
       {...rest}
       onClick={(e) => {
         e.stopPropagation();
+        if (disabled || readOnly || !value?.length) return null;
         handleClearClick(e);
         onClick?.(e);
       }}

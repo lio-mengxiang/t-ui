@@ -21,5 +21,5 @@ export const Trigger = (props: PropsWithChildren<any>) => {
     popperRef.current?.update?.();
   });
 
-  return <>{getTriggerNode(children, visible)}</>;
+  return <>{getTriggerNode(children)}</>;
 };

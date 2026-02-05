@@ -1,0 +1,42 @@
+import { ImageTypography, AvatarM, CodeBlock, H2, H3Sub, Divide } from '@/_components/typography';
+import { CodePreview2 } from '@/_components/code-preview2';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { InputTagApiDoc } from '../api-doc';
+import { CssSingleExample, CssMultiExample, TailwindBasicSingleExample, TailwindBasicMultiExample } from '../example';
+import { HowToUse } from '../how-to-use';
+
+{/* ## Selector */}
+
+<H2 className="mt-0" subheading={<>A dropdown selector which allows users to select one or more items from a list.</>}>
+  {'Selector'}
+</H2>
+
+{/* ### Single-Select Tailwind */}
+
+<H3Sub>{'Single-Select Tailwind'}</H3Sub>
+<TailwindBasicSingleExample />
+
+{/* ### Multi-Select Tailwind */}
+
+<H3Sub>{'Multi-Select Tailwind'}</H3Sub>
+<TailwindBasicMultiExample />
+
+{/* ### Single-Select CSS */}
+
+<H3Sub>{'Single-Select CSS'}</H3Sub>
+<CssSingleExample />
+
+{/* ### Multi-Select CSS */}
+
+<H3Sub>{'Multi-Select CSS'}</H3Sub>
+<CssMultiExample />
+
+{/* ### How to Use */}
+
+<H3Sub>{'How to Use'}</H3Sub>
+<HowToUse />
+
+{/* ### API */}
+
+<H3Sub>{'API'}</H3Sub>
+<InputTagApiDoc />

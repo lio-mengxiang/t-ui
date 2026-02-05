@@ -1,6 +1,7 @@
 import { CodePreview2 } from '@/_components/code-preview2';
 
 const code = `
+'use client';
 import React from 'react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -55,7 +56,7 @@ function App() {
           <InputTag.Input
             placeholder="input..."
             className={cn(
-              'flex-1 min-w-[40px] border-none outline-none bg-transparent text-[14px] py-1',
+              'bg-transparent text-[14px] py-1',
               '[&[aria-disabled="true"]]:cursor-not-allowed',
               '[&[aria-readonly="true"]]:cursor-default',
             )}

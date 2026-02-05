@@ -10,5 +10,11 @@
     "path": "dist/types/input-tag/interface.d.ts",
     "out": "./app/[locale]/_schemas/input-tag.schema.ts",
     "varName": "inputTagSchema"
+  },
+  {
+    "module": "@t-headless-ui/react",
+    "path": "dist/types/select/interface.d.ts",
+    "out": "./app/[locale]/_schemas/select.schema.ts",
+    "varName": "selectSchema"
   }
 ]

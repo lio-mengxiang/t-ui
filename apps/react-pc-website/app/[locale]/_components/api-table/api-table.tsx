@@ -60,7 +60,7 @@ export const ApiTable: React.FC<TableProps> = ({ columns, data, t, rowKey = 'key
               <thead className="text-color border-b border-color bg-color-50">
                 <tr>
                   {columns.map((col, index) => (
-                    <th key={col.key || col.dataIndex || index} className="px-4 py-2 whitespace-nowrap">
+                    <th key={col.key || col.dataIndex || index} className="px-4 py-2 whitespace-nowrap min-w-[10rem]">
                       {col.title}
                     </th>
                   ))}

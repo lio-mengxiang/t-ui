@@ -23,6 +23,7 @@ export interface InputTagInnerContextProps {
   onChange?: InputTagRootProps['onChange'];
   validate?: InputTagRootProps['validate'];
   tokenSeparators?: InputTagRootProps['tokenSeparators'];
+  disableInput?: InputTagRootProps['disableInput'];
 }
 
 export const InputTagInnerContext = createContext<InputTagInnerContextProps | null>(null);

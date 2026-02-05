@@ -1,0 +1,98 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { TAnchor } from '@/_components/ui-lib';
+import { CodePreview } from '@/_components/code-preview';
+import {
+  BasicExample,
+  RemoteSearchExample,
+  MultiExample,
+  GroupExample,
+  CustomRenderExample,
+  DropdownExample,
+  CoordinateExample,
+  MaxTagCountExample,
+} from '../example';
+
+{/* ### Basic */}
+
+<H3Sub
+  sub={
+    <>
+      After pressing Enter, the entered text becomes a tag. Tags that are empty, contain only spaces, or already exist will be filtered out.
+    </>
+  }
+>
+  {'Basic'}
+</H3Sub>
+<BasicExample />
+
+{/* ### Multiple Selection */}
+
+<H3Sub
+  sub={
+    <>
+      Use <Code>isMultiple</Code> to enable multiple selection. Combine with <Code>Select.MultiInputRoot</Code> to implement multiple
+      selection.
+    </>
+  }
+>
+  {'Multiple Selection'}
+</H3Sub>
+<MultiExample />
+
+{/* ### Remote Search */}
+
+<H3Sub
+  sub={
+    <>
+      Specify <Code>filterOption</Code> and <Code>onSearch</Code> to enable remote search.
+    </>
+  }
+>
+  {'Remote Search'}
+</H3Sub>
+<RemoteSearchExample />
+
+{/* ### Group */}
+
+<H3Sub>{'Group'}</H3Sub>
+<GroupExample />
+
+{/* ### Custom Render */}
+
+<H3Sub
+  sub={
+    <>
+      Use <Code>renderFormat</Code> to customize the display content.
+      <Code>renderFormat</Code> is called with the current <Code>value</Code> and <Code>option</Code> as arguments. If <Code>option</Code>{' '}
+      does not exist, return <Code>value</Code> as the display content.
+    </>
+  }
+>
+  {'Custom Render'}
+</H3Sub>
+<CustomRenderExample />
+
+{/* ### Dropdown */}
+
+<H3Sub sub={<>Customize the content of the dropdown freely.</>}>{'Dropdown'}</H3Sub>
+<DropdownExample />
+
+{/* ### Coordinate */}
+
+<H3Sub sub={<>Changes in one select box value will update other linked select boxes accordingly.</>}>{'Coordinate'}</H3Sub>
+<CoordinateExample />
+
+{/* ### Max Tag Count */}
+
+<H3Sub
+  sub={
+    <>
+      Specify <Code>maxTagCount</Code> to set the maximum number of tags. <Code>maxTagCount.render</Code> customizes the +x part of the node
+      content.
+    </>
+  }
+>
+  {'Max Tag Count'}
+</H3Sub>
+<MaxTagCountExample />
