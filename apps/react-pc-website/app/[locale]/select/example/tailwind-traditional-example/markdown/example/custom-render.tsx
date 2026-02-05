@@ -102,14 +102,14 @@ const SimpleSelect = ({
               <Select.Option
                 key={index}
                 item={item}
+                activeClassName="bg-[var(--bg-color-100)]"
                 className={cn(
                   // Layout & Interaction
                   'flex justify-between items-center px-3 py-2 transition-colors cursor-pointer',
-                  'hover:bg-[var(--bg-color-100)]',
                   // Conditionals
                   {
-                    'opacity-50 cursor-not-allowed hover:bg-transparent': isDisabled,
-                    'text-[var(--text-color-400)] text-[12px] cursor-default bg-transparent hover:bg-transparent': isTitle,
+                    'opacity-50 cursor-not-allowed': isDisabled,
+                    'text-[var(--text-color-400)] text-[12px] cursor-default bg-transparent': isTitle,
                     'pointer-events-none': isTitle || isDisabled,
                   },
                 )}

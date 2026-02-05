@@ -192,9 +192,9 @@ const MultiSelectSearch = ({
                 <Select.Option
                   key={index}
                   item={item}
+                  activeClassName="bg-[var(--bg-color-100)]"
                   className={cn(
                     'flex justify-between items-center px-3 py-2 cursor-pointer transition-colors',
-                    'hover:bg-[var(--bg-color-100)]',
                     { 'opacity-50 pointer-events-none': item.disabled }
                   )}
                 >

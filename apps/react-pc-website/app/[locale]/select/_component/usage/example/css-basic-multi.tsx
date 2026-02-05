@@ -71,6 +71,7 @@ function App() {
             <Select.Option
               key={index}
               item={item}
+              activeClassName="active"
               className={\`select-option \${item.disabled ? 'is-disabled' : ''}\`}
             >
               <span style={{ flex: 1, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', paddingRight: '4px' }}>
@@ -89,6 +90,10 @@ function App() {
 const css = `
 /* 容器 View */
 .select-view-wrapper { width: 256px; }
+
+.active {
+  background-color: var(--bg-color-100);
+}
 
 /* 输入框根容器 */
 .select-multi-root {
@@ -201,7 +206,7 @@ const css = `
   cursor: pointer;
 }
 
-.select-option:hover { background-color: var(--bg-color-100); }
+
 
 .select-option.is-disabled {
   opacity: 0.5;

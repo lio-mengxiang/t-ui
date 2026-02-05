@@ -126,11 +126,12 @@ const SimpleSelect = ({
               <Select.Option
                 key={index}
                 item={item}
+                activeClassName="bg-[var(--bg-color-100)]"
                 className={cn(
                   // Layout
                   'flex justify-between items-center px-3 py-2',
                   // Interaction & Animation
-                  'cursor-pointer transition-colors hover:bg-[var(--bg-color-100)]'
+                  'cursor-pointer transition-colors'
                 )}
               >
                 <span className="flex-1 overflow-hidden whitespace-nowrap text-ellipsis pr-1">

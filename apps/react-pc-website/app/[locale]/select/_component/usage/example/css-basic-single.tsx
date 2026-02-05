@@ -46,6 +46,7 @@ function App() {
               <Select.Option
                 key={index}
                 item={item}
+                activeClassName="active"
                 className={\`select-option \${isDisabled ? 'is-disabled' : ''} \${isTitle ? 'is-title' : ''}\`}
               >
                 <span 
@@ -86,6 +87,10 @@ const css = `
   transition: border-color 0.2s;
 }
 
+.active {
+  background-color: var(--bg-color-100);
+}
+  
 .select-view:hover {
   border-color: var(--border-color-200);
 }
@@ -171,16 +176,9 @@ const css = `
   cursor: pointer;
 }
 
-.select-option:hover {
-  background-color: var(--bg-color-100);
-}
-
 .select-option.is-disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-.select-option.is-disabled:hover {
-  background-color: transparent;
 }
 
 .select-option.is-title {

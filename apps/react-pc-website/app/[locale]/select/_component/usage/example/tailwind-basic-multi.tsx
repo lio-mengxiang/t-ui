@@ -145,19 +145,20 @@ function App() {
               <Select.Option
                 key={index}
                 item={item}
+                activeClassName="bg-[var(--bg-color-100)]"
                 className={cn(
                   // Base Layout & Interaction
                   'flex justify-between items-center px-3 py-2 transition-colors',
-                  'cursor-pointer hover:bg-[var(--bg-color-100)]',
+                  'cursor-pointer',
                   
                   // Conditionals
                   {
                     // Disabled State
-                    'opacity-50 cursor-not-allowed hover:bg-transparent': isDisabled,
+                    'opacity-50 cursor-not-allowed': isDisabled,
                     
                     // Group Title State
                     'text-[var(--text-color-400)] text-[12px]': isTitle,
-                    'cursor-default bg-transparent hover:bg-transparent': isTitle,
+                    'cursor-default bg-transparent': isTitle,
                     
                     // Shared Non-Interactive
                     'pointer-events-none': isTitle || isDisabled,
