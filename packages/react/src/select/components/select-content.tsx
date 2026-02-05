@@ -14,7 +14,9 @@ export function SelectContent({ className, attach, children, style }: SelectCont
         className={className}
         style={style}
         onKeyDown={hotkeyHandler} // 防止点击列表导致 input 失焦
-        onMouseDown={(e) => e?.stopPropagation()} // 防止点击列表导致 input 失焦
+        onMouseDown={(event: React.MouseEvent<HTMLDivElement>) => {
+          event.preventDefault();
+        }} // 防止点击列表导致 input 失焦
         onMouseLeave={() => setValueActive(undefined)}
       >
         {children}
