@@ -44,8 +44,6 @@ interface SelectContextValue {
   selectedValue: any; // 当前选中的值
   handleClearClick: (event: React.MouseEvent) => void;
   handleOptionClick: (value: OptionData['value'], disabled: boolean) => void;
-  valueActive: OptionData['value'] | undefined;
-  setValueActive: (value: OptionData['value'] | undefined) => void;
 }
 
 export const SelectInnerContext = createContext<SelectContextValue | null>(null);

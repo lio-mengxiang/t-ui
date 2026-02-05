@@ -2,24 +2,19 @@ import React from 'react';
 import { useSelectInnerContext } from '../inner-context';
 import type { SelectOptionProps } from '../interface';
 
-export function SelectOption({ item, children, activeClassName, ...rest }: SelectOptionProps) {
-  const { isMultipleMode, handleOptionClick, selectedValue, valueActive, setValueActive } = useSelectInnerContext();
+export function SelectOption({ item, children, ...rest }: SelectOptionProps) {
+  const { isMultipleMode, handleOptionClick, selectedValue } = useSelectInnerContext();
 
   const isChecked = isMultipleMode ? (selectedValue as any[]).indexOf(item.value) !== -1 : selectedValue === item.value;
-  const isActive = item.value === valueActive;
 
   return (
     <div
       role="option"
       aria-selected={isChecked}
       {...rest}
-      className={`${rest.className || ''} ${isActive ? activeClassName : ''}`}
       onClick={(event: React.MouseEvent<HTMLDivElement>) => {
         handleOptionClick(item.value, item.disabled);
         rest?.onClick?.(event);
-      }}
-      onMouseEnter={() => {
-        setValueActive(item.value);
       }}
     >
       {children}

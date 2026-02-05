@@ -79,7 +79,7 @@ function App() {
                 className={cn(
                   // Layout & Interaction
                   'flex justify-between items-center px-3 py-2 transition-colors cursor-pointer',
-                  'hover:bg-[var(--bg-color-100)]',
+                  // 'hover:bg-[var(--bg-color-100)]',
                   // Conditionals
                   {
                     'opacity-50 cursor-not-allowed hover:bg-transparent': isDisabled,

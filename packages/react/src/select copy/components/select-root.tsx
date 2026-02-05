@@ -3,7 +3,7 @@ import React, { type ReactNode, useCallback, useEffect, useImperativeHandle, use
 import { useMergeValue } from '../../hooks';
 import { isArray, isFunction, isObject } from '../../utils';
 import { getHotkeyHandler } from '../../utils/getHotkeyHandler';
-import { Esc, Enter, Tab, ArrowUp, ArrowDown } from '../../utils/keycode';
+import { Esc, Enter, Tab } from '../../utils/keycode';
 import { isEmptyValue, getValidValue } from '../utils';
 import { flatChildren } from '../utils/flat-children';
 import { SelectInnerContext } from '../inner-context';
@@ -60,25 +60,17 @@ export function SelectRoot(props: SelectRootProps) {
   });
 
   // 具有选中态或者 hover 态的 option 的 value
-  const [valueActive, setValueActive] = useMergeValue<OptionData['value'] | undefined>(undefined, {});
+  // const [valueActive] = useState<OptionData['value']>(isArray(value) ? value[0] : value);
 
   // 缓存较为耗时的 flatChildren 的结果
   const { childrenList, optionInfoMap } = useMemo(() => {
-    const result = flatChildren(
+    return flatChildren(
       { options, filterOption },
       {
         inputValue,
       },
     );
-    // Reset active value to first non-group-title and non-disabled option when options change
-    const firstValidOption = result.childrenList.find((item) => !item.isGroupTitle && !item.disabled);
-    if (firstValidOption) {
-      setValueActive(firstValidOption.value);
-    } else {
-      setValueActive(undefined);
-    }
-    return result;
-  }, [options, filterOption, inputValue, setValueActive]);
+  }, [options, filterOption, inputValue]);
 
   // ref
   const refSelectView = useRef<SelectViewHandle>(null);
@@ -141,53 +133,6 @@ export function SelectRoot(props: SelectRootProps) {
       onSearch?.(inputValue, reason);
     }
   }, [inputValue]);
-
-  // Track previous popup visible state
-  const refPrevPopupVisible = useRef(popupVisible);
-
-  // Set active value when popup becomes visible
-  useEffect(() => {
-    // Only run when popup transitions from closed to open
-    if (popupVisible && !refPrevPopupVisible.current) {
-      // Set active value based on selected value
-      let candidateValue: OptionData['value'] | undefined;
-      if (isMultipleMode) {
-        const valueArray = value as OptionData['value'][];
-        if (valueArray.length > 0) {
-          candidateValue = valueArray[valueArray.length - 1];
-        }
-      } else {
-        if (value !== undefined && value !== null) {
-          candidateValue = value as OptionData['value'];
-        }
-      }
-
-      // Check if candidate value is valid (exists, not disabled, not group title)
-      let validCandidate = false;
-      if (candidateValue !== undefined) {
-        const option = optionInfoMap.get(candidateValue);
-        if (option && !option.disabled && !option.isGroupTitle) {
-          validCandidate = true;
-        }
-      }
-
-      // Determine which value to use
-      let activeValue: OptionData['value'] | undefined;
-      if (validCandidate) {
-        activeValue = candidateValue;
-      }
-
-      // Set the active value
-      if (activeValue !== undefined) {
-        setValueActive(activeValue);
-      } else {
-        setValueActive(undefined);
-      }
-    }
-
-    // Update previous popup visible state
-    refPrevPopupVisible.current = popupVisible;
-  }, [popupVisible, value, isMultipleMode, childrenList, optionInfoMap, setValueActive]);
 
   /**
    * 返回 option
@@ -336,78 +281,12 @@ export function SelectRoot(props: SelectRootProps) {
         Enter.code,
         () => {
           if (popupVisible) {
-            const option = optionInfoMap.get(valueActive);
-            if (option) {
-              handleOptionClick(valueActive, option.disabled);
-            }
+            // const option = optionInfoMap.get(valueActive);
+            // if (option) {
+            //   handleOptionClick(valueActive, option.disabled);
+            // }
           } else {
             tryUpdatePopupVisible(true);
-          }
-        },
-      ],
-      [
-        ArrowUp.code,
-        () => {
-          if (popupVisible && childrenList.length > 0) {
-            const currentIndex = childrenList.findIndex((item) => item.value === valueActive);
-            if (currentIndex === -1) {
-              // If no active item, start from the first valid option
-              const firstValidOption = childrenList.find((item) => !item.isGroupTitle && !item.disabled);
-              if (firstValidOption) {
-                setValueActive(firstValidOption.value);
-              }
-              return false;
-            }
-
-            // Move up, skipping group titles and disabled options
-            let newIndex = currentIndex - 1;
-            const startIndex = currentIndex;
-            while (newIndex >= 0 && (childrenList[newIndex].isGroupTitle || childrenList[newIndex].disabled)) {
-              newIndex--;
-            }
-            if (newIndex < 0) {
-              // Wrap around to the end, skipping group titles and disabled options
-              newIndex = childrenList.length - 1;
-              while (newIndex >= 0 && (childrenList[newIndex].isGroupTitle || childrenList[newIndex].disabled)) {
-                newIndex--;
-              }
-              if (newIndex < 0 || newIndex === startIndex) return false; // No valid options or all disabled
-            }
-            setValueActive(childrenList[newIndex].value);
-            return false;
-          }
-        },
-      ],
-      [
-        ArrowDown.code,
-        () => {
-          if (popupVisible && childrenList.length > 0) {
-            const currentIndex = childrenList.findIndex((item) => item.value === valueActive);
-            if (currentIndex === -1) {
-              // If no active item, start from the first valid option
-              const firstValidOption = childrenList.find((item) => !item.isGroupTitle && !item.disabled);
-              if (firstValidOption) {
-                setValueActive(firstValidOption.value);
-              }
-              return false;
-            }
-
-            // Move down, skipping group titles and disabled options
-            let newIndex = currentIndex + 1;
-            const startIndex = currentIndex;
-            while (newIndex < childrenList.length && (childrenList[newIndex].isGroupTitle || childrenList[newIndex].disabled)) {
-              newIndex++;
-            }
-            if (newIndex >= childrenList.length) {
-              // Wrap around to the beginning, skipping group titles and disabled options
-              newIndex = 0;
-              while (newIndex < childrenList.length && (childrenList[newIndex].isGroupTitle || childrenList[newIndex].disabled)) {
-                newIndex++;
-              }
-              if (newIndex >= childrenList.length || newIndex === startIndex) return false; // No valid options or all disabled
-            }
-            setValueActive(childrenList[newIndex].value);
-            return false;
           }
         },
       ],
@@ -530,7 +409,6 @@ export function SelectRoot(props: SelectRootProps) {
       tryUpdateSelectValue(undefined);
     }
     tryUpdateInputValue('', 'manual');
-    setValueActive(undefined);
     onClear?.(popupVisible);
   };
 
@@ -589,8 +467,6 @@ export function SelectRoot(props: SelectRootProps) {
     isMultipleMode,
     handleClearClick,
     handleOptionClick,
-    valueActive,
-    setValueActive,
   };
 
   return (

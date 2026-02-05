@@ -288,7 +288,6 @@ export interface SelectContentProps {
 export interface SelectOptionProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   children?: ReactNode;
   item: OptionData;
-  activeClassName?: string;
 }
 
 export interface SelectListProps {

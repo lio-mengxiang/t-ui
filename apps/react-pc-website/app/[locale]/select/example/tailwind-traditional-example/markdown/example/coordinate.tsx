@@ -75,7 +75,10 @@ const SimpleSelect = ({
           'rounded border border-[var(--border-color)]',
           // 3. Hover & Interaction
           'hover:border-[var(--border-color-200)]',
-          
+
+          // --- 修复 tab 聚焦有蓝色边框的问题 ---
+          'outline-none focus:outline-none',
+
           // 4. Focus State
           '[&[data-focused="true"]]:border-[var(--border-color-200)]',
           

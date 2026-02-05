@@ -6,6 +6,13 @@ import { IconCheckLine, IconCloseLine, IconDownLine, IconEmptyFill, Select } fro
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
+const frameworks = [
+  { label: 'React.js', value: 'react' }, 
+  { label: 'Vue.js', value: 'vue' }, 
+  { label: 'Angular.js', value: 'angular' }, 
+  { label: 'Svelte.js', value: 'svelte', disabled: true }
+];
+
 
 function App() {
   return (
@@ -22,8 +29,6 @@ function App() {
     </div>
   );
 }
-
-
 
 const SimpleSelect = ({ 
   options, 
@@ -43,6 +48,9 @@ const SimpleSelect = ({
           'rounded border border-[var(--border-color)]',
           // 3. Interactions
           'hover:border-[var(--border-color-200)]',
+
+          // --- 修复 tab 聚焦有蓝色边框的问题 ---
+          'outline-none focus:outline-none',
           
           // 4. States: Focus
           '[&[data-focused="true"]]:border-[var(--border-color-200)]',
@@ -122,13 +130,6 @@ const SimpleSelect = ({
     </Select.Root>
   );
 };
-
-const frameworks = [
-  { label: 'React.js', value: 'react' }, 
-  { label: 'Vue.js', value: 'vue' }, 
-  { label: 'Angular.js', value: 'angular' }, 
-  { label: 'Svelte.js', value: 'svelte', disabled: true }
-];
 
 function cn(...inputs) {
   return twMerge(clsx(inputs));
