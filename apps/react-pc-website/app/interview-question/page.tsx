@@ -3,12 +3,10 @@ import React, { useRef } from 'react';
 import { Header } from './_components/header';
 import styles from './index.module.css';
 import { ThreeInteractiveSmoke } from './_components/bg-shader';
-import { Message, Select } from '@arco-design/web-react';
 import { CardContainer, CardContent, CardTitle } from './_components/card';
-const options = ['Beijing', 'Shanghai', 'Guangzhou', 'Shenzhen', 'Chengdu', 'Wuhan'];
+
 import './select.css';
 
-const Option = Select.Option;
 export default function App() {
   const containerRef = useRef<HTMLDivElement>(null);
   // const itemRef = useRef<HTMLDivElement>(null);
@@ -19,19 +17,12 @@ export default function App() {
       <Header />
       <div className="w-full h-[calc(100vh-36px)] p-4 pt-0 pb-1 ">
         <div className="flex justify-between w-full h-full relative border border-[var(--color-border-grey)]" ref={containerRef}>
-          <div className="w-[20%]">das dasd </div>
+          <div className="w-[20%]">das</div>
           <div className="h-full z-10 relative md:w-[70%] w-full overflow-hidden">
             <CardContainer className="h-[calc(100%-12px)] border-0 md:border mt-2 me-2">
               <CardTitle title="面试问题" />
               <CardContent>
                 <div>
-                  <Select placeholder="Select city" style={{ width: 154 }}>
-                    {options.map((option, index) => (
-                      <Option key={option} disabled={index === 3} value={option} className="text-white">
-                        {option}
-                      </Option>
-                    ))}
-                  </Select>
                   <span>筛选公司</span>
                   <span>面试时间</span>
                   <span>题目类型</span>

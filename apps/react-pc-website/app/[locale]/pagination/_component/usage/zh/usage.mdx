@@ -1,0 +1,33 @@
+import { ImageTypography, AvatarM, CodeBlock, H2, H3Sub, Divide } from '@/_components/typography';
+import { CodePreview2 } from '@/_components/code-preview2';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { InputTagApiDoc } from '../api-doc';
+import { TailwindBasicExample, CssBasicExample } from '../example';
+import { HowToUse } from '../how-to-use';
+
+{/* ## 分页 Pagination */}
+
+<H2 className="mt-0" subheading={<>采用分页控制单页内的信息数量，也可进行页面跳转。。</>}>
+  {'分页 Pagination'}
+</H2>
+
+{/* ### Tailwind 版本 */}
+
+<H3Sub>{'Tailwind 版本'}</H3Sub>
+<TailwindBasicExample />
+
+{/* ### CSS 版本 */}
+
+<H3Sub>{'CSS 版本'}</H3Sub>
+<CssBasicExample />
+
+{/* ### 使用方法 */}
+
+<H3Sub>{'使用方法'}</H3Sub>
+
+<HowToUse />
+
+{/* ### API */}
+
+<H3Sub>{'API'}</H3Sub>
+<InputTagApiDoc />

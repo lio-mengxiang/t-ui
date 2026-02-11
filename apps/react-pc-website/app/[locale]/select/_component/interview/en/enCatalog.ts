@@ -12,8 +12,4 @@ export const enCatalog = [
     level: 2,
     text: 'Break the Deadlock!',
   },
-  {
-    level: 2,
-    text: 'The Core Principles of the InputTag Component',
-  },
 ];

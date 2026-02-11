@@ -21,6 +21,7 @@ export const TOOLTIP_PATH = '/tooltip';
 export const ANCHOR_PATH = '/anchor';
 export const INPUT_TAG_PATH = '/input-tag';
 export const SELECT_PATH = '/select';
+export const PAGINATION_PATH = '/pagination';
 
 export const menuLinks: { path: string; label: string }[] = [
   { path: SOLUTION_THEME_PATH, label: '全局方案' },
@@ -42,4 +43,5 @@ export const menuLinks: { path: string; label: string }[] = [
   { path: ANCHOR_PATH, label: '锚点 Anchor' },
   { path: INPUT_TAG_PATH, label: '输入标签框 InputTag' },
   { path: SELECT_PATH, label: '选择框 Select' },
+  { path: PAGINATION_PATH, label: '分页 Pagination' },
 ];

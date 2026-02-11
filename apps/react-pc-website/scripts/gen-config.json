@@ -16,5 +16,11 @@
     "path": "dist/types/select/interface.d.ts",
     "out": "./app/[locale]/_schemas/select.schema.ts",
     "varName": "selectSchema"
+  },
+  {
+    "module": "@t-headless-ui/react",
+    "path": "dist/types/pagination/interface.d.ts",
+    "out": "./app/[locale]/_schemas/pagination.schema.ts",
+    "varName": "paginationSchema"
   }
 ]

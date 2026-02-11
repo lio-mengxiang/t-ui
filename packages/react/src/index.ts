@@ -13,5 +13,6 @@ export * from './radio';
 export * from './checkbox';
 export * from './input-tag';
 export * from './select';
+export * from './pagination';
 export * from './utils';
 export { useMergeValue } from './hooks/use-merge-value';

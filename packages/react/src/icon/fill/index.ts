@@ -11,3 +11,4 @@ export * from './lightning-fill';
 export * from './carrot-fill';
 export * from './chili-pepper-fill';
 export * from './cheery-fill';
+export * from './more-fill';

@@ -44,7 +44,7 @@ const data = (router: LocaleRouter, size: string) => [
     content: (
       <MenuItem>
         <IconStarFill size={size} className="text-[#FBCD2C] mr-2" />
-        面试亮点
+        AI 时代的组件库
       </MenuItem>
     ),
     onClick: () => {

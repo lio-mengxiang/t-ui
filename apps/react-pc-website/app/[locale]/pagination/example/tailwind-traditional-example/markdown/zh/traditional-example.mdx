@@ -1,0 +1,52 @@
+import { ImageTypography, AvatarM, CodeBlock, H1, Divide, H3Sub, Code } from '@/_components/typography';
+import { IconMuiLogo, Button } from '@t-headless-ui/react';
+import { TAnchor } from '@/_components/ui-lib';
+import { CodePreview } from '@/_components/code-preview';
+import { BasicExample, ChangePageSizeExample, JumperExample, TotalExample, BufferSizeExample, SimpleJumperExample } from '../example';
+
+{/* ### 基本演示 */}
+
+<H3Sub sub={<>最简单的用法。</>}>{'基本演示'}</H3Sub>
+<BasicExample />
+
+{/* ### 改变页数 */}
+
+<H3Sub sub={<>可定义每页展示条目数量</>}>{'改变页数'}</H3Sub>
+<ChangePageSizeExample />
+
+{/* ### 跳转 */}
+
+<H3Sub sub={<>输入页码，可快速跳转到指定页。</>}>{'跳转'}</H3Sub>
+<JumperExample />
+
+{/* ### 显示总页数 */}
+
+<H3Sub
+  sub={
+    <>显示数据总数。</>
+}
+
+> {'显示总页数'}
+
+</H3Sub>
+<TotalExample />
+
+{/* ### 省略页码时展示长度 */}
+
+<H3Sub
+  sub={
+    <>
+      通过 <Code>bufferSize</Code> 可以设置 <Code>current</Code> 页与 <Code>...</Code> 之间的页码个数。 一个 <Code>...</Code> 至少代表省略{' '}
+      <Code>2</Code> 页。
+    </>
+  }
+>
+  {'省略页码时展示长度'}
+</H3Sub>
+
+<BufferSizeExample />
+
+{/* ### 简单翻页 */}
+
+<H3Sub sub={<>在空间有限的场景下，可以使用下面的简单翻页组件。</>}>{'简单翻页'}</H3Sub>
+<SimpleJumperExample />
