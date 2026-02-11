@@ -72,5 +72,5 @@ function cn(...inputs) {
 `;
 
 export function TailwindBasicExample() {
-  return <CodePreview2 code={code} />;
+  return <CodePreview2 code={code} isCenter />;
 }
