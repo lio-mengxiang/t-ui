@@ -2,6 +2,8 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+@import './_theme/dark.css';
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

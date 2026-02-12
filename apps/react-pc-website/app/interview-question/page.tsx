@@ -1,58 +1,58 @@
 'use client';
-import React, { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Header } from './_components/header';
 import styles from './index.module.css';
 import { ThreeInteractiveSmoke } from './_components/bg-shader';
 import { CardContainer, CardContent, CardTitle } from './_components/card';
-
-import './select.css';
+import { SelectFilter } from './_components/filter';
+import { InterviewList } from './_components/interview-list/list';
 
 export default function App() {
   const containerRef = useRef<HTMLDivElement>(null);
-  // const itemRef = useRef<HTMLDivElement>(null);
-  // const center = useCenter(containerRef, itemRef);
+  const [filters, setFilters] = useState<{
+    company_id: number | null;
+    time: { start: string | null; end: string | null };
+    type_id: number | null;
+  }>({
+    company_id: null,
+    time: { start: null, end: null },
+    type_id: null,
+  });
+
+  const handleFilterChange = (newFilters: {
+    company_id: number | null;
+    time: { start: string | null; end: string | null };
+    type_id: number | null;
+  }) => {
+    setFilters(newFilters);
+  };
 
   return (
     <div className={styles.wrapper}>
       <Header />
       <div className="w-full h-[calc(100vh-36px)] p-4 pt-0 pb-1 ">
         <div className="flex justify-between w-full h-full relative border border-[var(--color-border-grey)]" ref={containerRef}>
-          <div className="w-[20%]">das</div>
-          <div className="h-full z-10 relative md:w-[70%] w-full overflow-hidden">
-            <CardContainer className="h-[calc(100%-12px)] border-0 md:border mt-2 me-2">
-              <CardTitle title="面试问题" />
-              <CardContent>
-                <div>
-                  <span>筛选公司</span>
-                  <span>面试时间</span>
-                  <span>题目类型</span>
-                </div>
-                <div className="text-white/70 flex items-center gap-3">
-                  <img
-                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAPFBMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACHr/7WAAAAFHRSTlMACVGJp7c86P/Elnrx2tJpKhUhL24SGS8AAACuSURBVHgBxZBFEgIxEACJu/L/v1KTiRd7hb5EOhl7/QJCngRlXAjO6JcHUijdUIbejukNfjqrD8TunL6wW76ezofo+47eQUWSknLUnHSXI4YqcCis2SC7pC2qqXgqQgPpKIeNJOk4phBCtDm/kWpjCMFh0u094uD82Kklt9thmyXDRXNb7AUwufI+obR+Rj06LWhDXXEzfBU4IbAe57NGL8aEOI59tzaPbbHo/sMHn6YKq5VbkQsAAAAASUVORK5CYII="
-                    alt="蔚来"
-                    className="w-8 h-8 rounded-full border-[var(--color-logo-border)] bg-[var(--color-logo-bg)]"
-                  />
-                  <div className="flex flex-col gap-3">
-                    <div className="text-white tracking-wide">
-                      讲讲重复渲染的性能优化方法
-                      <span className="px-2 py-[2px] rounded-[4px] underline-offset-1 underline text-xs text-white/70 cursor-pointer">
-                        gitee 讨论 👉
-                      </span>
-                    </div>
-                    <div className="flex text-xs gap-2 flex-wrap">
-                      <span className="px-2 py-[2px] rounded-[4px] border border-[var(--color-border-grey)]">蔚来</span>
-                      <span className="px-2 py-[2px] rounded-[4px] border border-[var(--color-border-grey)]">面试时间：2023/10/10</span>
-                      <span className="px-2 py-[2px] rounded-[4px] border border-[var(--color-border-grey)]">javascript</span>
-                      <span className="px-2 py-[2px] rounded-[4px] border border-[var(--color-border-grey)]">轮次: 1</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="pb-6 border-b border-[var(--color-list-border)]"></div>
+          <div className="z-[1] hidden md:block md:w-[26%] md:pl-[2%] md:pt-[10%]">
+            <CardContainer className="md:border pb-2">
+              <CardTitle title="注意事项" />
+              <CardContent className="text-[12px]">
+                <div>左边仅500条示例，解锁7万条真实面经</div>
+                <div>仅需 9.9 元上车,（ 后面人多起来会涨价！趁早！）</div>
+                <div>群里还会有定期分享</div>
+                <div>🔗 微信: a2298613245</div>
               </CardContent>
             </CardContainer>
           </div>
-          <ThreeInteractiveSmoke className="w-full h-full bg-black overflow-hidden absolute inset-0" />
+          <div className="h-full z-[1] relative w-full md:w-[70%]">
+            <CardContainer className="h-[calc(100%-12px)] border-0 md:border mt-2 overflow-hidden">
+              <CardTitle title="面试问题" />
+              <CardContent>
+                <SelectFilter onFilterChange={handleFilterChange} />
+                <InterviewList filters={filters} />
+              </CardContent>
+            </CardContainer>
+          </div>
+          <ThreeInteractiveSmoke className="w-full h-full bg-black overflow-hidden absolute inset-0 z-[0]" />
         </div>
       </div>
     </div>
@@ -68,3 +68,12 @@ export default function App() {
   </CardContent>
 </CardContainer>; */
 }
+
+// DELETE FROM companies
+// WHERE id IN ()
+
+// DELETE FROM interview_questions
+// WHERE company_id IN ()
+
+// DELETE FROM experience
+// WHERE company_id IN ()

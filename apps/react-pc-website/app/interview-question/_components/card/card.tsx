@@ -16,9 +16,14 @@ export function CardTitle({ title }: { title: ReactNode }) {
   );
 }
 
-export function CardContent({ children }: { children: ReactNode; className?: string }) {
+export function CardContent({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <div className="relative flex h-[calc(100%-32px)] flex-col gap-4 overflow-auto rounded-sm p-2 mx-2 border border-[var(--color-border-grey)]">
+    <div
+      className={cs(
+        'relative flex h-[calc(100%-32px)] flex-col gap-2 rounded-sm p-2 mx-2 border border-[var(--color-border-grey)]',
+        className,
+      )}
+    >
       {children}
     </div>
   );

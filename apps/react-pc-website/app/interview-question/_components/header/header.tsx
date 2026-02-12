@@ -1,4 +1,4 @@
-import Logo from '../logo';
+// import Logo from '../logo';
 import { useCNTime } from '../../_hooks';
 
 export function Header() {
@@ -6,14 +6,14 @@ export function Header() {
   return (
     <header className="flex justify-between h-9 px-4 font-normal tracking-wider text-xs md:text-sm">
       <div className="flex items-center h-full gap-3">
-        <Logo className="ml-2" />
-        <span className="">保安队长 - 孟队长</span>
+        {/* <Logo className="ml-2" /> */}
+        <span className="">[ 7 ] 万真面经，上岸不踩坑</span>
       </div>
       <div className="flex items-center justify-between w-[60%]">
         <div className="flex items-center gap-6 tracking-wider cursor-pointer">
-          <span>主页</span>
-          <span className="text-white/50">作品</span>
-          <span className="text-white/50">博客</span>
+          {/* <span>主页</span> */}
+          {/* <span className="text-white/50">作品</span>
+          <span className="text-white/50">博客</span> */}
         </div>
         <div className="flex items-center gap-2 pr-2">
           <span>{time}</span>
