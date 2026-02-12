@@ -38,6 +38,7 @@ export default function Metadata() {
     <head>
       <title>{siteTitle}</title>
       <meta name="author" content="孟祥同学" />
+      <meta name="baidu-site-verification" content="codeva-l58Zj13Nvd" />
       <link rel="icon" href="/interview/icon.png" />
 
       {/* 基础 SEO */}

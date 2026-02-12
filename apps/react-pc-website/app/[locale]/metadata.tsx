@@ -50,6 +50,7 @@ const Metadata: React.FC<SEOProps> = ({
     <head>
       {/* --- 基础 SEO --- */}
       <title>{fullTitle}</title>
+      <meta name="baidu-site-verification" content="codeva-l58Zj13Nvd" />
       <meta name="description" content={description} />
       <meta
         name="keywords"
