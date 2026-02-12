@@ -280,6 +280,11 @@ export interface SelectContentProps {
    * @en The content of dropdown options
    */
   children?: ReactNode;
+  /**
+   * @zh 下拉框最外层的类名
+   * @en Custom class name of the dropdown wrapper
+   */
+  wrapperClassName?: string;
 }
 
 /**

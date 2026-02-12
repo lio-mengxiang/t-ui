@@ -5,11 +5,15 @@ import { Popover } from '../../popover';
 import type { SelectContentProps } from '../interface';
 import { useSelectInnerContext } from '../inner-context';
 
-export function SelectContent({ className, attach, children, style }: SelectContentProps) {
+export function SelectContent({ className, attach, children, style, wrapperClassName }: SelectContentProps) {
   const { hotkeyHandler, refSelectView, setValueActive } = useSelectInnerContext();
 
   return (
-    <Popover.Content attach={attach} getStyle={() => ({ width: refSelectView?.current?.dom?.offsetWidth, boxSizing: 'border-box' })}>
+    <Popover.Content
+      attach={attach}
+      getStyle={() => ({ width: refSelectView?.current?.dom?.offsetWidth, boxSizing: 'border-box' })}
+      wrapperClassName={wrapperClassName}
+    >
       <div
         className={className}
         style={style}

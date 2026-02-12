@@ -9,7 +9,7 @@ import { Portal } from '../portal';
 import { passive } from './constants';
 
 export function Content(props) {
-  const { children, attach = 'body', className, animateFn = applyPopupSlide, getStyle } = props;
+  const { children, attach = 'body', className, animateFn = applyPopupSlide, getStyle, wrapperClassName } = props;
 
   const { popperRef, setPopupElement, visible, getPopupProps, placement, isAnimated, destroyOnClose } = useContext(PopupContext);
 
@@ -133,6 +133,7 @@ export function Content(props) {
           pointerEvents: !visible ? 'none' : 'auto',
         }}
         {...getPopupProps()}
+        className={wrapperClassName}
       >
         {/* willChange 提升性能 */}
         <div ref={scope} style={{ willChange: 'transform, opacity' }}>
