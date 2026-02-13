@@ -36,7 +36,7 @@ export default function App() {
             <CardContainer className="md:border pb-2">
               <CardTitle title="注意事项" />
               <CardContent className="text-[12px]">
-                <div>左边仅500条示例，解锁7万条真实面经</div>
+                <div>右边仅500条示例，解锁7万条真实面经</div>
                 <div>仅需 9.9 元上车,（ 后面人多起来会涨价！趁早！）</div>
                 <div>群里还会有定期分享</div>
                 <div>🔗 微信: a2298613245</div>

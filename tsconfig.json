@@ -36,7 +36,8 @@
     "apps/**/*.ts",
     "apps/**/*.tsx",
     "apps/react-pc-website/app/button/page.mdx",
-    "apps/react-pc-website/scripts/Interface-to-json.mjs"
+    "apps/react-pc-website/scripts/Interface-to-json.mjs",
+    "apps/react-pc-website/app/[locale]/select/_component/usage/zh/liquid.jsx"
   ],
   // 排除目录：跳过 node_modules，避免编译第三方库
   "exclude": ["**/node_modules/**", "**/scripts/**"]

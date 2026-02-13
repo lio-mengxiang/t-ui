@@ -34,7 +34,8 @@
     ".next/dev/types/**/*.ts",
     "out/types/**/*.ts",
     "out/dev/types/**/*.ts",
-    "scripts/interface-to-json.mjs"
+    "scripts/interface-to-json.mjs",
+    "app/[locale]/select/_component/usage/zh/liquid.jsx"
   ],
   "exclude": ["node_modules"]
 }
