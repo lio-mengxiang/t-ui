@@ -6,6 +6,7 @@ export default function RootPage() {
         <meta name="baidu-site-verification" content="codeva-l58Zj13Nvd" />
         <meta name="360-site-verification" content="2396fdba959e348222a94511903924ff" />
         <meta name="sogou_site_verification" content="B0RCX5VowB" />
+        <meta name="msvalidate.01" content="EAF5C15F306DB5C8F15B0822A1D97B9B" />
         <script
           dangerouslySetInnerHTML={{
             __html: `window.location.href = '${process.env.homeUrl}'`,
